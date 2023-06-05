@@ -5,12 +5,14 @@ html
     link(rel="preconnect" href="https://fonts.gstatic.com" crossorigin="")
     link(href="https://fonts.googleapis.com/css2?family=Oxanium&amp;family=Quicksand:wght@500;600;700&amp;display=swap" rel="stylesheet")
     link(rel="stylesheet", href="styles.css")
+    script(src="script.js") 
   body
     main.container
       h1.title='Om Lab GPT'
-      ol.messages
-        each message in messages
-          li(class=`message message--${message.role}`)=message.content
-      form.form(action="/" method="POST")
-        textarea.input(name="message", cols="30", rows="1")
+      div.messages-wrapper(js-messages-wrapper)
+        ol.messages(js-messages)
+          each message in messages
+            li(class=`message message--${message.role}`)=message.content
+      form.form(action="/" method="POST" js-form)
+        textarea.input(name="message", cols="30", rows="1" js-input)
         button.btn(type="submit")='Send'

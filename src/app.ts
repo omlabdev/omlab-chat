@@ -33,6 +33,6 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 // Routes
 app.get('/', ChatController.home)
-app.post('/', ChatController.messgePost)
+app.post('/', ChatController.messagePost)
 
 export default app

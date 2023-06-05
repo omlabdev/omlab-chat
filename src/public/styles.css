@@ -30,6 +30,9 @@ ol, ul {
 
 /* Container */
 .container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
   margin: 0 auto;
   max-width: 1440px;
 }
@@ -40,13 +43,19 @@ ol, ul {
 }
 
 /* Messages */
-.messages {
+.messages-wrapper {
   background-color: var(--color-grey);
-  display: grid;
-  gap: 1rem;
+  flex: 1;
   margin: 0 auto;
   max-width: 800px;
+  overflow: auto;
   padding: 2rem;
+  width: 100%;
+}
+
+.messages {
+  display: grid;
+  gap: 1rem;
 }
 
 .message {
@@ -65,13 +74,15 @@ ol, ul {
 
 /* New message */
 .form {
-  display: grid;
+  display: flex;
   margin: 0 auto;
   max-width: 800px;
+  width: 100%;
 }
 
 .input {
   border: 0;
+  flex: 1;
   font-size: 1.5rem;
   padding: 1rem;
   resize: none;

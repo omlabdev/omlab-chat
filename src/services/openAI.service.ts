@@ -23,14 +23,22 @@ class OpenAIService {
     return this.getInstance()
   }
   
-  public static async sendMessage(message: string) {
+  public static async sendMessage(message: string, test: boolean = false) {
     this.messages.push({ role: 'user', content: message })
+    let reply: ChatCompletionRequestMessage | undefined
+    if (test) {
+      reply = { role: 'assistant', content: 'Lorem ipsum dolor sit amet.' }
+      return await new Promise ((resolve) => setTimeout(() => {
+        if (reply) OpenAIService.messages.push(reply)
+        resolve(reply)
+      }, (800)))
+    }
     const response = await OpenAIService.getInstance().createChatCompletion({
       model: 'gpt-3.5-turbo',
       messages: OpenAIService.messages
     })
-    const reply = response.data.choices[0].message?.content
-    if (reply) OpenAIService.messages.push({ role: 'assistant', content: reply })
+    reply = response.data.choices[0].message
+    if (reply) OpenAIService.messages.push(reply)
     return reply
   }
 

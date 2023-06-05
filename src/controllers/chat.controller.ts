@@ -14,12 +14,11 @@ class ChatController {
     res.render('chat/home', { messages })
   }
 
-  static async messgePost(req: Request, res: Response) {
+  static async messagePost(req: Request, res: Response) {
     const { message } = req.body
     if (!message) return res.sendStatus(400)
-    await OpenAIService.sendMessage(message)
-    const messages = OpenAIService.getMessages()
-    res.render('chat/home', { messages })
+    const response = await OpenAIService.sendMessage(message, true)
+    res.json(response)
   }
 }
 
