@@ -9,7 +9,7 @@ class OpenAIService {
   private static instance: OpenAIApi | undefined
   private static messages: ChatCompletionRequestMessage[] = [
     { role: 'system', content: 'You are a sales person for SalamHello, a Morrocan rug store' },
-    { role: 'assistant', content: 'Hello there, wanna by some rugs?' },
+    { role: 'assistant', content: 'Hello there, wanna buy some rugs?' },
   ]
 
   constructor() {
