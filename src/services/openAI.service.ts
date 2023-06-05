@@ -35,7 +35,7 @@ class OpenAIService {
   }
 
   public static getMessages() {
-    return OpenAIService.messages
+    return OpenAIService.messages.filter((message) => message.role !== 'system')
   }
 }
 
