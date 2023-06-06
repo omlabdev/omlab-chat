@@ -1,31 +1,55 @@
 import { randomBytes } from 'crypto'
+import dotenv from 'dotenv'
 import { Request, Response } from 'express'
+import jwt from 'jsonwebtoken'
 
 import OpenAIService from '../services/openAI.service'
 
+// Enviorment variables
+dotenv.config()
+const { JWT_SECRET } = process.env
+
+async function verifyJWT(token: any) {
+  if ((!token) || (!JWT_SECRET)) return false
+  try {
+    const jwtPayload = jwt.verify(token, JWT_SECRET) as jwt.JwtPayload
+    return jwtPayload
+  } catch (error) {
+    if (error instanceof jwt.JsonWebTokenError) return false
+    console.error(error)
+    return false
+  }
+}
+
 function setChatId(req: Request, res: Response) {
+  if (!JWT_SECRET) return false
+  const ttl = 24 * 60 * 60 * 1000
   const chatId = randomBytes(32).toString('hex')
-  res.cookie('chatId', chatId, { maxAge: 24 * 60 * 60, sameSite: 'none', secure: !!req.secure, httpOnly: true, domain: req.hostname })
+  const token = jwt.sign({ chatId }, JWT_SECRET, { algorithm: 'HS256', expiresIn: ttl })
+  res.cookie('token', token, { maxAge: ttl, sameSite: 'none', secure: !!req.secure, httpOnly: true, domain: req.hostname })
   return chatId
 }
 
-class ChatController {  
-  /**
-   * Express handler for 
-   *
-   * @param {Express.Request} req The request object
-   * @param {Express.Response} res The response object
-   */
-  static home(req: Request, res: Response) {
-    let { chatId } = req.cookies
+async function getChatId(token: any): Promise<string|false> {
+  const jwtPayload = await verifyJWT(token)
+  if (!jwtPayload) return false
+  return jwtPayload.chatId
+}
+
+class ChatController {
+  static async  home(req: Request, res: Response) {
+    const { token } = req.cookies
+    let chatId = await getChatId(token)
     if (!chatId) chatId = setChatId(req, res)
-    const messages = OpenAIService.getMessages(chatId)
+    if (!chatId) res.sendStatus(500)
+    const messages = OpenAIService.getMessages(chatId as string)
     res.render('chat/home', { messages })
   }
 
   static async messagePost(req: Request, res: Response) {
-    const { chatId } = req.cookies
+    const { token } = req.cookies
     const { message } = req.body
+    const chatId = await getChatId(token)
     if ((!message) || (!chatId)) return res.sendStatus(400)
     const response = await OpenAIService.sendMessage(chatId, message, false)
     res.json(response)
