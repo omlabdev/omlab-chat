@@ -73,6 +73,10 @@ ol, ul {
   justify-self: end;
 }
 
+.message--error {
+  background-color: brown;
+}
+
 /* New message */
 .form {
   display: flex;

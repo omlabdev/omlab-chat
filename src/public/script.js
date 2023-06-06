@@ -31,8 +31,14 @@ async function sendMessage() {
   inputElement.value = ''
   addMessage({ role: 'user', content: input })
   const body = JSON.stringify({ message: input })
-  const response = await fetch('/', { method: 'post', headers: { 'content-type': 'application/json' }, body })
-  const message = await response.json()
+  let message
+  try {
+    const response = await fetch('/', { method: 'post', headers: { 'content-type': 'application/json' }, body })
+    message = await response.json()
+  } catch (error) {
+    message = { role: 'error', content: 'There was an error processing your message, please try again' }
+    console.error(error)
+  }
   addMessage(message)
   setLoader(false)
 }
