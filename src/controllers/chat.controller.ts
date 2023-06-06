@@ -26,7 +26,7 @@ function setChatId(req: Request, res: Response) {
   const ttl = 24 * 60 * 60 * 1000
   const chatId = randomBytes(32).toString('hex')
   const token = jwt.sign({ chatId }, JWT_SECRET, { algorithm: 'HS256', expiresIn: ttl })
-  res.cookie('token', token, { maxAge: ttl, sameSite: 'none', secure: !!req.secure, httpOnly: true, domain: req.hostname })
+  res.cookie('token', token, { maxAge: ttl, sameSite: 'lax', secure: !!req.secure, httpOnly: true, domain: req.hostname })
   return chatId
 }
 
