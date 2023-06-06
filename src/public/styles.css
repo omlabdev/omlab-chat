@@ -63,6 +63,7 @@ ol, ul {
 .message {
   background-color: var(--color-main);
   border-radius: 1rem;
+  box-shadow: 1.5px 2.5px 8px hsla(0, 0%, 0%, .2);
   font-size: 1.25rem;
   padding: 1rem;
   width: fit-content;
