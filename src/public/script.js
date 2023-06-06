@@ -1,3 +1,10 @@
+function setLoader(status) {
+  const loader = document.querySelector('[js-loader]')
+  if (!loader) return
+  if (status) loader.classList.add('show')
+  else loader.classList.remove('show')
+}
+
 function createMessage(message) {
   const messageElement = document.createElement('li')
   messageElement.classList.add('message')
@@ -19,6 +26,7 @@ async function sendMessage() {
   const inputElement = document.querySelector('[js-input]')
   const messages = document.querySelector('[js-messages]')
   if ((!inputElement) || (!messages)) return
+  setLoader(true)
   const input = inputElement.value
   inputElement.value = ''
   addMessage({ role: 'user', content: input })
@@ -26,6 +34,7 @@ async function sendMessage() {
   const response = await fetch('/', { method: 'post', headers: { 'content-type': 'application/json' }, body })
   const message = await response.json()
   addMessage(message)
+  setLoader(false)
 }
 
 document.addEventListener('DOMContentLoaded', () => {

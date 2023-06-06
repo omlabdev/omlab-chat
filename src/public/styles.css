@@ -1,6 +1,6 @@
 /* Variables */
 :root {
-  --color-main: #00BDB6;
+  --color-main: #00bdb6;
   --color-grey: #757575;
   --font-family-main: 'Quicksand', sans-serif;
   --font-family-text: 'Oxanium', cursive;
@@ -45,7 +45,9 @@ ol, ul {
 /* Messages */
 .messages-wrapper {
   background-color: var(--color-grey);
+  display: flex;
   flex: 1;
+  flex-direction: column;
   margin: 0 auto;
   max-width: 800px;
   overflow: auto;
@@ -59,16 +61,15 @@ ol, ul {
 }
 
 .message {
-  background-color: #fff;
+  background-color: var(--color-main);
   border-radius: 1rem;
-  color: #000;
   padding: 1rem;
   width: fit-content;
 }
 
 .message--user {
-  background-color: var(--color-main);
-  color: #fff;
+  background-color: #fff;
+  color: #000;
   justify-self: end;
 }
 
@@ -100,4 +101,54 @@ ol, ul {
 
 .btn:hover {
   opacity: .9;
+}
+
+/* Loading indicator */
+.loader {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+  overflow: hidden;
+  padding: 2rem 0;
+  width: 2.5rem;
+}
+
+.loader:not(.show) {
+  visibility: hidden;
+}
+
+.dots {
+  animation: dots 1.5s infinite linear;
+  background-color: var(--color-main);
+  border-radius: 5px;
+  box-shadow: 9984px 0 0 0 var(--color-main), 9999px 0 0 0 var(--color-main), 10014px 0 0 0 var(--color-main);
+  color: var(--color-main);
+  height: 10px;
+  left: -9999px;
+  position: relative;
+  width: 10px;
+}
+
+@keyframes dots {
+  0% {
+    box-shadow: 9984px 0 0 0 var(--color-main), 9999px 0 0 0 var(--color-main), 10014px 0 0 0 var(--color-main);
+  }
+  16.667% {
+    box-shadow: 9984px -10px 0 0 var(--color-main), 9999px 0 0 0 var(--color-main), 10014px 0 0 0 var(--color-main);
+  }
+  33.333% {
+    box-shadow: 9984px 0 0 0 var(--color-main), 9999px 0 0 0 var(--color-main), 10014px 0 0 0 var(--color-main);
+  }
+  50% {
+    box-shadow: 9984px 0 0 0 var(--color-main), 9999px -10px 0 0 var(--color-main), 10014px 0 0 0 var(--color-main);
+  }
+  66.667% {
+    box-shadow: 9984px 0 0 0 var(--color-main), 9999px 0 0 0 var(--color-main), 10014px 0 0 0 var(--color-main);
+  }
+  83.333% {
+    box-shadow: 9984px 0 0 0 var(--color-main), 9999px 0 0 0 var(--color-main), 10014px -10px 0 0 var(--color-main);
+  }
+  100% {
+    box-shadow: 9984px 0 0 0 var(--color-main), 9999px 0 0 0 var(--color-main), 10014px 0 0 0 var(--color-main);
+  }
 }
