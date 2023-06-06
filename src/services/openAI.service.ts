@@ -7,7 +7,8 @@ const { OPENAI_API_KEY } = process.env
 
 class OpenAIService {
   private static instance: OpenAIApi | undefined
-  private static messages: ChatCompletionRequestMessage[] = [
+  private static chats: Map<string, ChatCompletionRequestMessage[]> = new Map()
+  private static initMessages: ChatCompletionRequestMessage[] = [
     { role: 'system', content: 'You are a sales person for SalamHello, a Morrocan rug store' },
     { role: 'system', content: 'Your name is Stan S. Stanman' },
     { role: 'system', content: 'The store offers in stock rugs as well as custom rugs tailored to the client\'s taste' },
@@ -30,28 +31,36 @@ class OpenAIService {
     new OpenAIService()
     return this.getInstance()
   }
+
+  private static getAllMessages(chatId: string) {
+    // Init the chat if need be with the initial messages
+    if (!this.chats.has(chatId)) OpenAIService.chats.set(chatId, [...OpenAIService.initMessages])
+    return OpenAIService.chats.get(chatId) as ChatCompletionRequestMessage[]
+  }
+
+  public static getMessages(chatId: string) {
+    const messages = OpenAIService.getAllMessages(chatId)
+    return messages.filter((message) => message.role !== 'system')
+  }
   
-  public static async sendMessage(message: string, test: boolean = false) {
-    this.messages.push({ role: 'user', content: message })
+  public static async sendMessage(chatId: string, message: string, test: boolean = false) {
+    const messages = OpenAIService.getAllMessages(chatId)
+    messages.push({ role: 'user', content: message })
     let reply: ChatCompletionRequestMessage | undefined
     if (test) {
       reply = { role: 'assistant', content: 'Lorem ipsum dolor sit amet.' }
       return await new Promise ((resolve) => setTimeout(() => {
-        if (reply) OpenAIService.messages.push(reply)
+        if (reply) messages.push(reply)
         resolve(reply)
       }, (800)))
     }
     const response = await OpenAIService.getInstance().createChatCompletion({
       model: 'gpt-3.5-turbo',
-      messages: OpenAIService.messages
+      messages,
     })
     reply = response.data.choices[0].message
-    if (reply) OpenAIService.messages.push(reply)
+    if (reply) messages.push(reply)
     return reply
-  }
-
-  public static getMessages() {
-    return OpenAIService.messages.filter((message) => message.role !== 'system')
   }
 }
 

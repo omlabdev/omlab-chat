@@ -1,4 +1,5 @@
 import bodyParser from 'body-parser'
+import cookieParser from 'cookie-parser'
 import express from 'express'
 import path from 'path'
 
@@ -13,7 +14,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
 // Cookie parser
-// app.use(cookieParser())
+app.use(cookieParser())
 
 // CORS
 // app.use(cors({
@@ -22,7 +23,7 @@ app.use(bodyParser.json())
 // }))
 
 // Needed for HTTPS detection
-// app.enable('trust proxy')
+app.enable('trust proxy')
 
 // Template language
 app.set('view engine', 'pug')
