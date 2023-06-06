@@ -65,6 +65,7 @@ ol, ul {
   border-radius: 1rem;
   box-shadow: 1.5px 2.5px 8px hsla(0, 0%, 0%, .2);
   font-size: 1.25rem;
+  letter-spacing: .5;
   padding: 1rem;
   width: fit-content;
 }
@@ -92,7 +93,6 @@ ol, ul {
   flex: 1;
   font-size: 1.5rem;
   padding: 1rem;
-  resize: none;
 }
 
 .btn {

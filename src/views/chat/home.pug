@@ -16,5 +16,5 @@ html
         span.loader(js-loader)
           span.dots
       form.form(action="/" method="POST" js-form)
-        textarea.input(name="message", cols="30", rows="1" js-input)
+        input.input(name="message", type="text" autocomplete="false" js-input)
         button.btn(type="submit")='Send'
