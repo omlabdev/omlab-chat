@@ -5,6 +5,7 @@ import path from 'path'
 
 // Controllers
 import ChatController from './controllers/chat.controller'
+import AdminController from './controllers/admin.controller'
 
 // Server
 const app = express()
@@ -33,7 +34,8 @@ app.set('views', path.join(__dirname, 'views'))
 app.use(express.static(path.join(__dirname, 'public')))
 
 // Routes
-app.get('/', ChatController.home)
+app.get('/', ChatController.chat)
 app.post('/', ChatController.messagePost)
+app.get('/admin', AdminController.admin)
 
 export default app

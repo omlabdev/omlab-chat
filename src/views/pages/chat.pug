@@ -1,0 +1,17 @@
+extends ../layouts/main.pug
+
+block scripts
+  script(src="chat.js") 
+
+block content
+  main.container
+    h1.title='Om Lab GPT | Chat'
+    div.messages-wrapper(js-messages-wrapper)
+      ol.messages(js-messages)
+        each message in messages
+          li(class=`message message--${message.role}`)=message.content
+      span.loader(js-loader)
+        span.dots
+    form.form(action="/" method="POST" js-form)
+      input.input(name="message", type="text" autocomplete="false" js-input)
+      button.btn(type="submit")='Send'

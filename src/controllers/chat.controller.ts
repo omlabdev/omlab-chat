@@ -37,13 +37,13 @@ async function getChatId(token: any): Promise<string|false> {
 }
 
 class ChatController {
-  static async  home(req: Request, res: Response) {
+  static async chat(req: Request, res: Response) {
     const { token } = req.cookies
     let chatId = await getChatId(token)
     if (!chatId) chatId = setChatId(req, res)
     if (!chatId) res.sendStatus(500)
     const messages = OpenAIService.getMessages(chatId as string)
-    res.render('chat/home', { messages })
+    res.render('pages/chat', { messages, title: 'Chat' })
   }
 
   static async messagePost(req: Request, res: Response) {
