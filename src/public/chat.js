@@ -20,6 +20,7 @@ function addMessage(message) {
   const messageElement = createMessage(message)
   messagesList.appendChild(messageElement)
   if (messagesWrapper) messagesWrapper.scrollTop = messagesWrapper.scrollHeight
+  return messageElement
 }
 
 async function sendMessage() {

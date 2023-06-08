@@ -1,8 +1,27 @@
 extends ../layouts/main.pug
 
 block scripts
+  script(src="chat.js") 
   script(src="admin.js") 
 
 block content
   main.container
     h1.title='Om Lab GPT | Admin'
+    div.messages-wrapper(js-messages-wrapper)
+      ol.messages(js-messages)
+        each message in messages
+          li(class=`message message--${message.role}` js-message=message._id)=message.content
+            button.delete-btn(type="button" js-delete=message._id)='X'
+      span.loader(js-loader)
+        span.dots
+    form(action="./" method="POST" js-admin-form)
+      div.radio-group
+        input#radio-system.radio-input(type="radio" name="role" value="system" checked js-admin-radio)
+        label.radio-label(for="radio-system")
+          | System
+        input#radio-assistant.radio-input(type="radio" name="role" value="assistant" js-admin-radio)
+        label.radio-label(for="radio-assistant")
+          | Assistant
+      div.form
+        input.input(name="message", type="text" autocomplete="false" js-admin-input)
+        button.btn(type="submit")='Send'

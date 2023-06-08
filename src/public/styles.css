@@ -67,6 +67,7 @@ ol, ul {
   font-size: 1.25rem;
   letter-spacing: .5;
   padding: 1rem;
+  position: relative;
   width: fit-content;
 }
 
@@ -74,6 +75,11 @@ ol, ul {
   background-color: #fff;
   color: #000;
   justify-self: end;
+}
+
+.message--system {
+  background-color: #000;
+  padding-right: 2rem;
 }
 
 .message--error {
@@ -157,4 +163,44 @@ ol, ul {
   100% {
     box-shadow: 9984px 0 0 0 var(--color-main), 9999px 0 0 0 var(--color-main), 10014px 0 0 0 var(--color-main);
   }
+}
+
+/* Admin form */
+.delete-btn {
+  border: 0;
+  background-color: transparent;
+  cursor: pointer;
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #fff;
+  padding: 0;
+  position: absolute;
+  right: .5rem;
+  top: .25rem;
+}
+
+.radio-group {
+  border-bottom: 1px solid #000;
+  border-top: 1px solid #000;
+  display: flex;
+  gap: 1px;
+  margin: 0 auto;
+  max-width: 800px;
+  width: 100%;
+}
+
+.radio-input {
+  display: none;
+}
+
+.radio-label {
+  background-color: var(--color-grey);
+  cursor: pointer;
+  flex: 1;
+  padding: 1rem;
+  text-align: center;
+}
+
+.radio-input:checked + .radio-label {
+  background-color: var(--color-main);
 }

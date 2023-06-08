@@ -34,8 +34,14 @@ app.set('views', path.join(__dirname, 'views'))
 app.use(express.static(path.join(__dirname, 'public')))
 
 // Routes
+
+// Chat
 app.get('/', ChatController.chat)
 app.post('/', ChatController.messagePost)
+
+// Admin
 app.get('/admin', AdminController.admin)
+app.post('/admin', AdminController.messagePost)
+app.delete('/admin', AdminController.messageDelete)
 
 export default app

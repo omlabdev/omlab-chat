@@ -1,6 +1,8 @@
 import dotenv from 'dotenv'
 import { ChatCompletionRequestMessage, Configuration, OpenAIApi } from 'openai'
 
+import AdminMessage from '../models/adminMessage'
+
 // Load env variables
 dotenv.config()
 const { OPENAI_API_KEY } = process.env
@@ -8,6 +10,7 @@ const { OPENAI_API_KEY } = process.env
 class OpenAIService {
   private static instance: OpenAIApi | undefined
   private static chats: Map<string, ChatCompletionRequestMessage[]> = new Map()
+  private static adminMessages: ChatCompletionRequestMessage[]
   private static initMessages: ChatCompletionRequestMessage[] = [
     { role: 'system', content: 'You are a sales person for SalamHello, a Morrocan rug store' },
     { role: 'system', content: 'Your name is Stan S. Stanman' },
@@ -32,19 +35,43 @@ class OpenAIService {
     return this.getInstance()
   }
 
-  private static getAllMessages(chatId: string) {
-    // Init the chat if need be with the initial messages
-    if (!this.chats.has(chatId)) OpenAIService.chats.set(chatId, [...OpenAIService.initMessages])
+  private static async refershAdminMessages() {
+    OpenAIService.adminMessages = (await AdminMessage.find({ active: true })).map((adminMessage) => adminMessage.toMessage())
+    return OpenAIService.adminMessages
+  }
+
+  private static async getAdminMessages() {
+    if (!OpenAIService.adminMessages) await OpenAIService.refershAdminMessages()
+    return OpenAIService.adminMessages
+  }
+
+  private static async getAllMessages(chatId: string) {
+    if (!this.chats.has(chatId)) OpenAIService.chats.set(chatId, [])
     return OpenAIService.chats.get(chatId) as ChatCompletionRequestMessage[]
   }
 
-  public static getMessages(chatId: string) {
-    const messages = OpenAIService.getAllMessages(chatId)
+  public static async addAdminMessage(role: 'system' | 'assistant', content: string, order?: number, active?: boolean) {
+    const adminMessage = await AdminMessage.create({ role, content, order, active })
+    await OpenAIService.refershAdminMessages()
+    return adminMessage
+  }
+
+  public static async deleteAdminMessage(messageId: string) {
+    const { acknowledged } = await AdminMessage.deleteOne({ _id: messageId })
+    if (acknowledged) OpenAIService.refershAdminMessages()
+    return acknowledged
+  }
+
+  public static async getMessages(chatId: string) {
+    const adminMessages = await OpenAIService.getAdminMessages()
+    const messages = await OpenAIService.getAllMessages(chatId)
+    return adminMessages.concat(messages)
     return messages.filter((message) => message.role !== 'system')
   }
   
   public static async sendMessage(chatId: string, message: string, test: boolean = false) {
-    const messages = OpenAIService.getAllMessages(chatId)
+    const adminMessages = await OpenAIService.getAdminMessages()
+    const messages = await OpenAIService.getAllMessages(chatId)
     messages.push({ role: 'user', content: message })
     let reply: ChatCompletionRequestMessage | undefined
     if (test) {
@@ -56,7 +83,7 @@ class OpenAIService {
     }
     const response = await OpenAIService.getInstance().createChatCompletion({
       model: 'gpt-3.5-turbo',
-      messages,
+      messages: adminMessages.concat(messages),
     })
     reply = response.data.choices[0].message
     if (reply) messages.push(reply)

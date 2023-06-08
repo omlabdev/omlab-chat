@@ -22,7 +22,7 @@ const AdminMessageSchema = new Schema<AdminMessageBaseDocument, AdminMessageMode
   },
 })
 
-export interface AdminMessage {
+interface AdminMessage {
   content: String
   active: Boolean
   role: 'system' | 'assistant'
@@ -39,7 +39,7 @@ AdminMessageSchema.methods.toMessage = function(this: AdminMessageBaseDocument) 
 }
 
 // For model
-export interface AdminMessageModel extends Model<AdminMessageBaseDocument> {}
+interface AdminMessageModel extends Model<AdminMessageBaseDocument> {}
 
 // Default export
 export default model<AdminMessageBaseDocument, AdminMessageModel>('AdminMessage', AdminMessageSchema)

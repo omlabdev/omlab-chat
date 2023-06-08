@@ -42,7 +42,7 @@ class ChatController {
     let chatId = await getChatId(token)
     if (!chatId) chatId = setChatId(req, res)
     if (!chatId) res.sendStatus(500)
-    const messages = OpenAIService.getMessages(chatId as string)
+    const messages = await OpenAIService.getMessages(chatId as string)
     res.render('pages/chat', { messages, title: 'Chat' })
   }
 
@@ -51,7 +51,7 @@ class ChatController {
     const { message } = req.body
     const chatId = await getChatId(token)
     if ((!message) || (!chatId)) return res.sendStatus(400)
-    const response = await OpenAIService.sendMessage(chatId, message, false)
+    const response = await OpenAIService.sendMessage(chatId, message)
     res.json(response)
   }
 }
