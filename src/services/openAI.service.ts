@@ -11,18 +11,7 @@ class OpenAIService {
   private static instance: OpenAIApi | undefined
   private static chats: Map<string, ChatCompletionRequestMessage[]> = new Map()
   private static adminMessages: ChatCompletionRequestMessage[]
-  private static initMessages: ChatCompletionRequestMessage[] = [
-    { role: 'system', content: 'You are a sales person for SalamHello, a Morrocan rug store' },
-    { role: 'system', content: 'Your name is Stan S. Stanman' },
-    { role: 'system', content: 'The store offers in stock rugs as well as custom rugs tailored to the client\'s taste' },
-    { role: 'system', content: 'For custom rugs the clients can select the size, color and tassels of the rug' },
-    { role: 'system', content: 'Custom rugs usally take between 8 to 10 weeks to produce and ship' },
-    { role: 'system', content: 'For custom rugs larger than  9\' x 12\' the production may take up between 10 to 13 weeks' },
-    { role: 'system', content: 'Do not fabricate information that is not explicitly provided to you regarding the store or its products' },
-    { role: 'system', content: 'If you do not have enough explicitly provided information to respond just apologize' },
-    { role: 'system', content: 'Respond as succinctly as possible' },
-    { role: 'assistant', content: 'Hello there, wanna buy some rugs?' },
-  ]
+  private static sandwichMessages: ChatCompletionRequestMessage[]
 
   constructor() {
     const configuration = new Configuration({ apiKey: OPENAI_API_KEY })
@@ -36,13 +25,23 @@ class OpenAIService {
   }
 
   private static async refershAdminMessages() {
-    OpenAIService.adminMessages = (await AdminMessage.find({ active: true })).map((adminMessage) => adminMessage.toMessage())
+    OpenAIService.adminMessages = (await AdminMessage.find({ active: true, role: ['system', 'assistant'] })).map((adminMessage) => adminMessage.toMessage())
     return OpenAIService.adminMessages
   }
 
   private static async getAdminMessages() {
     if (!OpenAIService.adminMessages) await OpenAIService.refershAdminMessages()
     return OpenAIService.adminMessages
+  }
+
+  private static async refershSandwichMessages() {
+    OpenAIService.sandwichMessages = (await AdminMessage.find({ active: true, role: 'sandwich' })).map((sandwichMessage) => sandwichMessage.toMessage())
+    return OpenAIService.sandwichMessages
+  }
+
+  private static async getSandwichMessages() {
+    if (!OpenAIService.sandwichMessages) await OpenAIService.refershSandwichMessages()
+    return OpenAIService.sandwichMessages
   }
 
   private static async getAllMessages(chatId: string) {
@@ -71,22 +70,25 @@ class OpenAIService {
   
   public static async sendMessage(chatId: string, message: string, test: boolean = false) {
     const adminMessages = await OpenAIService.getAdminMessages()
-    const messages = await OpenAIService.getAllMessages(chatId)
-    messages.push({ role: 'user', content: message })
+    const sandwichMessages = await OpenAIService.getSandwichMessages()
+    const chatMessages = await OpenAIService.getAllMessages(chatId)
+    chatMessages.push({ role: 'user', content: message })
     let reply: ChatCompletionRequestMessage | undefined
     if (test) {
       reply = { role: 'assistant', content: 'Lorem ipsum dolor sit amet.' }
       return await new Promise ((resolve) => setTimeout(() => {
-        if (reply) messages.push(reply)
+        if (reply) chatMessages.push(reply)
         resolve(reply)
       }, (800)))
     }
+    const messages = adminMessages.concat([...chatMessages, ...sandwichMessages])
+    console.log('Sending messages', messages)
     const response = await OpenAIService.getInstance().createChatCompletion({
       model: 'gpt-3.5-turbo',
-      messages: adminMessages.concat(messages),
+      messages,
     })
     reply = response.data.choices[0].message
-    if (reply) messages.push(reply)
+    if (reply) chatMessages.push(reply)
     return reply
   }
 }

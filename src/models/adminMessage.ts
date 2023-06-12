@@ -13,7 +13,7 @@ const AdminMessageSchema = new Schema<AdminMessageBaseDocument, AdminMessageMode
   },
   role: {
     type: String,
-    enum: ['system', 'assistant'],
+    enum: ['system', 'assistant', 'sandwich'],
     default: 'system',
   },
   order: {
@@ -25,7 +25,7 @@ const AdminMessageSchema = new Schema<AdminMessageBaseDocument, AdminMessageMode
 interface AdminMessage {
   content: String
   active: Boolean
-  role: 'system' | 'assistant'
+  role: 'system' | 'assistant' | 'sandwich'
   order: Number
 }
 
@@ -35,7 +35,8 @@ interface AdminMessageBaseDocument extends AdminMessage, Document {
 
 // Methods
 AdminMessageSchema.methods.toMessage = function(this: AdminMessageBaseDocument) {
-  return { role: this.role, content: this.content }
+  const role = this.role === 'sandwich' ? 'system' : this.role
+  return { role, content: this.content }
 }
 
 // For model

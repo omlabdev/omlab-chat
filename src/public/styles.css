@@ -67,6 +67,7 @@ ol, ul {
   font-size: 1.25rem;
   letter-spacing: .5;
   padding: 1rem;
+  padding-right: 2rem;
   position: relative;
   width: fit-content;
 }
@@ -79,7 +80,11 @@ ol, ul {
 
 .message--system {
   background-color: #000;
-  padding-right: 2rem;
+}
+
+
+.message--sandwich {
+  background-color: #00000055;
 }
 
 .message--error {
