@@ -49,8 +49,16 @@ class ChatController {
     let chatId = await getChatId(token)
     if (!chatId) chatId = setChatId(req, res)
     if (!chatId) res.sendStatus(500)
+    res.render('pages/chat', { title: 'Chat' })
+  }
+
+  static async messages(req: Request, res: Response) {
+    const { token } = req.cookies
+    let chatId = await getChatId(token)
+    if (!chatId) chatId = setChatId(req, res)
+    if (!chatId) res.sendStatus(500)
     const messages = await OpenAIService.getMessages(chatId as string)
-    res.render('pages/chat', { messages, title: 'Chat' })
+    res.json(messages)
   }
 
   static async messagePost(req: Request, res: Response) {

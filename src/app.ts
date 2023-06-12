@@ -37,6 +37,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 // Chat
 app.get('/', ChatController.chat)
+app.get('/json', ChatController.messages)
 app.post('/', ChatController.messagePost)
 
 // Admin
