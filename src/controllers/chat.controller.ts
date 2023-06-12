@@ -38,7 +38,14 @@ async function getChatId(token: any): Promise<string|false> {
 
 class ChatController {
   static async chat(req: Request, res: Response) {
+    const { reset } = req.query
     const { token } = req.cookies
+    if (reset === 'true') {
+      const chatId = await getChatId(token)
+      if (chatId) OpenAIService.deleteChat(chatId)
+      setChatId(req, res)
+      return res.redirect('/')
+    }
     let chatId = await getChatId(token)
     if (!chatId) chatId = setChatId(req, res)
     if (!chatId) res.sendStatus(500)

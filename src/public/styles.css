@@ -2,6 +2,7 @@
 :root {
   --color-main: #00bdb6;
   --color-grey: #757575;
+  --color-error: brown;
   --font-family-main: 'Quicksand', sans-serif;
   --font-family-text: 'Oxanium', cursive;
 }
@@ -88,7 +89,7 @@ ol, ul {
 }
 
 .message--error {
-  background-color: brown;
+  background-color: var(--color-error);
 }
 
 /* New message */
@@ -113,11 +114,16 @@ ol, ul {
   border: 0;
   font-size: 1.5rem;
   padding: 1rem;
+  text-decoration: none;
   transition: opacity .2s linear;
 }
 
 .btn:hover {
   opacity: .9;
+}
+
+.btn--danger {
+  background-color: var(--color-error);
 }
 
 /* Loading indicator */

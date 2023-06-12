@@ -61,6 +61,10 @@ class OpenAIService {
     return acknowledged
   }
 
+  public static deleteChat(chatId: string) {
+    return OpenAIService.chats.delete(chatId)
+  }
+
   public static async getMessages(chatId: string) {
     const adminMessages = await OpenAIService.getAdminMessages()
     const messages = await OpenAIService.getAllMessages(chatId)
@@ -82,7 +86,7 @@ class OpenAIService {
       }, (800)))
     }
     const messages = adminMessages.concat([...chatMessages, ...sandwichMessages])
-    console.log('Sending messages', messages)
+    // console.log('Sending messages', messages)
     const response = await OpenAIService.getInstance().createChatCompletion({
       model: 'gpt-3.5-turbo',
       messages,
