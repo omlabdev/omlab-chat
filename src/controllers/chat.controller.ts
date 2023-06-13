@@ -58,6 +58,7 @@ class ChatController {
     if (!chatId) chatId = setChatId(req, res)
     if (!chatId) res.sendStatus(500)
     const messages = await OpenAIService.getMessages(chatId as string)
+    res.set('Cache-Control', 'no-store')
     res.json(messages)
   }
 
