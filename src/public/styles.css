@@ -68,9 +68,12 @@ ol, ul {
   font-size: 1.25rem;
   letter-spacing: .5;
   padding: 1rem;
-  padding-right: 2rem;
   position: relative;
   width: fit-content;
+}
+
+.page-admin .message {
+  padding-right: 2rem;
 }
 
 .message--user {
@@ -94,10 +97,15 @@ ol, ul {
 
 /* New message */
 .form {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr 1fr;
   margin: 0 auto;
   max-width: 800px;
   width: 100%;
+}
+
+.page-admin .form {
+  display: flex;
 }
 
 .input {
@@ -105,6 +113,7 @@ ol, ul {
   flex: 1;
   font-size: 1.5rem;
   padding: 1rem;
+  width: 100%;
 }
 
 .btn {
