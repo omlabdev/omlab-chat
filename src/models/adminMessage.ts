@@ -11,9 +11,12 @@ const AdminMessageSchema = new Schema<AdminMessageBaseDocument, AdminMessageMode
     type: Boolean,
     default: true,
   },
+  chatId: {
+    type: String,
+  },
   role: {
     type: String,
-    enum: ['system', 'assistant', 'sandwich'],
+    enum: ['system', 'assistant', 'sandwich', 'user'],
     default: 'system',
   },
   order: {
@@ -25,7 +28,8 @@ const AdminMessageSchema = new Schema<AdminMessageBaseDocument, AdminMessageMode
 interface AdminMessage {
   content: String
   active: Boolean
-  role: 'system' | 'assistant' | 'sandwich'
+  chatId: String
+  role: 'system' | 'assistant' | 'sandwich' | 'user'
   order: Number
 }
 

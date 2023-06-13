@@ -42,7 +42,7 @@ class ChatController {
     const { token } = req.cookies
     if (reset === 'true') {
       const chatId = await getChatId(token)
-      if (chatId) OpenAIService.deleteChat(chatId)
+      if (chatId) await OpenAIService.deleteChat(chatId)
       setChatId(req, res)
       return res.redirect('/')
     }

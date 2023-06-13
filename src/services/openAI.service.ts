@@ -1,5 +1,5 @@
 import dotenv from 'dotenv'
-import { ChatCompletionRequestMessage, Configuration, OpenAIApi } from 'openai'
+import { ChatCompletionRequestMessage, ChatCompletionResponseMessage, Configuration, OpenAIApi } from 'openai'
 
 import AdminMessage from '../models/adminMessage'
 
@@ -45,8 +45,15 @@ class OpenAIService {
   }
 
   private static async getAllMessages(chatId: string) {
-    if (!this.chats.has(chatId)) OpenAIService.chats.set(chatId, [])
+    if (!this.chats.has(chatId)) {
+      const messages = (await AdminMessage.find({ chatId })).map((message) => message.toMessage())
+      OpenAIService.chats.set(chatId, messages)
+    }
     return OpenAIService.chats.get(chatId) as ChatCompletionRequestMessage[]
+  }
+
+  private static async saveMessage(chatId: string, message: ChatCompletionRequestMessage | ChatCompletionResponseMessage) {
+    (await AdminMessage.create({ ...message, chatId })).save()
   }
 
   public static async addAdminMessage(role: 'system' | 'assistant', content: string, order?: number, active?: boolean) {
@@ -61,7 +68,8 @@ class OpenAIService {
     return acknowledged
   }
 
-  public static deleteChat(chatId: string) {
+  public static async deleteChat(chatId: string) {
+    await AdminMessage.deleteMany({ chatId })
     return OpenAIService.chats.delete(chatId)
   }
 
@@ -72,27 +80,23 @@ class OpenAIService {
     return messages.filter((message) => message.role !== 'system')
   }
   
-  public static async sendMessage(chatId: string, message: string, test: boolean = false) {
+  public static async sendMessage(chatId: string, content: string) {
     const adminMessages = await OpenAIService.getAdminMessages()
     const sandwichMessages = await OpenAIService.getSandwichMessages()
     const chatMessages = await OpenAIService.getAllMessages(chatId)
-    chatMessages.push({ role: 'user', content: message })
-    let reply: ChatCompletionRequestMessage | undefined
-    if (test) {
-      reply = { role: 'assistant', content: 'Lorem ipsum dolor sit amet.' }
-      return await new Promise ((resolve) => setTimeout(() => {
-        if (reply) chatMessages.push(reply)
-        resolve(reply)
-      }, (800)))
-    }
+    const message: ChatCompletionRequestMessage = { role: 'user', content }
+    OpenAIService.saveMessage(chatId, message)
+    chatMessages.push(message)
     const messages = adminMessages.concat([...chatMessages, ...sandwichMessages])
-    // console.log('Sending messages', messages)
     const response = await OpenAIService.getInstance().createChatCompletion({
       model: 'gpt-3.5-turbo',
       messages,
     })
-    reply = response.data.choices[0].message
-    if (reply) chatMessages.push(reply)
+    const reply = response.data.choices[0].message
+    if (reply) {
+      OpenAIService.saveMessage(chatId, reply)
+      chatMessages.push(reply)
+    }
     return reply
   }
 }
