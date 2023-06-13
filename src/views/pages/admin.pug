@@ -1,7 +1,7 @@
 extends ../layouts/main.pug
 
 block scripts
-  script(src="chat.js") 
+  script(src="main.js") 
   script(src="admin.js") 
 
 block content
@@ -26,5 +26,5 @@ block content
         label.radio-label(for="radio-sandwich")
           | Sandwich
       div.form
-        input.input(name="message", type="text" autocomplete="false" js-admin-input)
+        input.input(name="message", type="text" autocomplete="off" js-admin-input)
         button.btn(type="submit")='Send'
