@@ -9,7 +9,7 @@
     "build": "npm run clean && npm run copy-views && npm run copy-public && npx tsc",
     "clean": "rimraf ./dist/",
     "copy-views": "copyfiles -u 1 ./src/views/* ./src/views/**/* ./dist/",
-    "copy-public": "copyfiles -u 1 ./src/public/* ./src/public/**/* ./src/public/**/**/* ./dist/",
+    "copy-public": "copyfiles -u 1 ./src/public/* ./dist/",
     "deploy:prod": "git push prod main"
   },
   "keywords": [],
