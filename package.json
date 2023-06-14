@@ -8,8 +8,8 @@
     "dev": "nodemon src/index.ts",
     "build": "npm run clean && npm run copy-views && npm run copy-public && npx tsc",
     "clean": "rimraf ./dist/",
-    "copy-views": "copyfiles -u 1 ./src/views/* ./src/views/**/* ./dist/",
-    "copy-public": "copyfiles -u 1 ./src/public/* ./dist/",
+    "copy-views": "copyfiles -u 1 ./src/views/* ./src/views/**/* ./dist/src/",
+    "copy-public": "copyfiles -u 1 ./src/public/* ./dist/src/",
     "deploy:prod": "git push prod main"
   },
   "bin": {
