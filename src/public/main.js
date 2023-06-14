@@ -51,8 +51,9 @@ async function sendMessage() {
   const inputElement = document.querySelector('[js-input]')
   const messages = document.querySelector('[js-messages]')
   if ((!inputElement) || (!messages)) return
-  setLoader(true)
   const input = inputElement.value
+  if (!input) return
+  setLoader(true)
   inputElement.value = ''
   addMessage({ role: 'user', content: input })
   const body = JSON.stringify({ message: input })

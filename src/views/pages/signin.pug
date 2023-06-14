@@ -1,0 +1,13 @@
+extends ../layouts/main.pug
+
+block content
+  main.container.page-signin
+    h1.title='Om Lab GPT | Signin'
+    form.form(action="" method="POST")
+      div
+        label.label(for="email")="Email"
+        input.input(id="email", name="email", type="email" required)
+      div
+        label.label(for="password")="Password"
+        input.input(id="password", name="password", type="password" required)
+      button.btn(type="submit")='Signin'

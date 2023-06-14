@@ -19,10 +19,12 @@ const UserSchema = new Schema<UserBaseDocument, UserModel>({
   password: {
     type: String,
     required: true,
+    select: false,
   },
   salt: {
     type: String,
     required: true,
+    select: false,
   },
 })
 

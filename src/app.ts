@@ -6,6 +6,8 @@ import path from 'path'
 // Controllers
 import ChatController from './controllers/chat.controller'
 import AdminController from './controllers/admin.controller'
+import UserController from './controllers/user.controller'
+import AuthMiddleware from './middleware/auth.middleware'
 
 // Server
 const app = express()
@@ -35,14 +37,18 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 // Routes
 
+// Login
+app.get('/login', AuthMiddleware.noAuth ,UserController.signin)
+app.post('/login', AuthMiddleware.noAuth ,UserController.signinPost)
+
 // Chat
-app.get('/', ChatController.chat)
-app.get('/json', ChatController.messages)
-app.post('/', ChatController.messagePost)
+app.get('/', AuthMiddleware.auth, ChatController.chat)
+app.get('/json', AuthMiddleware.auth, ChatController.messages)
+app.post('/', AuthMiddleware.auth, ChatController.messagePost)
 
 // Admin
-app.get('/admin', AdminController.admin)
-app.post('/admin', AdminController.messagePost)
-app.delete('/admin', AdminController.messageDelete)
+app.get('/admin', AuthMiddleware.auth, AdminController.admin)
+app.post('/admin', AuthMiddleware.auth, AdminController.messagePost)
+app.delete('/admin', AuthMiddleware.auth, AdminController.messageDelete)
 
 export default app

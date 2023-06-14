@@ -108,6 +108,17 @@ ol, ul {
   display: flex;
 }
 
+.page-signin .form {
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+.label {
+  display: block;
+  font-size: 1.5rem;
+  margin-bottom: .5rem;
+}
+
 .input {
   border: 0;
   flex: 1;
