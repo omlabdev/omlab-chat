@@ -6,7 +6,7 @@ import AdminMessage from '../models/adminMessage'
 
 class AdminController {
   static async admin(req: Request, res: Response) {
-    const messages = await AdminMessage.find()
+    const messages = await AdminMessage.find({ chatId: undefined })
     res.render('pages/admin', { title: 'Admin', messages })
   }
 
