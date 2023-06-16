@@ -25,8 +25,8 @@ function loadWidget() {
   iframe.classList.add('widget__iframe')
   iframe.src = 'https://chat.omlabdev.com/widget'
   iframe.setAttribute('frameborder', '0')
-  iframe.setAttribute('width', '370')
-  iframe.setAttribute('height', '766')
+  iframe.setAttribute('width', '320')
+  iframe.setAttribute('height', '500')
   const toggleBtn = document.createElement('button')
   toggleBtn.classList.add('widget__toggle-btn')
   toggleBtn.setAttribute('js-widget-toggle', '')
