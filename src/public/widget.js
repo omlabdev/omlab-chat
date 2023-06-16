@@ -40,6 +40,7 @@ function loadWidget() {
   closeBtn.classList.add('widget__close-btn')
   closeBtn.setAttribute('js-widget-close', '')
   closeBtn.setAttribute('type', 'button')
+  closeBtn.innerText = 'X'
   closeBtn.addEventListener('click', () => closeWidget(chatWrapper, toggleBtn))
   chatWrapper.appendChild(closeBtn)
   chatWrapper.appendChild(iframe)
