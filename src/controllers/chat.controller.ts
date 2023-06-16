@@ -6,7 +6,7 @@ import OpenAIService from '../services/openAI.service'
 
 class ChatController {
   static async home(req: Request, res: Response) {
-    return res.redirect('/store')
+    return res.redirect('/widget')
   }
 
   static async store(req: Request, res: Response) {

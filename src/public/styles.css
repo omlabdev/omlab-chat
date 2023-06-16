@@ -125,6 +125,10 @@ img {
   display: flex;
 }
 
+.page-signin {
+  padding: 0 1rem;
+}
+
 .page-signin .form {
   grid-template-columns: 1fr;
   gap: 2rem;

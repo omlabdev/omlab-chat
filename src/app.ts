@@ -43,7 +43,7 @@ app.post('/login', AuthMiddleware.noAuth ,UserController.signinPost)
 
 // Chat
 app.get('/', AuthMiddleware.auth, ChatController.home)
-app.get('/store', AuthMiddleware.auth, ChatController.store)
+app.get('/store', ChatController.store)
 app.get('/widget', AuthMiddleware.auth, ChatController.widget)
 app.get('/reset', AuthMiddleware.auth, ChatController.reset)
 app.get('/json', AuthMiddleware.auth, ChatController.messages)
