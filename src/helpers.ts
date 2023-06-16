@@ -28,7 +28,7 @@ async function verifyJWT(token: any) {
 function setToken(data: any, res: Response, req: Request) {
   const ttl = parseInt(JWT_TTL || '')
   const token = jwt.sign(data, JWT_SECRET || '', { algorithm: 'HS256', expiresIn: ttl })
-  res.cookie('token', token, { maxAge: ttl * 1000, sameSite: 'lax', secure: !!req.secure, httpOnly: true, domain: req.hostname })
+  res.cookie('token', token, { maxAge: ttl * 1000, sameSite: 'none', secure: !!req.secure, httpOnly: true, domain: req.hostname })
   return token
 }
 
@@ -37,7 +37,7 @@ function setToken(data: any, res: Response, req: Request) {
  */
 function unsetToken(res: Response, req: Request) {
   const ttl = parseInt(JWT_TTL || '')
-  res.cookie('token', '', { maxAge: ttl * 1000, sameSite: 'lax', secure: !!req.secure, httpOnly: true, domain: req.hostname })
+  res.cookie('token', '', { maxAge: ttl * 1000, sameSite: 'none', secure: !!req.secure, httpOnly: true, domain: req.hostname })
 }
 
 function generateChatId() {
