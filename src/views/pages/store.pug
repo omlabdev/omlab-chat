@@ -1,0 +1,16 @@
+extends ../layouts/main.pug
+
+block scripts
+  script(src="store.js") 
+
+block content
+  main.container
+    h1.title='Om Lab GPT | Store Demo'
+    p="Lorem ipsum dolor, sit amet consectetur adipisicing elit. Earum recusandae optio obcaecati eum. Beatae reiciendis, amet dicta voluptatum nulla, animi fuga expedita aliquid reprehenderit dolores aut at provident. Eum, in?"
+    p="Lorem ipsum dolor, sit amet consectetur adipisicing elit. Earum recusandae optio obcaecati eum. Beatae reiciendis, amet dicta voluptatum nulla, animi fuga expedita aliquid reprehenderit dolores aut at provident. Eum, in?"
+    div.widget
+      div.widget__chat-wrapper(js-widget-chat-wrapper)
+        button.widget__close-btn(type="button" js-widget-close aria-label="Close chat")="X"
+        iframe.widget__iframe(src="/widget", frameborder="0" width="370" height="766")
+      button.widget__toggle-btn(type="button" js-widget-toggle)
+        img.widget__toggle-btn__img(src="/imgs/om-lab-logo.png" alt="")

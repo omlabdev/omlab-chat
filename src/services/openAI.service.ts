@@ -76,8 +76,8 @@ class OpenAIService {
   public static async getMessages(chatId: string) {
     const adminMessages = await OpenAIService.getAdminMessages()
     const messages = await OpenAIService.getAllMessages(chatId)
-    return adminMessages.concat(messages)
-    return messages.filter((message) => message.role !== 'system')
+    // return adminMessages.concat(messages)
+    return adminMessages.filter((message) => message.role !== 'system').concat(messages)
   }
   
   public static async sendMessage(chatId: string, content: string) {

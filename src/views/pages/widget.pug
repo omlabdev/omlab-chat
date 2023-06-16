@@ -1,12 +1,11 @@
 extends ../layouts/main.pug
 
 block scripts
-  script(src="main.js") 
-  script(src="chat.js") 
+  script(src="main.js")
+  script(src="chat.js")
 
 block content
   main.container
-    h1.title='Om Lab GPT | Chat'
     div.messages-wrapper(js-messages-wrapper)
       ol.messages(js-messages)
       span.loader(js-loader)
@@ -14,4 +13,4 @@ block content
     form.form(action="/" method="POST" js-form)
       input.input(name="message", type="text" autocomplete="off" js-input)
       button.btn(type="submit")='Send'
-      a.btn.btn--danger(href="/?reset=true" js-reset-btn)='Reset'
+      a.btn.btn--danger(href="/reset" js-reset-btn)='Reset'
