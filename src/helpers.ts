@@ -40,14 +40,14 @@ function unsetToken(res: Response, req: Request) {
   res.cookie('token', '', { maxAge: ttl * 1000, sameSite: 'none', secure: req.secure, httpOnly: true, domain: req.hostname })
 }
 
-function generateChatId() {
+function generateSessionId() {
   return randomBytes(32).toString('hex')
 }
 
-function resetChatId(res: Response, req: Request) {
-  const chatId = generateChatId()
+function resetSessionId(res: Response, req: Request) {
+  const sessionId = generateSessionId()
   const { id } = req.body.jwtPayload
-  setToken({ id, chatId }, res, req)
+  setToken({ id, sessionId }, res, req)
 }
 
-export { verifyJWT, setToken, unsetToken, generateChatId, resetChatId }
+export { verifyJWT, setToken, unsetToken, generateSessionId, resetSessionId }

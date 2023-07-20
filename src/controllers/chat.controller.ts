@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 
-import { resetChatId } from '../helpers'
+import { resetSessionId } from '../helpers'
 
 import OpenAIService from '../services/openAI.service'
 
@@ -14,31 +14,31 @@ class ChatController {
   }
 
   static async widget(req: Request, res: Response) {
-    const { chatId } = req.body.jwtPayload
-    if (!chatId) return res.status(400).send('No chat')
+    const { sessionId } = req.body.jwtPayload
+    if (!sessionId) return res.status(400).send('No chat')
     return res.render('pages/widget', { title: 'Chat' })
   }
 
   static async reset(req: Request, res: Response) {
-    const { chatId } = req.body.jwtPayload
-    if (chatId) await OpenAIService.deleteChat(chatId)
-    resetChatId(res, req)
+    const { sessionId } = req.body.jwtPayload
+    if (sessionId) await OpenAIService.deleteChat(sessionId)
+    resetSessionId(res, req)
     return res.redirect('/widget')
   }
 
   static async messages(req: Request, res: Response) {
-    const { chatId } = req.body.jwtPayload
-    if (!chatId) res.sendStatus(500)
-    const messages = await OpenAIService.getMessages(chatId as string)
+    const { sessionId } = req.body.jwtPayload
+    if (!sessionId) res.sendStatus(500)
+    const messages = await OpenAIService.getMessages(sessionId as string)
     res.set('Cache-Control', 'no-store')
     return res.json(messages)
   }
 
   static async messagePost(req: Request, res: Response) {
-    const { chatId } = req.body.jwtPayload
+    const { sessionId } = req.body.jwtPayload
     const { message } = req.body
-    if ((!message) || (!chatId)) return res.sendStatus(400)
-    const response = await OpenAIService.sendMessage(chatId, message)
+    if ((!message) || (!sessionId)) return res.sendStatus(400)
+    const response = await OpenAIService.sendMessage(sessionId, message)
     return res.json(response)
   }
 }

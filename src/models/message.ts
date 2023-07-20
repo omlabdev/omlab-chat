@@ -2,7 +2,7 @@ import { Document, Model, model, Schema } from 'mongoose'
 import { ChatCompletionRequestMessage } from 'openai'
 
 // Schema
-const AdminMessageSchema = new Schema<AdminMessageBaseDocument, AdminMessageModel>({
+const MessageSchema = new Schema<MessageBaseDocument, MessageModel>({
   content: {
     type: String,
     required: true,
@@ -12,6 +12,9 @@ const AdminMessageSchema = new Schema<AdminMessageBaseDocument, AdminMessageMode
     default: true,
   },
   chatId: {
+    type: String,
+  },
+  sessionId: {
     type: String,
   },
   role: {
@@ -25,26 +28,27 @@ const AdminMessageSchema = new Schema<AdminMessageBaseDocument, AdminMessageMode
   },
 })
 
-interface AdminMessage {
+interface Message {
   content: String
   active: Boolean
   chatId: String
+  sessionId: String
   role: 'system' | 'assistant' | 'sandwich' | 'user'
   order: Number
 }
 
-interface AdminMessageBaseDocument extends AdminMessage, Document {
+interface MessageBaseDocument extends Message, Document {
   toMessage(): ChatCompletionRequestMessage
 }
 
 // Methods
-AdminMessageSchema.methods.toMessage = function(this: AdminMessageBaseDocument) {
+MessageSchema.methods.toMessage = function(this: MessageBaseDocument) {
   const role = this.role === 'sandwich' ? 'system' : this.role
   return { role, content: this.content }
 }
 
 // For model
-interface AdminMessageModel extends Model<AdminMessageBaseDocument> {}
+interface MessageModel extends Model<MessageBaseDocument> {}
 
 // Default export
-export default model<AdminMessageBaseDocument, AdminMessageModel>('AdminMessage', AdminMessageSchema)
+export default model<MessageBaseDocument, MessageModel>('Message', MessageSchema)

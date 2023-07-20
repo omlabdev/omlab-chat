@@ -1,7 +1,7 @@
 import dotenv from 'dotenv'
 import { ChatCompletionRequestMessage, ChatCompletionResponseMessage, Configuration, OpenAIApi } from 'openai'
 
-import AdminMessage from '../models/adminMessage'
+import Message from '../models/message'
 
 // Load env variables
 dotenv.config()
@@ -25,7 +25,7 @@ class OpenAIService {
   }
 
   private static async refershAdminMessages() {
-    OpenAIService.adminMessages = (await AdminMessage.find({ active: true, role: ['system', 'assistant'] })).map((adminMessage) => adminMessage.toMessage())
+    OpenAIService.adminMessages = (await Message.find({ active: true, role: ['system', 'assistant'] })).map((adminMessage) => adminMessage.toMessage())
     return OpenAIService.adminMessages
   }
 
@@ -35,7 +35,7 @@ class OpenAIService {
   }
 
   private static async refershSandwichMessages() {
-    OpenAIService.sandwichMessages = (await AdminMessage.find({ active: true, role: 'sandwich' })).map((sandwichMessage) => sandwichMessage.toMessage())
+    OpenAIService.sandwichMessages = (await Message.find({ active: true, role: 'sandwich' })).map((sandwichMessage) => sandwichMessage.toMessage())
     return OpenAIService.sandwichMessages
   }
 
@@ -44,48 +44,48 @@ class OpenAIService {
     return OpenAIService.sandwichMessages
   }
 
-  private static async getAllMessages(chatId: string) {
-    if (!this.chats.has(chatId)) {
-      const messages = (await AdminMessage.find({ chatId })).map((message) => message.toMessage())
-      OpenAIService.chats.set(chatId, messages)
+  private static async getAllMessages(sessionId: string) {
+    if (!this.chats.has(sessionId)) {
+      const messages = (await Message.find({ sessionId })).map((message) => message.toMessage())
+      OpenAIService.chats.set(sessionId, messages)
     }
-    return OpenAIService.chats.get(chatId) as ChatCompletionRequestMessage[]
+    return OpenAIService.chats.get(sessionId) as ChatCompletionRequestMessage[]
   }
 
-  private static async saveMessage(chatId: string, message: ChatCompletionRequestMessage | ChatCompletionResponseMessage) {
-    (await AdminMessage.create({ ...message, chatId })).save()
+  private static async saveMessage(sessionId: string, message: ChatCompletionRequestMessage | ChatCompletionResponseMessage) {
+    (await Message.create({ ...message, sessionId })).save()
   }
 
   public static async addAdminMessage(role: 'system' | 'assistant', content: string, order?: number, active?: boolean) {
-    const adminMessage = await AdminMessage.create({ role, content, order, active })
+    const adminMessage = await Message.create({ role, content, order, active })
     await OpenAIService.refershAdminMessages()
     return adminMessage
   }
 
   public static async deleteAdminMessage(messageId: string) {
-    const { acknowledged } = await AdminMessage.deleteOne({ _id: messageId })
+    const { acknowledged } = await Message.deleteOne({ _id: messageId })
     if (acknowledged) OpenAIService.refershAdminMessages()
     return acknowledged
   }
 
-  public static async deleteChat(chatId: string) {
-    await AdminMessage.deleteMany({ chatId })
-    return OpenAIService.chats.delete(chatId)
+  public static async deleteChat(sessionId: string) {
+    await Message.deleteMany({ sessionId })
+    return OpenAIService.chats.delete(sessionId)
   }
 
-  public static async getMessages(chatId: string) {
+  public static async getMessages(sessionId: string) {
     const adminMessages = await OpenAIService.getAdminMessages()
-    const messages = await OpenAIService.getAllMessages(chatId)
+    const messages = await OpenAIService.getAllMessages(sessionId)
     // return adminMessages.concat(messages)
     return adminMessages.filter((message) => message.role !== 'system').concat(messages)
   }
   
-  public static async sendMessage(chatId: string, content: string) {
+  public static async sendMessage(sessionId: string, content: string) {
     const adminMessages = await OpenAIService.getAdminMessages()
     const sandwichMessages = await OpenAIService.getSandwichMessages()
-    const chatMessages = await OpenAIService.getAllMessages(chatId)
+    const chatMessages = await OpenAIService.getAllMessages(sessionId)
     const message: ChatCompletionRequestMessage = { role: 'user', content }
-    OpenAIService.saveMessage(chatId, message)
+    OpenAIService.saveMessage(sessionId, message)
     chatMessages.push(message)
     const messages = adminMessages.concat([...chatMessages, ...sandwichMessages])
     const response = await OpenAIService.getInstance().createChatCompletion({
@@ -94,7 +94,7 @@ class OpenAIService {
     })
     const reply = response.data.choices[0].message
     if (reply) {
-      OpenAIService.saveMessage(chatId, reply)
+      OpenAIService.saveMessage(sessionId, reply)
       chatMessages.push(reply)
     }
     return reply

@@ -29,10 +29,10 @@ class UserController {
     // Get the user & verify it exists and its password is correct
     const user = await User.findOne({ email: email.toLowerCase() }, ['password', 'salt'])
     if ((!user) || (!user.checkPassword(password))) return res.sendStatus(403)
-    // Generate a chatId
-    const chatId = randomBytes(32).toString('hex')
+    // Generate a sessionId
+    const sessionId = randomBytes(32).toString('hex')
     // Set the auth token as a cookie
-    setToken({ id: user.id, chatId }, res, req)
+    setToken({ id: user.id, sessionId }, res, req)
     return res.redirect('/')
   }
 

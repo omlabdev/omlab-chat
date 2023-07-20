@@ -2,11 +2,11 @@ import { Request, Response } from 'express'
 
 import OpenAIService from '../services/openAI.service'
 
-import AdminMessage from '../models/adminMessage'
+import Message from '../models/message'
 
 class AdminController {
   static async admin(req: Request, res: Response) {
-    const messages = await AdminMessage.find({ chatId: undefined })
+    const messages = await Message.find({ sessionId: undefined })
     res.render('pages/admin', { title: 'Admin', messages })
   }
 
