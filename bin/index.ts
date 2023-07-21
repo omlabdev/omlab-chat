@@ -51,5 +51,12 @@ yargs.scriptName('chat')
   else console.log('Could not delete chat')
   await Database.close()
 })
+.command('delete_all', 'deletes all chats', async function (argv) {
+  await Database.connect()
+  const ok = await Message.deleteMany()
+  if (ok) console.log('Chats deleted')
+  else console.log('Could not delete chats')
+  await Database.close()
+})
 .help()
 .argv

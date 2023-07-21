@@ -5,7 +5,8 @@ import Message from '../models/message'
 
 // Load env variables
 dotenv.config()
-const { OPENAI_API_KEY } = process.env
+const { OPENAI_API_KEY, MAX_CHATS } = process.env
+const MAX_CHATS_NUMBER = Number(MAX_CHATS) || 1000
 
 class OpenAIService {
   private static instance: OpenAIApi | undefined
@@ -45,11 +46,13 @@ class OpenAIService {
   }
 
   private static async getAllMessages(sessionId: string) {
-    if (!this.chats.has(sessionId)) {
-      const messages = (await Message.find({ sessionId })).map((message) => message.toMessage())
-      OpenAIService.chats.set(sessionId, messages)
-    }
-    return OpenAIService.chats.get(sessionId) as ChatCompletionRequestMessage[]
+    return (await Message.find({ sessionId })).map((message) => message.toMessage())
+    // Disable chat message caching for now
+    // if (!this.chats.has(sessionId)) {
+    //   const messages = (await Message.find({ sessionId })).map((message) => message.toMessage())
+    //   OpenAIService.chats.set(sessionId, messages)
+    // }
+    // return OpenAIService.chats.get(sessionId) as ChatCompletionRequestMessage[]
   }
 
   private static async saveMessage(sessionId: string, message: ChatCompletionRequestMessage | ChatCompletionResponseMessage) {
@@ -81,6 +84,8 @@ class OpenAIService {
   }
   
   public static async sendMessage(sessionId: string, content: string) {
+    const currentChatCount = (await Message.distinct('sessionId')).length
+    if (currentChatCount >= MAX_CHATS_NUMBER) return { role: 'error', content: 'Maximum active chats limit reached' }
     const adminMessages = await OpenAIService.getAdminMessages()
     const sandwichMessages = await OpenAIService.getSandwichMessages()
     const chatMessages = await OpenAIService.getAllMessages(sessionId)
