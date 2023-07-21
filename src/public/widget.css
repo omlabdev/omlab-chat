@@ -37,13 +37,13 @@
 
 .widget__toggle-btn {
   align-self: end;
-  background-color: #fff;
+  background-color: #543927;
   border: 0;
   border-radius: 50%;
   cursor: pointer;
   height: 4rem;
   margin-top: auto;
-  padding: 0;
+  padding: .7rem;
   width: 4rem;
 }
 
