@@ -32,7 +32,7 @@ function loadWidget() {
   toggleBtn.setAttribute('js-widget-toggle', '')
   const toggleImg = document.createElement('img')
   toggleImg.classList.add('widget__toggle-btn__img')
-  toggleImg.src = 'https://chat.omlabdev.com/imgs/om-lab-logo.png'
+  toggleImg.src = 'https://chat.omlabdev.com/imgs/chat.svg'
   toggleImg.setAttribute('alt', 'Close chat')
   toggleBtn.appendChild(toggleImg)
   toggleBtn.addEventListener('click', () => toggleWidget(chatWrapper, toggleBtn))
