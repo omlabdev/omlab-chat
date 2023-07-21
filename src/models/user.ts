@@ -26,7 +26,7 @@ const UserSchema = new Schema<UserBaseDocument, UserModel>({
     required: true,
     select: false,
   },
-})
+}, { timestamps: true })
 
 interface User {
   email: String

@@ -4,6 +4,7 @@ import yargs from 'yargs'
 import Database from '../src/services/database.service'
 
 import User from '../src/models/user'
+import Message from '../src/models/message'
 
 yargs.scriptName('user')
 .usage('$0 <cmd> [args]')
@@ -33,6 +34,21 @@ yargs.scriptName('user')
   const ok = await User.deleteOne({ email })
   if (ok) console.log('User deleted')
   else console.log('Could not delete user')
+  await Database.close()
+})
+.help()
+.argv
+
+yargs.scriptName('chat')
+.usage('$0 <cmd> [args]')
+.command('delete <sessionId>', 'deletes a chat', (yargs) => {
+  yargs.positional('sessionId', { type: 'string', describe: 'the session ID for the chat' })
+}, async function (argv) {
+  const { sessionId } = argv
+  await Database.connect()
+  const ok = await Message.deleteMany({ sessionId })
+  if (ok) console.log('Chat deleted')
+  else console.log('Could not delete chat')
   await Database.close()
 })
 .help()

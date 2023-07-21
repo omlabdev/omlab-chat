@@ -26,7 +26,7 @@ const MessageSchema = new Schema<MessageBaseDocument, MessageModel>({
     type: Number,
     default: 0,
   },
-})
+}, { timestamps: true })
 
 interface Message {
   content: String
