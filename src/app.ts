@@ -8,6 +8,7 @@ import ChatController from './controllers/chat.controller'
 import AdminController from './controllers/admin.controller'
 import UserController from './controllers/user.controller'
 import AuthMiddleware from './middleware/auth.middleware'
+import SessionMiddleware from './middleware/session.middleware'
 
 // Server
 const app = express()
@@ -35,6 +36,9 @@ app.set('views', path.join(__dirname, 'views'))
 // Static files
 app.use(express.static(path.join(__dirname, 'public')))
 
+// Session creation
+app.use(SessionMiddleware.session)
+
 // Routes
 
 // Login
@@ -42,12 +46,13 @@ app.get('/login', AuthMiddleware.noAuth ,UserController.signin)
 app.post('/login', AuthMiddleware.noAuth ,UserController.signinPost)
 
 // Chat
-app.get('/', AuthMiddleware.auth, ChatController.home)
+app.get('/', ChatController.home)
+app.post('/', ChatController.messagePost)
 app.get('/store', ChatController.store)
-app.get('/widget', AuthMiddleware.auth, ChatController.widget)
+app.get('/widget', ChatController.widget)
+app.get('/json', ChatController.messages)
+
 app.get('/reset', AuthMiddleware.auth, ChatController.reset)
-app.get('/json', AuthMiddleware.auth, ChatController.messages)
-app.post('/', AuthMiddleware.auth, ChatController.messagePost)
 
 // Admin
 app.get('/admin', AuthMiddleware.auth, AdminController.admin)

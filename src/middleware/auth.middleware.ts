@@ -7,6 +7,9 @@ import User from '../models/user'
 class AuthMiddleware {
   /**
    * Checks to see if a user is authenticated
+   * 
+   * If the user is authenticated then the flow continues
+   * If the user is not authenticated then it gets redirected to /login
    *
    * @param {Express.Request} req The request object
    * @param {Express.Response} res The response object
@@ -18,7 +21,7 @@ class AuthMiddleware {
     if (!token) return res.redirect('/login')
     // Verify the token
     const jwtPayload = await verifyJWT(token)
-    if (!jwtPayload) return res.redirect('/login')
+    if ((!jwtPayload) || (!jwtPayload?.id)) return res.redirect('/login')
     // Try to find the user using the ID on the JWT payload
     try {
       const user = await User.findById(jwtPayload.id)
@@ -32,7 +35,10 @@ class AuthMiddleware {
   }
 
   /**
-   * Checks to see if a user is authenticated
+   * Checks to see if a user is not authenticated
+   * 
+   * If the user is not authenticated then the flow continues
+   * If the user is authenticated then it gets redirected to /
    *
    * @param {Express.Request} req The request object
    * @param {Express.Response} res The response object
@@ -44,7 +50,7 @@ class AuthMiddleware {
     if (!token) return next()
     // Verify the token
     const jwtPayload = await verifyJWT(token)
-    if (!jwtPayload) return next()
+    if ((!jwtPayload) || (!jwtPayload?.id)) return next()
     // Try to find the user using the ID on the JWT payload
     try {
       const user = await User.findById(jwtPayload.id)

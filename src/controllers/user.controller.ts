@@ -1,4 +1,3 @@
-import { randomBytes } from 'crypto'
 import { Request, Response } from 'express'
 
 import { setToken, unsetToken } from '../helpers'
@@ -23,17 +22,17 @@ class UserController {
    * @param {Express.Response} res The response object
    */
   static async signinPost(req: Request, res: Response) {
-    const { email, password } = req.body
+    const { email, password, jwtPayload } = req.body
     // Check required fields
-    if ((!email) || (!password)) return res.sendStatus(400)
+    if ((!email) || (!password) || (!jwtPayload)) return res.sendStatus(400)
+    const { sessionId } = jwtPayload
+    if (!sessionId) return res.sendStatus(400)
     // Get the user & verify it exists and its password is correct
     const user = await User.findOne({ email: email.toLowerCase() }, ['password', 'salt'])
     if ((!user) || (!user.checkPassword(password))) return res.sendStatus(403)
-    // Generate a sessionId
-    const sessionId = randomBytes(32).toString('hex')
     // Set the auth token as a cookie
     setToken({ id: user.id, sessionId }, res, req)
-    return res.redirect('/')
+    return res.redirect('/admin')
   }
 
   /**
