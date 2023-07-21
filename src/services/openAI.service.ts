@@ -26,7 +26,7 @@ class OpenAIService {
   }
 
   private static async refershAdminMessages() {
-    OpenAIService.adminMessages = (await Message.find({ active: true, role: ['system', 'assistant'] })).map((adminMessage) => adminMessage.toMessage())
+    OpenAIService.adminMessages = (await Message.find({ sessionId: undefined, active: true, role: ['system', 'assistant'] })).map((adminMessage) => adminMessage.toMessage())
     return OpenAIService.adminMessages
   }
 
