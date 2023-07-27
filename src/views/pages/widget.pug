@@ -8,7 +8,7 @@ block scripts
   script(src="/widget.js")
 
 block content
-  div.widget
+  div.widget(js-widget)
     div.widget__chat-wrapper(aria-hidden="true" js-widget-wrapper)
       button.widget__close-btn(js-widget-close type="button")=X
       div.messages-wrapper(js-messages-wrapper)

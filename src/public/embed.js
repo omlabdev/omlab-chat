@@ -8,6 +8,9 @@ window.addEventListener('DOMContentLoaded', () => {
   iframe.style.position = 'fixed'
   iframe.style.right = '10px'
   iframe.style.zIndex = '99'
+  iframe.addEventListener('load', () => {
+    if (!iframe.contentDocument.querySelector('[js-widget]')) iframe.style.display = 'none'
+  })
   document.body.appendChild(iframe)
   window.addEventListener('message', (message) => {
     const { data } = message

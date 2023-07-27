@@ -59,6 +59,11 @@ class OpenAIService {
     (await Message.create({ ...message, sessionId })).save()
   }
 
+  public static async activeChatLimitReached() {
+    const currentChatCount = (await Message.distinct('sessionId')).length
+    return (currentChatCount >= MAX_CHATS_NUMBER)
+  }
+
   public static async addAdminMessage(role: 'system' | 'assistant', content: string, order?: number, active?: boolean) {
     const adminMessage = await Message.create({ role, content, order, active })
     await OpenAIService.refershAdminMessages()
@@ -84,8 +89,7 @@ class OpenAIService {
   }
   
   public static async sendMessage(sessionId: string, content: string) {
-    const currentChatCount = (await Message.distinct('sessionId')).length
-    if (currentChatCount >= MAX_CHATS_NUMBER) return { role: 'error', content: 'Maximum active chats limit reached' }
+    if (await OpenAIService.activeChatLimitReached()) return { role: 'error', content: 'Maximum active chats limit reached' }
     const adminMessages = await OpenAIService.getAdminMessages()
     const sandwichMessages = await OpenAIService.getSandwichMessages()
     const chatMessages = await OpenAIService.getAllMessages(sessionId)
