@@ -1,13 +1,23 @@
 function closeWidget(widgetChatWrapper, widgetToggleBtn) {
-  widgetChatWrapper?.classList.remove('show')
-  widgetChatWrapper?.setAttribute('aria-hidden', 'true')
-  widgetToggleBtn?.setAttribute('aria-expanded', 'false')
+  // Communicate to the parent window that the chat is going to be closed
+  window.top.postMessage('omlab-chat/close')
+  // This setTimeout is here so this code runs after the parent window has resized the iframe
+  setTimeout(() => {
+    widgetChatWrapper?.classList.remove('show')
+    widgetChatWrapper?.setAttribute('aria-hidden', 'true')
+    widgetToggleBtn?.setAttribute('aria-expanded', 'false')
+  }, 0)
 }
 
 function openWidget(widgetChatWrapper, widgetToggleBtn) {
-  widgetChatWrapper?.classList.add('show')
-  widgetChatWrapper?.setAttribute('aria-hidden', 'false')
-  widgetToggleBtn?.setAttribute('aria-expanded', 'true')
+  // Communicate to the parent window that the chat is going to be opened
+  window.top.postMessage('omlab-chat/open')
+  // This setTimeout is here so this code runs after the parent window has resized the iframe
+  setTimeout(() => {
+    widgetChatWrapper?.classList.add('show')
+    widgetChatWrapper?.setAttribute('aria-hidden', 'false')
+    widgetToggleBtn?.setAttribute('aria-expanded', 'true')
+  }, 0)
 }
 
 function toggleWidget(widgetChatWrapper, widgetToggleBtn) {
@@ -15,38 +25,10 @@ function toggleWidget(widgetChatWrapper, widgetToggleBtn) {
   else openWidget(widgetChatWrapper, widgetToggleBtn)
 }
 
-function loadWidget() {
-  const widget = document.createElement('div')
-  widget.classList.add('widget')
-  const chatWrapper = document.createElement('div')
-  chatWrapper.classList.add('widget__chat-wrapper')
-  widget.setAttribute('js-widget-chat-wrapper', '')
-  const iframe = document.createElement('iframe')
-  iframe.classList.add('widget__iframe')
-  iframe.src = 'https://chat.omlabdev.com/widget'
-  iframe.setAttribute('frameborder', '0')
-  iframe.setAttribute('width', '320')
-  iframe.setAttribute('height', '500')
-  const toggleBtn = document.createElement('button')
-  toggleBtn.classList.add('widget__toggle-btn')
-  toggleBtn.setAttribute('js-widget-toggle', '')
-  const toggleImg = document.createElement('img')
-  toggleImg.classList.add('widget__toggle-btn__img')
-  toggleImg.src = 'https://chat.omlabdev.com/imgs/chat.svg'
-  toggleImg.setAttribute('alt', 'Close chat')
-  toggleBtn.appendChild(toggleImg)
-  toggleBtn.addEventListener('click', () => toggleWidget(chatWrapper, toggleBtn))
-  const closeBtn = document.createElement('button')
-  closeBtn.classList.add('widget__close-btn')
-  closeBtn.setAttribute('js-widget-close', '')
-  closeBtn.setAttribute('type', 'button')
-  closeBtn.innerText = 'X'
+window.addEventListener('DOMContentLoaded', () => {
+  const chatWrapper = document.querySelector('[js-widget-wrapper]')
+  const closeBtn = document.querySelector('[js-widget-close]')
   closeBtn.addEventListener('click', () => closeWidget(chatWrapper, toggleBtn))
-  chatWrapper.appendChild(closeBtn)
-  chatWrapper.appendChild(iframe)
-  widget.appendChild(chatWrapper)
-  widget.appendChild(toggleBtn)
-  document.body.appendChild(widget)
-}
-
-window.addEventListener('DOMContentLoaded', () => loadWidget())
+  const toggleBtn = document.querySelector('[js-widget-toggle]')
+  toggleBtn.addEventListener('click', () => toggleWidget(chatWrapper, toggleBtn))
+})
