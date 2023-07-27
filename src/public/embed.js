@@ -5,8 +5,9 @@ window.addEventListener('DOMContentLoaded', () => {
   iframe.width = 64
   iframe.height = 64
   iframe.style.bottom = '10px'
-  iframe.style.position = 'absolute'
+  iframe.style.position = 'fixed'
   iframe.style.right = '10px'
+  iframe.style.zIndex = '99'
   document.body.appendChild(iframe)
   window.addEventListener('message', (message) => {
     const { data } = message
