@@ -1,6 +1,6 @@
 window.addEventListener('DOMContentLoaded', () => {
   const iframe = document.createElement('iframe')
-  iframe.src = 'https://chat.omlabdev.com/widget'
+  iframe.src = '/widget'
   iframe.setAttribute('frameborder', '0')
   iframe.width = 64
   iframe.height = 64

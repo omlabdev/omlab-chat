@@ -53,7 +53,22 @@ body {
   height: 4rem;
   margin-top: auto;
   padding: .7rem;
+  position: relative;
   width: 4rem;
+}
+
+.widget__badge {
+  background-color: brown;
+  border-radius: 50%;
+  height: 1rem;
+  width: 1rem;
+  position: absolute;
+  left: .1rem;
+  top: 0;
+}
+
+.widget__toggle-btn:not(.badge) .widget__badge {
+  display: none;
 }
 
 .widget__toggle-btn__img {

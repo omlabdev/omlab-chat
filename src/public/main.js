@@ -65,6 +65,7 @@ async function sendMessage() {
     message = { role: 'error', content: 'There was an error processing your message, please try again' }
     console.error(error)
   }
+  window.dispatchEvent(new CustomEvent('omlab-chat/new-message', { message }))
   addMessage(message)
   setLoader(false)
 }

@@ -10,6 +10,7 @@ function openWidget(widgetChatWrapper, widgetToggleBtn) {
   widgetChatWrapper?.classList.add('show')
   widgetChatWrapper?.setAttribute('aria-hidden', 'false')
   widgetToggleBtn?.setAttribute('aria-expanded', 'true')
+  widgetToggleBtn?.classList.remove('badge')
 }
 
 function toggleWidget(widgetChatWrapper) {
@@ -30,5 +31,8 @@ window.addEventListener('DOMContentLoaded', () => {
     } else if (data === 'omlab-chat/close') {
       closeWidget(chatWrapper, toggleBtn)
     }
+  })
+  window.addEventListener('omlab-chat/new-message', () => {
+    if (toggleBtn?.getAttribute('aria-expanded') === 'false') toggleBtn?.classList.add('badge')
   })
 }, { once: true })
