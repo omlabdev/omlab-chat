@@ -1,6 +1,6 @@
 function closeWidget(widgetChatWrapper, widgetToggleBtn) {
   // Communicate to the parent window that the chat is going to be closed
-  window.top.postMessage('omlab-chat/close')
+  window.top.postMessage('omlab-chat/close', '*')
   // This setTimeout is here so this code runs after the parent window has resized the iframe
   setTimeout(() => {
     widgetChatWrapper?.classList.remove('show')
@@ -11,7 +11,7 @@ function closeWidget(widgetChatWrapper, widgetToggleBtn) {
 
 function openWidget(widgetChatWrapper, widgetToggleBtn) {
   // Communicate to the parent window that the chat is going to be opened
-  window.top.postMessage('omlab-chat/open')
+  window.top.postMessage('omlab-chat/open', '*')
   // This setTimeout is here so this code runs after the parent window has resized the iframe
   setTimeout(() => {
     widgetChatWrapper?.classList.add('show')
