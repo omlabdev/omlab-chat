@@ -1,34 +1,34 @@
+// We use window.top.postMessage to tell the parent window's script to resize the iframe when toggling the chat window
+
 function closeWidget(widgetChatWrapper, widgetToggleBtn) {
-  // Communicate to the parent window that the chat is going to be closed
-  window.top.postMessage('omlab-chat/close', '*')
-  // This setTimeout is here so this code runs after the parent window has resized the iframe
-  setTimeout(() => {
-    widgetChatWrapper?.classList.remove('show')
-    widgetChatWrapper?.setAttribute('aria-hidden', 'true')
-    widgetToggleBtn?.setAttribute('aria-expanded', 'false')
-  }, 0)
+  widgetChatWrapper?.classList.remove('show')
+  widgetChatWrapper?.setAttribute('aria-hidden', 'true')
+  widgetToggleBtn?.setAttribute('aria-expanded', 'false')
 }
 
 function openWidget(widgetChatWrapper, widgetToggleBtn) {
-  // Communicate to the parent window that the chat is going to be opened
-  window.top.postMessage('omlab-chat/open', '*')
-  // This setTimeout is here so this code runs after the parent window has resized the iframe
-  setTimeout(() => {
-    widgetChatWrapper?.classList.add('show')
-    widgetChatWrapper?.setAttribute('aria-hidden', 'false')
-    widgetToggleBtn?.setAttribute('aria-expanded', 'true')
-  }, 0)
+  widgetChatWrapper?.classList.add('show')
+  widgetChatWrapper?.setAttribute('aria-hidden', 'false')
+  widgetToggleBtn?.setAttribute('aria-expanded', 'true')
 }
 
-function toggleWidget(widgetChatWrapper, widgetToggleBtn) {
-  if (widgetChatWrapper?.classList.contains('show')) closeWidget(widgetChatWrapper, widgetToggleBtn)
-  else openWidget(widgetChatWrapper, widgetToggleBtn)
+function toggleWidget(widgetChatWrapper) {
+  if (widgetChatWrapper?.classList.contains('show')) window.top.postMessage('omlab-chat/close', '*')
+  else window.top.postMessage('omlab-chat/open', '*')
 }
 
 window.addEventListener('DOMContentLoaded', () => {
   const chatWrapper = document.querySelector('[js-widget-wrapper]')
   const closeBtn = document.querySelector('[js-widget-close]')
-  closeBtn.addEventListener('click', () => closeWidget(chatWrapper, toggleBtn))
+  closeBtn.addEventListener('click', () => window.top.postMessage('omlab-chat/close', '*'))
   const toggleBtn = document.querySelector('[js-widget-toggle]')
   toggleBtn.addEventListener('click', () => toggleWidget(chatWrapper, toggleBtn))
-})
+  window.addEventListener('message', (message) => {
+    const { data } = message
+    if (data === 'omlab-chat/open') {
+      openWidget(chatWrapper, toggleBtn)
+    } else if (data === 'omlab-chat/close') {
+      closeWidget(chatWrapper, toggleBtn)
+    }
+  })
+}, { once: true })

@@ -14,9 +14,13 @@ window.addEventListener('DOMContentLoaded', () => {
     if (data === 'omlab-chat/open') {
       iframe.height = 580
       iframe.width = 320
+      // Inform the ifrmae's script that the iframe has been resized
+      iframe.contentWindow.postMessage('omlab-chat/open', '*')
     } else if (data === 'omlab-chat/close') {
       iframe.height = 64
       iframe.width = 64
+      // Inform the ifrmae's script that the iframe has been resized
+      iframe.contentWindow.postMessage('omlab-chat/close', '*')
     }
   })
 }, { once: true })
