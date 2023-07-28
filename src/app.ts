@@ -46,11 +46,11 @@ app.get('/login', AuthMiddleware.noAuth ,UserController.signin)
 app.post('/login', AuthMiddleware.noAuth ,UserController.signinPost)
 
 // Chat
-app.get('/', ChatController.home)
-app.post('/', ChatController.messagePost)
-app.get('/store', ChatController.store)
-app.get('/widget', ChatController.widget)
-app.get('/json', ChatController.messages)
+app.get('/', AuthMiddleware.auth, ChatController.home)
+app.post('/', AuthMiddleware.auth, ChatController.messagePost)
+app.get('/store', AuthMiddleware.auth, ChatController.store)
+app.get('/widget', AuthMiddleware.auth, ChatController.widget)
+app.get('/json', AuthMiddleware.auth, ChatController.messages)
 
 app.get('/reset', AuthMiddleware.auth, ChatController.reset)
 
