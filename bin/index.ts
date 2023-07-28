@@ -1,10 +1,15 @@
 #!/usr/bin/env node
 import yargs from 'yargs'
+import dotenv from 'dotenv'
 
 import Database from '../src/services/database.service'
 
 import User from '../src/models/user'
 import Message from '../src/models/message'
+
+// Enviorment variables
+dotenv.config()
+const { MAX_INACTIVE_TIME } = process.env
 
 yargs.scriptName('user')
 .usage('$0 <cmd> [args]')
@@ -55,7 +60,23 @@ yargs.scriptName('chat')
   await Database.connect()
   const ok = await Message.deleteMany()
   if (ok) console.log('Chats deleted')
-  else console.log('Could not delete chats')
+  else console.log('Could not delete all chats')
+  await Database.close()
+})
+.command('clean', 'deletes all inactive chats', async function (argv) {
+  await Database.connect()
+  const maxInactiveTime = Number(MAX_INACTIVE_TIME) || 7 * 24 * 60 * 60 * 1000
+  const limitDate = new Date(Date.now() - maxInactiveTime)
+  // Get the session ID's from messages older than the limit date
+  const oldSessionIds = await Message.find({ createdAt: { $lte: limitDate } }).select('sessionId').distinct('sessionId')
+  // Get the session ID's from messages newer than the limit date
+  const NewSessionIds = await Message.find({ createdAt: { $gt: limitDate } }).select('sessionId').distinct('sessionId')
+  // Get all the session ID's that do not have messages newer than the limit date
+  const toDeleteSessionIds = oldSessionIds.filter((sessionId) => !NewSessionIds.includes(sessionId))
+  // Delete all messages from sessions that have been inactive after the limit date
+  const ok = await Message.deleteMany({ sessionId: { $in: toDeleteSessionIds } })
+  if (ok) console.log('Old chats deleted')
+  else console.log('Could not delete old chats')
   await Database.close()
 })
 .help()
