@@ -1,10 +1,10 @@
 extends ../layouts/main.pug
 
 block scripts
-  script(src="/embed.js")
+  script(src="/embed.js" data-chat-id=chat.chatId)
 
 block content
   main.container
-    h1.title='Om Lab GPT | Store Demo'
+    h1.title=`Om Lab GPT | Demo - ${chat.name}`
     p="Lorem ipsum dolor, sit amet consectetur adipisicing elit. Earum recusandae optio obcaecati eum. Beatae reiciendis, amet dicta voluptatum nulla, animi fuga expedita aliquid reprehenderit dolores aut at provident. Eum, in?"
     p="Lorem ipsum dolor, sit amet consectetur adipisicing elit. Earum recusandae optio obcaecati eum. Beatae reiciendis, amet dicta voluptatum nulla, animi fuga expedita aliquid reprehenderit dolores aut at provident. Eum, in?"

@@ -15,7 +15,7 @@ block content
         ol.messages(js-messages)
         span.loader(js-loader)
           span.dots
-      form.form(action="/" method="POST" js-form)
+      form.form(action="/" method="POST" js-form data-chat-id=chatId)
         input.input(name="message", type="text" autocomplete="off" js-input)
         button.btn(type="submit")='Send'
         //- a.btn.btn--danger(href="/reset" js-reset-btn)='Reset'

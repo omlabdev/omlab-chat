@@ -9,6 +9,7 @@ import AdminController from './controllers/admin.controller'
 import UserController from './controllers/user.controller'
 import AuthMiddleware from './middleware/auth.middleware'
 import SessionMiddleware from './middleware/session.middleware'
+import ChatMiddleware from './middleware/chat.middleware'
 
 // Server
 const app = express()
@@ -46,16 +47,17 @@ app.get('/login', AuthMiddleware.noAuth ,UserController.signin)
 app.post('/login', AuthMiddleware.noAuth ,UserController.signinPost)
 
 // Chat
-app.get('/', AuthMiddleware.auth, ChatController.home)
-app.post('/', AuthMiddleware.auth, ChatController.messagePost)
-app.get('/store', AuthMiddleware.auth, ChatController.store)
-app.get('/widget', AuthMiddleware.auth, ChatController.widget)
-app.get('/json', AuthMiddleware.auth, ChatController.messages)
+app.get('/', ChatController.home)
+app.post('/', ChatController.messagePost)
+app.get('/store/:chatId', ChatController.store)
+app.get('/widget', ChatMiddleware.chatLimit, ChatController.widget)
+app.get('/json', ChatController.messages)
 
 app.get('/reset', AuthMiddleware.auth, ChatController.reset)
 
 // Admin
 app.get('/admin', AuthMiddleware.auth, AdminController.admin)
+app.get('/admin/:chatId', AuthMiddleware.auth, AdminController.adminChat)
 app.post('/admin', AuthMiddleware.auth, AdminController.messagePost)
 app.delete('/admin', AuthMiddleware.auth, AdminController.messageDelete)
 

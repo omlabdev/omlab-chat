@@ -1,4 +1,5 @@
 async function sendAdminMessage() {
+  const chatId = document.querySelector('[js-admin-chat-id]')?.value
   const inputElement = document.querySelector('[js-admin-input]')
   const role = document.querySelector('[js-admin-radio]:checked')?.value
   const messages = document.querySelector('[js-messages]')
@@ -6,7 +7,7 @@ async function sendAdminMessage() {
   setLoader(true)
   const input = inputElement.value
   inputElement.value = ''
-  const body = JSON.stringify({ message: input, role })
+  const body = JSON.stringify({ message: input, role, chatId })
   let message
   try {
     const response = await fetch('/admin', { method: 'post', headers: { 'content-type': 'application/json' }, body })
@@ -42,6 +43,10 @@ async function deleteMessage(messageId) {
   setLoader(false)
 }
 
+function selectChat(chatId) {
+  window.location = `/admin/${chatId}`
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   const inputElement = document.querySelector('[js-admin-input]')
   const form = document.querySelector('[js-admin-form]')
@@ -58,4 +63,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const messageId = deleteBtn.getAttribute('js-delete')
     deleteBtn.addEventListener('click', () => deleteMessage(messageId))
   })
+  const chatSelect = document.querySelector('[js-admin-chats-select]')
+  chatSelect?.addEventListener('change', () => selectChat(chatSelect.value))
 })

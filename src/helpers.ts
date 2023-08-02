@@ -44,10 +44,14 @@ function generateSessionId() {
   return randomBytes(32).toString('hex')
 }
 
+function generateChatId() {
+  return randomBytes(32).toString('hex')
+}
+
 function resetSessionId(res: Response, req: Request) {
   const sessionId = generateSessionId()
   const { id } = req.body.jwtPayload
   setToken({ id, sessionId }, res, req)
 }
 
-export { verifyJWT, setToken, unsetToken, generateSessionId, resetSessionId }
+export { verifyJWT, setToken, unsetToken, generateSessionId, resetSessionId, generateChatId }

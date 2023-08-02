@@ -4,8 +4,11 @@ import dotenv from 'dotenv'
 
 import Database from '../src/services/database.service'
 
+import { generateChatId } from '../src/helpers'
+
 import User from '../src/models/user'
 import Message from '../src/models/message'
+import chat from '../src/models/chat'
 
 // Enviorment variables
 dotenv.config()
@@ -46,7 +49,7 @@ yargs.scriptName('user')
 
 yargs.scriptName('chat')
 .usage('$0 <cmd> [args]')
-.command('delete <sessionId>', 'deletes a chat', (yargs) => {
+.command('delete <sessionId>', 'deletes a user chat', (yargs) => {
   yargs.positional('sessionId', { type: 'string', describe: 'the session ID for the chat' })
 }, async function (argv) {
   const { sessionId } = argv
@@ -56,9 +59,9 @@ yargs.scriptName('chat')
   else console.log('Could not delete chat')
   await Database.close()
 })
-.command('delete_all', 'deletes all chats', async function (argv) {
+.command('delete_all', 'deletes all user chats', async function (argv) {
   await Database.connect()
-  const ok = await Message.deleteMany()
+  const ok = await Message.deleteMany({ sessionId: { $ne: undefined } })
   if (ok) console.log('Chats deleted')
   else console.log('Could not delete all chats')
   await Database.close()
@@ -77,6 +80,17 @@ yargs.scriptName('chat')
   const ok = await Message.deleteMany({ sessionId: { $in: toDeleteSessionIds } })
   if (ok) console.log('Old chats deleted')
   else console.log('Could not delete old chats')
+  await Database.close()
+})
+.command('new <name>', 'creates a new chat ID', (yargs) => {
+  yargs.positional('name', { type: 'string', describe: 'the name for the new chat' })
+}, async function (argv) {
+  const { name } = argv
+  await Database.connect()
+  const chatId = generateChatId()
+  const ok = await chat.create({ name, chatId })
+  if (ok) console.log('New chat ID created', chatId)
+  else console.log('Could not create the new chat')
   await Database.close()
 })
 .help()

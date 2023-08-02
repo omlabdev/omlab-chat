@@ -1,9 +1,11 @@
+const omlabChatId = document.currentScript?.dataset.chatId
 window.addEventListener('DOMContentLoaded', () => {
+  if (!omlabChatId) return
   const styles = document.createElement('style')
   styles.innerText = '@media (max-width: 399px){.omlab-chat-iframe{height:100vh;width:100vw;}}'
   const iframe = document.createElement('iframe')
-  // iframe.src = '/widget'
-  iframe.src = 'https://chat.omlabdev.com/widget'
+  // iframe.src = `/widget?chatId=${omlabChatId}`
+  iframe.src = `https://chat.omlabdev.com/widget?chatId=${omlabChatId}`
   iframe.classList.add('omlab-chat-iframe')
   iframe.setAttribute('frameborder', '0')
   iframe.width = 72

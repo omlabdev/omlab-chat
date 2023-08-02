@@ -6,7 +6,11 @@ block scripts
 
 block content
   main.container.page-admin
-    h1.title='Om Lab GPT | Admin'
+    h1.title=`Om Lab GPT | ${title}`
+    select.chats-select(js-admin-chats-select)
+      option(value="" selected=(!chatId) autocomplete="off")="Select a chat"
+      each chat in chats
+        option(value=chat.chatId selected=(chatId === chat.chatId))=chat.name
     div.messages-wrapper(js-messages-wrapper)
       ol.messages(js-messages)
         each message in messages
@@ -15,6 +19,8 @@ block content
       span.loader(js-loader)
         span.dots
     form(action="./" method="POST" js-admin-form)
+      if chatId
+        input(type="hidden" value=chatId js-admin-chat-id)
       div.radio-group
         input#radio-system.radio-input(type="radio" name="role" value="system" checked js-admin-radio)
         label.radio-label(for="radio-system")

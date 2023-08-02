@@ -5,11 +5,11 @@ function enableLinks(text) {
   })
 }
 
-async function getAllMessages() {
+async function getAllMessages(chatId) {
   setLoader(true)
   let messages
   try {
-    const response = await fetch('/json', { method: 'get' })
+    const response = await fetch(`/json?chatId=${chatId}`, { method: 'get' })
     messages = await response.json()
   } catch (error) {
     messages = [{ role: 'error', content: 'There was an error processing your message, please try again' }]
@@ -47,7 +47,7 @@ function addMessage(message) {
   return messageElement
 }
 
-async function sendMessage() {
+async function sendMessage(chatId) {
   const inputElement = document.querySelector('[js-input]')
   const messages = document.querySelector('[js-messages]')
   if ((!inputElement) || (!messages)) return
@@ -56,7 +56,7 @@ async function sendMessage() {
   setLoader(true)
   inputElement.value = ''
   addMessage({ role: 'user', content: input })
-  const body = JSON.stringify({ message: input })
+  const body = JSON.stringify({ message: input, chatId })
   let message
   try {
     const response = await fetch('/', { method: 'post', headers: { 'content-type': 'application/json' }, body })

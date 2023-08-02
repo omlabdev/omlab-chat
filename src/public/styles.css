@@ -73,6 +73,12 @@ img {
   width: 100%;
 }
 
+.page-admin .messages-wrapper {
+  border: 1px solid #000;
+  border-bottom: 0;
+  border-top: 0;
+}
+
 .messages {
   display: flex;
   flex-direction: column;
@@ -234,8 +240,7 @@ img {
 }
 
 .radio-group {
-  border-bottom: 1px solid #000;
-  border-top: 1px solid #000;
+  border: 1px solid #000;
   display: flex;
   gap: 1px;
   margin: 0 auto;
@@ -255,6 +260,24 @@ img {
   text-align: center;
 }
 
+.radio-label:not(:last-child) {
+  border-right: 1px solid #000;
+}
+
 .radio-input:checked + .radio-label {
   background-color: var(--color-main);
+}
+
+.chats-select {
+  background-color: var(--color-grey);
+  border: 1px solid #000;
+  color: #fff;
+  cursor: pointer;
+  font-family: var(--font-family-text);
+  font-size: 1rem;
+  margin: 0 auto;
+  max-width: 800px;
+  padding: 1rem;
+  text-transform: capitalize;
+  width: 100%;
 }
