@@ -9,8 +9,8 @@ export default async function Admin() {
   const title = 'Admin'
 
   await Database.connect()
-  const chats: Chat[] = await chat.find()
-  
+  const chats: Chat[] = (await chat.find().exec()).map((chat) => ({ chatId: chat.chatId, name: chat.name }))
+
   return (
     <main className="container page-admin">
       <h1 className="title">

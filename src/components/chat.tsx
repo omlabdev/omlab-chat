@@ -22,10 +22,10 @@ export default function Chat({ chatId, onMessageReceived, admin }: ChatPropsType
   const [role, setRole] = useState<MessageRole>(admin ? 'system' : 'user')
 
   useEffect(() => {
-    if (!chatId) return
+    if ((!chatId) && (!admin)) return
     setLoading(true)
-    const getMessages = admin ? getAdminChatMessages : getChatMessages
-    getMessages(chatId).then(setMessages).catch(() => setMessages([errorMessage])).finally(() => setLoading(false))
+    const getMessages = admin ? getAdminChatMessages(chatId) : getChatMessages(chatId)
+    getMessages.then(setMessages).catch(() => setMessages([errorMessage])).finally(() => setLoading(false))
   }, [admin, chatId])
 
   useEffect(() => {

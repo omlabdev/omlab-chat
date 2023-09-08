@@ -8,7 +8,7 @@ import Database from '@/services/database.service'
 
 export async function GET(_: NextRequest) {
   await Database.connect()
-  const messages = await message.find({ chatId: undefined, sessionId: undefined })
+  const messages = await message.find({ chatId: undefined, sessionId: undefined }).exec()
   return NextResponse.json(messages)
 }
 

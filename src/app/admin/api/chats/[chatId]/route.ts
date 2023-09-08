@@ -6,7 +6,7 @@ import ChatService from '@/services/chat.service'
 
 export async function GET(_: NextRequest, { params }: { params: { chatId: string } }) {
   const { chatId } = params
-  const messages = await message.find({ chatId, sessionId: undefined })
+  const messages = await message.find({ chatId, sessionId: undefined }).exec()
   return NextResponse.json(messages)
 }
 

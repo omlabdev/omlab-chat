@@ -1,11 +1,11 @@
 import { OpenAI } from 'openai'
 
-import { MessageType } from '@/types'
-
 import Message from '@/models/message'
 import Chat from '@/models/chat'
 
 import Database from './database.service'
+
+type ChatCompletionMessage = OpenAI.Chat.Completions.ChatCompletionMessage
 
 // Load env variables
 const { OPENAI_API_KEY, MAX_CHATS } = process.env
@@ -13,11 +13,11 @@ const MAX_CHATS_NUMBER = Number(MAX_CHATS) || 1000
 
 class ChatService {
   private static instance: OpenAI | undefined
-  private static chats: Map<string, MessageType[]> = new Map()
-  private static adminMessages: MessageType[]
-  private static chatAdminMessages: Map<string, MessageType[]> = new Map()
-  private static sandwichMessages: MessageType[]
-  private static chatSandwichMessages: Map<string, MessageType[]> = new Map()
+  private static chats: Map<string, ChatCompletionMessage[]> = new Map()
+  private static adminMessages: ChatCompletionMessage[]
+  private static chatAdminMessages: Map<string, ChatCompletionMessage[]> = new Map()
+  private static sandwichMessages: ChatCompletionMessage[]
+  private static chatSandwichMessages: Map<string, ChatCompletionMessage[]> = new Map()
 
   constructor() {
     ChatService.instance = new OpenAI({ apiKey: OPENAI_API_KEY })
@@ -31,9 +31,9 @@ class ChatService {
 
   private static async refershAdminMessages(chatId?: string) {
     await Database.connect()
-    ChatService.adminMessages = (await Message.find({ chatId: undefined, sessionId: undefined, active: true, role: ['system', 'assistant'] })).map((adminMessage) => adminMessage.toMessage())
+    ChatService.adminMessages = (await Message.find({ chatId: undefined, sessionId: undefined, active: true, role: ['system', 'assistant'] }).exec()).map((adminMessage) => adminMessage.toMessage())
     if (chatId) {
-      ChatService.chatAdminMessages.set(chatId, (await Message.find({ chatId, sessionId: undefined, active: true, role: ['system', 'assistant'] })).map((adminMessage) => adminMessage.toMessage()))
+      ChatService.chatAdminMessages.set(chatId, (await Message.find({ chatId, sessionId: undefined, active: true, role: ['system', 'assistant'] }).exec()).map((adminMessage) => adminMessage.toMessage()))
     }
   }
 
@@ -45,9 +45,9 @@ class ChatService {
 
   private static async refershSandwichMessages(chatId?: string) {
     await Database.connect()
-    ChatService.sandwichMessages = (await Message.find({ active: true, role: 'sandwich' })).map((sandwichMessage) => sandwichMessage.toMessage())
+    ChatService.sandwichMessages = (await Message.find({ active: true, role: 'sandwich' }).exec()).map((sandwichMessage) => sandwichMessage.toMessage())
     if (chatId) {
-      ChatService.chatSandwichMessages.set(chatId, (await Message.find({ chatId, active: true, role: 'sandwich' })).map((sandwichMessage) => sandwichMessage.toMessage()))
+      ChatService.chatSandwichMessages.set(chatId, (await Message.find({ chatId, active: true, role: 'sandwich' }).exec()).map((sandwichMessage) => sandwichMessage.toMessage()))
     }
   }
 
@@ -59,16 +59,16 @@ class ChatService {
 
   private static async getAllMessages(chatId: string, sessionId: string) {
     await Database.connect()
-    return (await Message.find({ chatId, sessionId })).map((message) => message.toMessage())
+    return (await Message.find({ chatId, sessionId }).exec()).map((message) => message.toMessage())
     // Disable chat message caching for now
     // if (!this.chats.has(sessionId)) {
     //   const messages = (await Message.find({ sessionId })).map((message) => message.toMessage())
     //   ChatService.chats.set(sessionId, messages)
     // }
-    // return ChatService.chats.get(sessionId) as MessageType[]
+    // return ChatService.chats.get(sessionId) as ChatCompletionMessage[]
   }
 
-  private static async saveMessage(chatId: string, sessionId: string, message: MessageType) {
+  private static async saveMessage(chatId: string, sessionId: string, message: ChatCompletionMessage) {
     await Database.connect()
     const newMessage = await Message.create({ ...message, chatId, sessionId })
     await newMessage.save()
@@ -76,12 +76,12 @@ class ChatService {
 
   public static async chatExists(chatId: string) {
     await Database.connect()
-    return !!(await Chat.findOne({ chatId }))
+    return !!(await Chat.findOne({ chatId }).exec())
   }
 
   public static async activeChatLimitReached(chatId: string) {
     await Database.connect()
-    const currentChatCount = (await Message.find({ chatId }).distinct('sessionId')).length
+    const currentChatCount = (await Message.find({ chatId }).distinct('sessionId').exec()).length
     return (currentChatCount >= MAX_CHATS_NUMBER)
   }
 
@@ -94,14 +94,14 @@ class ChatService {
 
   public static async deleteAdminMessage(messageId: string) {
     await Database.connect()
-    const { acknowledged } = await Message.deleteOne({ _id: messageId })
+    const { acknowledged } = await Message.deleteOne({ _id: messageId }).exec()
     if (acknowledged) ChatService.refershAdminMessages()
     return acknowledged
   }
 
   public static async deleteChat(chatId: string, sessionId: string) {
     await Database.connect()
-    await Message.deleteMany({ chatId, sessionId })
+    await Message.deleteMany({ chatId, sessionId }).exec()
     // return ChatService.chats.delete(sessionId)
   }
 
@@ -117,7 +117,7 @@ class ChatService {
     const adminMessages = await ChatService.getAdminMessages(chatId)
     const sandwichMessages = await ChatService.getSandwichMessages(chatId)
     const chatMessages = await ChatService.getAllMessages(chatId, sessionId)
-    const message: MessageType = { role: 'user', content }
+    const message: ChatCompletionMessage = { role: 'user', content }
     ChatService.saveMessage(chatId, sessionId, message)
     chatMessages.push(message)
     const messages = adminMessages.concat([...chatMessages, ...sandwichMessages])

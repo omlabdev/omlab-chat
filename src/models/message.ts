@@ -30,7 +30,7 @@ const MessageSchema = new Schema<MessageBaseDocument, MessageModel>({
 }, { timestamps: true })
 
 export interface Message {
-  _id?: Types.ObjectId,
+  _id?: string,
   content: string
   active: boolean
   chatId: string
@@ -40,7 +40,7 @@ export interface Message {
 }
 
 interface MessageBaseDocument extends Message, Document {
-  _id: Types.ObjectId
+  _id: string
   toMessage(): OpenAI.Chat.Completions.ChatCompletionMessage
 }
 
