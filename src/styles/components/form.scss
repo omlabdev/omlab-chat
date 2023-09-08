@@ -1,0 +1,54 @@
+.form {
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  margin: 0 auto;
+  max-width: 800px;
+  width: 100%;
+}
+
+.page-admin .form {
+  display: flex;
+}
+
+.page-signin {
+  padding: 0 1rem;
+}
+
+.page-signin .form {
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+.label {
+  display: block;
+  font-size: 1.5rem;
+  margin-bottom: .5rem;
+}
+
+.input {
+  border: 0;
+  flex: 1;
+  font-size: 1.5rem;
+  padding: 1rem;
+  width: 100%;
+}
+
+.btn {
+  background-color: var(--color-main);
+  color: #fff;
+  cursor: pointer;
+  border: 0;
+  font-size: 1.5rem;
+  padding: 1rem;
+  text-align: center;
+  text-decoration: none;
+  transition: opacity .2s linear;
+}
+
+.btn:hover {
+  opacity: .9;
+}
+
+.btn--danger {
+  background-color: var(--color-error);
+}

@@ -1,0 +1,57 @@
+.messages-wrapper {
+  background-color: var(--color-grey);
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  margin: 0 auto;
+  max-width: 800px;
+  overflow: auto;
+  padding: 2rem;
+  width: 100%;
+}
+
+.page-admin .messages-wrapper {
+  border: 1px solid #000;
+  border-bottom: 0;
+  border-top: 0;
+}
+
+.messages {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.message {
+  background-color: var(--color-main);
+  border-radius: 1rem;
+  box-shadow: var(--shadow);
+  font-size: 1.25rem;
+  letter-spacing: .5;
+  padding: 1rem;
+  position: relative;
+  width: fit-content;
+}
+
+.page-admin .message {
+  padding-right: 2rem;
+}
+
+.message--user {
+  background-color: #fff;
+  color: #000;
+  justify-self: end;
+}
+
+.message--system {
+  background-color: #000;
+}
+
+
+.message--sandwich {
+  background-color: #00000055;
+}
+
+.message--error {
+  background-color: var(--color-error);
+}
