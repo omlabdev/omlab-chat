@@ -3,6 +3,7 @@
 import Image from 'next/image'
 
 import { useEffect, useState } from 'react'
+
 import '@/styles/widget.scss'
 
 import Chat from '@/components/chat'
@@ -14,17 +15,30 @@ export default function Widget({ searchParams }: { searchParams: { chatId: strin
   const [showBadge, setShowBadge] = useState(true)
 
   useEffect(() => {
-    if ((open) && (showBadge)) setShowBadge(false)
+    window.addEventListener('message', (message) => {
+      const { data } = message
+      if (data === 'omlab-chat/open') {
+        setOpen(true)
+      } else if (data === 'omlab-chat/close') {
+        setOpen(false)
+      }
+    })
+  }, [])
+  
+  useEffect(() => {
+    if (open) {
+      if (showBadge) setShowBadge(false)
+      window.top?.postMessage('omlab-chat/open', '*')
+    } else {
+      window.top?.postMessage('omlab-chat/close', '*')
+    }
   }, [open, showBadge])
 
   const { chatId } = searchParams
   if (!chatId) return null
 
   function toggleChat() {
-    setOpen((open) => {
-      if (!open) setShowBadge(false)
-      return !open
-    })
+    setOpen(!open)
   }
 
   function onMessageReceivedHandler() {
@@ -33,13 +47,10 @@ export default function Widget({ searchParams }: { searchParams: { chatId: strin
 
   return (
     <div className="widget">
-      <div className={`widget__chat-wrapper ${open ? 'show' : ''}`} aria-hidden="true">
-        <button type="button" className="widget__close-btn">
-          X
-        </button>
+      <div className={`widget__chat-wrapper ${open ? 'show' : ''}`} aria-hidden={!open}>
         <Chat chatId={chatId} onMessageReceived={onMessageReceivedHandler} />
       </div>
-      <button className={`widget__toggle-btn ${showBadge ? 'badge' : ''}`} aria-expanded="false" onClick={toggleChat}>
+      <button className={`widget__toggle-btn ${showBadge ? 'badge' : ''}`} aria-expanded={open} onClick={toggleChat}>
         <span className="widget__badge"></span>
         <Image className="widget__toggle-btn__img" src={chatImg} alt="Open chat" />
       </button>
