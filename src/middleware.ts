@@ -14,7 +14,6 @@ export default withAuth(function middleware(request: NextRequest) {
   {
     callbacks: {
       authorized: ({ req, token }) => (
-        true ||
         (token !== null) || (!req.nextUrl.pathname.startsWith('/admin'))
       ),
     },
