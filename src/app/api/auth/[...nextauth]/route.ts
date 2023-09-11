@@ -12,7 +12,7 @@ const adminEmails = ADMIN_EMAILS?.split(',')
 const client = new MongoClient(DB_DSN || '')
 const clientPromise = client.connect()
 
-export const authOptions: NextAuthOptions = {
+const authOptions: NextAuthOptions = {
   adapter: MongoDBAdapter(clientPromise),
   providers: [
     EmailProvider({
