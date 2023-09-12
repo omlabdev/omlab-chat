@@ -1,6 +1,8 @@
 .form {
+  background-color: var(--color-background);
   margin: 0 auto;
   max-width: 800px;
+  padding: 1rem;
   position: relative;
   width: 100%;
 }
@@ -26,9 +28,11 @@
 
 .input {
   border: 0;
+  border-radius: var(--border-radius);
   flex: 1;
   font-size: 1.5rem;
   padding: 1rem;
+  padding-right: 2.75rem;
   width: 100%;
 }
 
@@ -39,7 +43,7 @@
   bottom: 0;
   padding: 0 1rem;
   position: absolute;
-  right: 0rem;
+  right: 1rem;
   transition: opacity .2s linear;;
   top: 0;
 }

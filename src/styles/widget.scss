@@ -12,7 +12,7 @@ body {
 }
 
 .widget__chat-wrapper {
-  border-radius: .75rem;
+  border-radius: var(--border-radius);
   box-shadow: var(--shadow);
   display: flex;
   flex-direction: column;

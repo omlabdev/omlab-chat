@@ -43,11 +43,14 @@
 
 .message__content {
   background-color: var(--color-main);
-  border-radius: 1rem;
+  border-radius: var(--border-radius);
   box-shadow: var(--shadow);
   display: block;
   font-size: 1.25rem;
   letter-spacing: .5;
+  max-width: 100%;
+  text-overflow: ellipsis;
+  overflow: hidden;
   padding: 1rem;
   position: relative;
   width: fit-content;

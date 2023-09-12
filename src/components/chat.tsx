@@ -102,25 +102,23 @@ export default function Chat({ chat, onMessageReceived, admin }: ChatPropsType) 
         </ol>
         <Loader active={loading} />
       </div>
-      <form noValidate onSubmit={submit}>
-        {admin && (
-          <div className="radio-group">
-            {adminMessageRoles.map((messageRole, index) => (
-              <div className="radio-wrapper" key={index}>
-                <input className="radio-input" id={`radio-${messageRole.id}`} type="radio" checked={role === messageRole.id} onChange={() => setRole(messageRole.id)} />
-                <label className="radio-label" htmlFor={`radio-${messageRole.id}`}>
-                  {messageRole.label}
-                </label>
-              </div>
-            ))}
-          </div>
-        )}
-        <div className="form">
-          <input className="input" type="text" autoComplete="off" value={message} onKeyDown={handleKeyDown} onChange={(event) => setMessage(event.target.value)} />
-          <button className="btn" type="submit" disabled={message === ''}>
-            <Send color={chat?.colors?.main} />
-          </button>
+      {admin && (
+        <div className="radio-group">
+          {adminMessageRoles.map((messageRole, index) => (
+            <div className="radio-wrapper" key={index}>
+              <input className="radio-input" id={`radio-${messageRole.id}`} type="radio" checked={role === messageRole.id} onChange={() => setRole(messageRole.id)} />
+              <label className="radio-label" htmlFor={`radio-${messageRole.id}`}>
+                {messageRole.label}
+              </label>
+            </div>
+          ))}
         </div>
+      )}
+      <form className="form" noValidate onSubmit={submit}>
+        <input className="input" type="text" autoComplete="off" value={message} onKeyDown={handleKeyDown} onChange={(event) => setMessage(event.target.value)} />
+        <button className="btn" type="submit" disabled={message === ''}>
+          <Send color={chat?.colors?.main} />
+        </button>
       </form>
     </>
   )
