@@ -31,14 +31,15 @@ body {
 }
 
 .widget__chat {
-  background-color: #757575;
+  background-color: var(--color-background);
 }
 
 .widget__toggle-btn {
   align-self: end;
-  background-color: #543927;
+  background-color: var(--color-main);
   border: 0;
   border-radius: 50%;
+  box-shadow: var(--shadow);
   cursor: pointer;
   height: 4rem;
   margin-top: auto;
@@ -48,7 +49,7 @@ body {
 }
 
 .widget__badge {
-  background-color: brown;
+  background-color: var(--color-error);
   border-radius: 50%;
   height: 1rem;
   width: 1rem;
@@ -64,6 +65,10 @@ body {
 .widget__toggle-btn__img {
   display: block;
   width: 100%;
+}
+
+.widget__toggle-btn .widget__toggle-btn__close {
+  display: none;
 }
 
 @media (max-width: 399px) {
@@ -84,6 +89,8 @@ body {
 
   .widget__toggle-btn[aria-expanded="true"] {
     align-items: center;
+    background-color: transparent;
+    box-shadow: none;
     display: flex;
     height: 2rem;
     justify-content: center;
@@ -93,10 +100,8 @@ body {
     width: 2rem;
   }
 
-  .widget__toggle-btn[aria-expanded="true"]::after {
-    content: 'X';
-    color: #fff;
-    font-size: 1.125rem;
+  .widget__toggle-btn[aria-expanded="true"] .widget__toggle-btn__close {
+    display: block;
   }
 
   .widget__toggle-btn[aria-expanded="true"] .widget__toggle-btn__img {

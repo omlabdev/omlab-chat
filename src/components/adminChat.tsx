@@ -8,12 +8,16 @@ import Chat from './chat'
 import ChatSelect from './chatSelect'
 
 export default function AdminChat({ chats }: { chats: ChatInterface[] }) {
-  const [chatId, setChatId] = useState<string>('')
+  const [chat, setChat] = useState<ChatInterface | undefined>(undefined)
+
+  function selectChat(chatId: string) {
+    setChat(chats.find((chat) => chat.chatId === chatId))
+  }
 
   return (
     <>
-      <ChatSelect chats={chats} value={chatId} onChange={(event) => setChatId(event.target.value)} />
-      <Chat chatId={chatId} admin={true} />
+      <ChatSelect chats={chats} value={chat?.chatId} onChange={(event) => selectChat(event.target.value)} />
+      <Chat chat={chat} admin={true} />
     </>
   )
 }

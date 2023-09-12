@@ -6,11 +6,18 @@ import { useEffect, useState } from 'react'
 
 import '@/styles/widget.scss'
 
+import { getChat } from '@/api'
+
+import { Chat as ChatInterface } from '@/models/chat'
+
 import Chat from '@/components/chat'
 
 import chatImg from '../../../public/imgs/chat.svg'
+import Close from '@/components/icons/close'
 
 export default function Widget({ searchParams }: { searchParams: { chatId: string } }) {
+  const { chatId } = searchParams
+  const [chat, setChat] = useState<ChatInterface | undefined>(undefined)
   const [open, setOpen] = useState(false)
   const [showBadge, setShowBadge] = useState(true)
 
@@ -23,7 +30,8 @@ export default function Widget({ searchParams }: { searchParams: { chatId: strin
         setOpen(false)
       }
     })
-  }, [])
+    getChat(chatId).then(setChat)
+  }, [chatId])
   
   useEffect(() => {
     if (open) {
@@ -34,7 +42,6 @@ export default function Widget({ searchParams }: { searchParams: { chatId: strin
     }
   }, [open, showBadge])
 
-  const { chatId } = searchParams
   if (!chatId) return null
 
   function toggleChat() {
@@ -45,14 +52,22 @@ export default function Widget({ searchParams }: { searchParams: { chatId: strin
     setShowBadge(true)
   }
 
+  if (!chat) return null
+
   return (
     <div className="widget">
+      {chat.colors?.main && (<style>{`:root{--color-main:${chat.colors.main}}`}</style>)}
+      {chat.colors?.background && (<style>{`:root{--color-background:${chat.colors.background}}`}</style>)}
+      {chat.font && (<style>{`:root{--font-family-text:${chat.font}}`}</style>)}
       <div className={`widget__chat-wrapper ${open ? 'show' : ''}`} aria-hidden={!open}>
-        <Chat chatId={chatId} onMessageReceived={onMessageReceivedHandler} />
+        <Chat chat={chat} onMessageReceived={onMessageReceivedHandler} />
       </div>
       <button className={`widget__toggle-btn ${showBadge ? 'badge' : ''}`} aria-expanded={open} onClick={toggleChat}>
         <span className="widget__badge"></span>
         <Image className="widget__toggle-btn__img" src={chatImg} alt="Open chat" />
+        <span className="widget__toggle-btn__close">
+          <Close color={chat.colors?.main} />
+        </span>
       </button>
     </div>
   )

@@ -1,8 +1,8 @@
-import { Chat } from './models/chat'
+import { Chat as ChatInterface } from './models/chat'
 
 import { MessageType } from './types'
 
-export async function getChat(chatId: string): Promise<Chat[]> {
+export async function getChat(chatId: string): Promise<ChatInterface> {
   const response = await fetch(`/api/chats/${chatId}`, { cache: 'no-cache' })
   if ((response.status < 200) || (response.status >= 300)) throw response
   const chat = await response.json()

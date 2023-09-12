@@ -9,6 +9,8 @@ const ChatSchema = new Schema<ChatBaseDocument, ChatModel>({
     index: true,
   },
   avatar: String,
+  font: String,
+  colors: Schema.Types.Mixed,
   chatId: {
     type: String,
     required: true,
@@ -19,6 +21,8 @@ const ChatSchema = new Schema<ChatBaseDocument, ChatModel>({
 export interface Chat {
   name: string
   avatar: string
+  font: string
+  colors: { main?: string, background?: string }
   chatId: string
 }
 

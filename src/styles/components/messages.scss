@@ -1,5 +1,5 @@
 .messages-wrapper {
-  background-color: var(--color-grey);
+  background-color: var(--color-background);
   display: flex;
   flex: 1;
   flex-direction: column;
@@ -23,35 +23,55 @@
 }
 
 .message {
+  align-items: flex-start;
+  display: flex;
+  gap: .5rem;
+  position: relative;
+}
+
+.message__img-wrapper {
+  align-items: center;
+  background-color: var(--color-main);
+  border-radius: 50%;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-shrink: 0;
+  height: 2rem;
+  justify-content: center;
+  padding: .5rem;
+  width: 2rem;
+}
+
+.message__content {
   background-color: var(--color-main);
   border-radius: 1rem;
   box-shadow: var(--shadow);
+  display: block;
   font-size: 1.25rem;
   letter-spacing: .5;
   padding: 1rem;
-  position: relative;
   width: fit-content;
 }
 
-.page-admin .message {
+.page-admin .message__content {
   padding-right: 2rem;
 }
 
-.message--user {
+.message--user .message__content {
   background-color: #fff;
   color: #000;
   justify-self: end;
 }
 
-.message--system {
+.message--system .message__content {
   background-color: #000;
 }
 
 
-.message--sandwich {
+.message--sandwich .message__content {
   background-color: #00000055;
 }
 
-.message--error {
+.message--error .message__content {
   background-color: var(--color-error);
 }
