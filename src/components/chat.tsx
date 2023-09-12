@@ -77,7 +77,10 @@ export default function Chat({ chatId, onMessageReceived, admin }: ChatPropsType
         <ol className="messages">
           {messages.map((message, index) => (
             <li key={index} className={`message message--${message.role}`}>
-              {message.content}
+              {/* {((message.role !== 'user') && (chat.))} */}
+              <span className="message__content">
+                {message.content}
+              </span>
               {admin && (<button className="delete-btn" type="button" onClick={() => handleAdminMessageDelete(message._id!)}>X</button>)}
             </li>
           ))}

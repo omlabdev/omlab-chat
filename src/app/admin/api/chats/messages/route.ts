@@ -5,6 +5,7 @@ import message from '@/models/message'
 import ChatService from '@/services/chat.service'
 import Database from '@/services/database.service'
 
+export const dynamic = 'force-dynamic' // Don't pre-render this GET method
 
 export async function GET(_: NextRequest) {
   await Database.connect()
@@ -17,11 +18,4 @@ export async function POST(request: NextRequest) {
   if ((!message) || (!role)) return NextResponse.json({}, { status: 400 })
   const response = await ChatService.addAdminMessage(role, message)
   return NextResponse.json(response)
-}
-
-export async function DELETE(request: NextRequest) {
-  const { messageId } = await request.json()
-  if (!messageId) return NextResponse.json({}, { status: 400 })
-  const success = await ChatService.deleteAdminMessage(messageId)
-  return NextResponse.json({ success }, { status: 200 })
 }

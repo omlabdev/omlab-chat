@@ -1,34 +1,31 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Om Lab GPT
 
-## Getting Started
+## Endpoints
 
-First, run the development server:
+### /api/chats/[chatId]
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+- GET: Get a chat (just the chat, not its messages)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### /api/chats/[chatId]/messages
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+All these endpoints require a `SessionId` cookie to be set on the request.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- GET: Get all the messages of a given chat and Session
+- POST: Post a new message to a given chat and Session
+- DELETE: Delete all messages for a given chat and Session
 
-## Learn More
+## Admin endpoints
 
-To learn more about Next.js, take a look at the following resources:
+### /admin/api/chats/messages
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- GET: Get all the general system messages (system messages that do not belong to a specific chat)
+- POST: Post a new general system message (a system message that does not belong to a specific chat)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+### /admin/api/chats/messages/[messageId]
 
-## Deploy on Vercel
+- DELETE: Delete a general system message (a system message that does not belong to a specific chat)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### /admin/api/chats/[chatId]/messages
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- GET: Get all the system messages for a given chat
+- POST: Post a new system message to a given chat

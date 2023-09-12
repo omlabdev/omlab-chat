@@ -12,7 +12,7 @@ export default function AdminChat({ chats }: { chats: ChatInterface[] }) {
 
   return (
     <>
-      <ChatSelect chats={chats} onChange={(event) => setChatId(event.target.value)} />
+      <ChatSelect chats={chats} value={chatId} onChange={(event) => setChatId(event.target.value)} />
       <Chat chatId={chatId} admin={true} />
     </>
   )
