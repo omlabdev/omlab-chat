@@ -1,7 +1,6 @@
 import Database from '@/services/database.service'
 
-import chat, { Chat } from '@/models/chat'
-
+import Chat, { Chat as ChatInterface } from '@/models/chat'
 
 import AdminChat from '@/components/adminChat'
 
@@ -9,7 +8,7 @@ export default async function Admin() {
   const title = 'Admin'
 
   await Database.connect()
-  const chats: Chat[] = (await chat.find().exec()).map((chat) => ({ chatId: chat.chatId, name: chat.name }))
+  const chats: ChatInterface[] = await Chat.find().select('-_id').lean<ChatInterface[]>().exec()
 
   return (
     <main className="container page-admin">

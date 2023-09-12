@@ -8,6 +8,7 @@ const ChatSchema = new Schema<ChatBaseDocument, ChatModel>({
     unique: true,
     index: true,
   },
+  avatar: String,
   chatId: {
     type: String,
     required: true,
@@ -17,6 +18,7 @@ const ChatSchema = new Schema<ChatBaseDocument, ChatModel>({
 
 export interface Chat {
   name: string
+  avatar: string
   chatId: string
 }
 

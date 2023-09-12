@@ -1,11 +1,18 @@
 import Script from 'next/script'
 
-export default function Store() {
-  const chat = { name: 'NAME' }
+import Database from '@/services/database.service'
+
+import Chat, { Chat as ChatInteface } from '@/models/chat'
+
+export default async function Store() {
+  await Database.connect()
+  const chat = await Chat.findOne().lean<ChatInteface>().exec()
+
+  if (!chat) return null
   
   return (
     <main className="container">
-      <Script src="/embed.js" data-chat-id="b9f3c19e140223f86da61d8cbb06ce5f1c48d79e0afa99f2b3814b3be3c76ff7" />
+      <Script src="/embed.js" data-chat-id={chat.chatId} />
       <h1 className="title">
         Om Lab GPT | Demo - {chat.name}
       </h1>
