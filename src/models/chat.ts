@@ -20,9 +20,9 @@ const ChatSchema = new Schema<ChatBaseDocument, ChatModel>({
 
 export interface Chat {
   name: string
-  avatar: string
-  font: string
-  colors: { main?: string, background?: string }
+  avatar?: string
+  font?: string
+  colors?: { main?: string, background?: string }
   chatId: string
 }
 
