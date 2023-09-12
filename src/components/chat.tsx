@@ -13,6 +13,7 @@ import { deleteAdminChatMessage, getAdminChatMessages, getChatMessages, sendAdmi
 import Loader from './loader'
 
 import Send from './icons/send'
+import Close from './icons/close'
 
 const errorMessage: MessageType = { role: 'error', content: 'There was an error processing your message, please try again' }
 
@@ -83,15 +84,19 @@ export default function Chat({ chat, onMessageReceived, admin }: ChatPropsType) 
         <ol className="messages">
           {messages.map((message, index) => (
             <li key={index} className={`message message--${message.role}`}>
-              {(message.role !== 'user') && (chat?.avatar) && (
+              {(!admin) && (message.role === 'assistant') && (chat?.avatar) && (
                 <span className="message__img-wrapper">
                   <Image className="message__img" src={chat.avatar} alt="" height={20} width={20} />
                 </span>
               )}
-              <span className="message__content">
+              <div className="message__content">
                 {message.content}
-              </span>
-              {admin && (<button className="delete-btn" type="button" onClick={() => handleAdminMessageDelete(message._id!)}>X</button>)}
+                {admin && (
+                  <button className="delete-btn" type="button" onClick={() => handleAdminMessageDelete(message._id!)}>
+                    <Close color="#fff" />
+                  </button>
+                )}
+              </div>
             </li>
           ))}
         </ol>

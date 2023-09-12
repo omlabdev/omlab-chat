@@ -26,7 +26,6 @@
   align-items: flex-start;
   display: flex;
   gap: .5rem;
-  position: relative;
 }
 
 .message__img-wrapper {
@@ -50,11 +49,12 @@
   font-size: 1.25rem;
   letter-spacing: .5;
   padding: 1rem;
+  position: relative;
   width: fit-content;
 }
 
 .page-admin .message__content {
-  padding-right: 2rem;
+  padding-right: 2.5rem;
 }
 
 .message--user .message__content {

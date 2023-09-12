@@ -11,17 +11,19 @@ export default async function Store() {
   if (!chat) return null
   
   return (
-    <main className="container">
-      <Script src="/embed.js" data-chat-id={chat.chatId} />
-      <h1 className="title">
-        Om Lab GPT | Demo - {chat.name}
-      </h1>
-      <p>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus, corrupti laborum? Est, quasi at quos sequi vel, aliquid hic ad iste maiores provident necessitatibus harum autem eveniet ratione repellat explicabo?
-      </p>
-      <p>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus, corrupti laborum? Est, quasi at quos sequi vel, aliquid hic ad iste maiores provident necessitatibus harum autem eveniet ratione repellat explicabo?
-      </p>
+    <main className="store">
+      <div className="container">
+        <Script src="/embed.js" data-chat-id={chat.chatId} />
+        <h1 className="title">
+          Om Lab GPT | Demo - {chat.name}
+        </h1>
+        <p>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus, corrupti laborum? Est, quasi at quos sequi vel, aliquid hic ad iste maiores provident necessitatibus harum autem eveniet ratione repellat explicabo?
+        </p>
+        <p>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus, corrupti laborum? Est, quasi at quos sequi vel, aliquid hic ad iste maiores provident necessitatibus harum autem eveniet ratione repellat explicabo?
+        </p>
+      </div>
     </main>
   )
 }
