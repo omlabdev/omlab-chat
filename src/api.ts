@@ -24,6 +24,15 @@ export async function sendChatMessage(message: string, chatId: string): Promise<
   return responseMessage
 }
 
+// Admin requests
+
+export async function getChats(): Promise<ChatInterface[]> {
+  const response = await fetch('/admin/api/chats', { cache: 'no-cache' })
+  if ((response.status < 200) || (response.status >= 300)) throw response
+  const chats = await response.json()
+  return chats
+}
+
 export async function getAdminChatMessages(chatId?: string): Promise<MessageType[]> {
   const endpoint = chatId ? `/admin/api/chats/${chatId}/messages` : `/admin/api/chats/messages`
   const response = await fetch(endpoint, { cache: 'no-cache' })
@@ -34,7 +43,7 @@ export async function getAdminChatMessages(chatId?: string): Promise<MessageType
 
 export async function sendAdminChatMessage(message: string, role: string, chatId?: string): Promise<MessageType> {
   const body = JSON.stringify({ message, role })
-  const endpoint = chatId ? `/admin/api/chats/${chatId}/messages` : `/admin/api/chats/messages`
+  const endpoint = chatId ? `/admin/api/chats/${chatId}/messages` : '/admin/api/chats/messages'
   const response = await fetch(endpoint, { method: 'POST', body })
   if ((response.status < 200) || (response.status >= 300)) throw response
   const responseMessage = await response.json()

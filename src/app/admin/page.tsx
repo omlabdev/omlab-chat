@@ -1,14 +1,20 @@
-import Database from '@/services/database.service'
+'use client'
 
-import Chat, { Chat as ChatInterface } from '@/models/chat'
+import { useEffect, useState } from 'react'
+
+import { Chat as ChatInterface } from '@/models/chat'
+
+import { getChats } from '@/api'
 
 import AdminChat from '@/components/adminChat'
 
-export default async function Admin() {
+export default function Admin() {
+  const [chats, setChats] = useState<ChatInterface[]>([])
   const title = 'Admin'
 
-  await Database.connect()
-  const chats: ChatInterface[] = await Chat.find().select('-_id').lean<ChatInterface[]>().exec()
+  useEffect(() => {
+    getChats().then(setChats)
+  }, [])
 
   return (
     <main className="container page-admin">
