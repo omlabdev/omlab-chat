@@ -1,0 +1,12 @@
+.config {
+  background-color: var(--color-background);
+  border-radius: var(--border-radius);
+  color: #000;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  margin: 0 auto;
+  max-width: 800px;
+  padding: 2rem;
+  width: 100%;
+}

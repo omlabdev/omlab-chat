@@ -1,3 +1,10 @@
+.admin {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+
 .delete-btn {
   border: 0;
   background-color: transparent;
@@ -9,20 +16,16 @@
 }
 
 .radio-group {
-  border: 1px solid #000;
   display: flex;
-  gap: 1px;
+  gap: .5rem;
   margin: 0 auto;
   max-width: 800px;
+  padding: 0 1rem;
   width: 100%;
 }
 
 .radio-wrapper {
   flex: 1;
-}
-
-.radio-wrapper:not(:last-child) {
-  border-right: 1px solid #000;
 }
 
 .radio-input {
@@ -31,15 +34,22 @@
 
 .radio-label {
   background-color: var(--color-grey);
+  border-top-left-radius: var(--border-radius);
+  border-top-right-radius: var(--border-radius);
+  color: #000;
   cursor: pointer;
   display: block;
-  padding: 1rem;
+  padding: .5rem 1rem;
   text-align: center;
   width: 100%;
 }
 
 .radio-input:checked + .radio-label {
-  background-color: var(--color-main);
+  background-color: #fff;
+}
+
+.radio-input:checked + .radio-label.theme {
+  background-color: var(--color-background);
 }
 
 .chats-select {
@@ -54,4 +64,8 @@
   padding: 1rem;
   text-transform: capitalize;
   width: 100%;
+}
+
+.page-admin .message__content {
+  padding-right: 2.5rem;
 }

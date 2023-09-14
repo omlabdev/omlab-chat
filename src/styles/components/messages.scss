@@ -1,5 +1,13 @@
+.chat {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
 .messages-wrapper {
   background-color: var(--color-background);
+  border-top-left-radius: var(--border-radius);
+  border-top-right-radius: var(--border-radius);
   display: flex;
   flex: 1;
   flex-direction: column;
@@ -8,12 +16,6 @@
   overflow: auto;
   padding: 2rem;
   width: 100%;
-}
-
-.page-admin .messages-wrapper {
-  border: 1px solid #000;
-  border-bottom: 0;
-  border-top: 0;
 }
 
 .messages {
@@ -54,10 +56,6 @@
   padding: 1rem;
   position: relative;
   width: fit-content;
-}
-
-.page-admin .message__content {
-  padding-right: 2.5rem;
 }
 
 .message--user .message__content {

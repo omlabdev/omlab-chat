@@ -1,14 +1,12 @@
 .form {
   background-color: var(--color-background);
+  border-bottom-left-radius: var(--border-radius);
+  border-bottom-right-radius: var(--border-radius);
   margin: 0 auto;
   max-width: 800px;
   padding: 1rem;
   position: relative;
   width: 100%;
-}
-
-.page-admin .form {
-  display: flex;
 }
 
 .page-signin {
@@ -24,6 +22,10 @@
   display: block;
   font-size: 1.5rem;
   margin-bottom: .5rem;
+}
+
+.input-wrapper {
+  position: relative;
 }
 
 .input {
@@ -43,7 +45,7 @@
   bottom: 0;
   padding: 0 1rem;
   position: absolute;
-  right: 1rem;
+  right: 0;
   transition: opacity .2s linear;;
   top: 0;
 }

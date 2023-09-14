@@ -79,12 +79,12 @@ export default function Chat({ chat, onMessageReceived, admin }: ChatPropsType) 
   }
 
   return (
-    <>
+    <div className="chat theme">
       <div className="messages-wrapper" ref={messagesWrapper}>
         <ol className="messages">
           {messages.map((message, index) => (
             <li key={index} className={`message message--${message.role}`}>
-              {(!admin) && (message.role === 'assistant') && (chat?.avatar) && (
+              {(message.role === 'assistant') && (chat?.avatar) && (
                 <span className="message__img-wrapper">
                   <Image className="message__img" src={chat.avatar} alt="" height={20} width={20} />
                 </span>
@@ -102,24 +102,26 @@ export default function Chat({ chat, onMessageReceived, admin }: ChatPropsType) 
         </ol>
         <Loader active={loading} />
       </div>
-      {admin && (
-        <div className="radio-group">
-          {adminMessageRoles.map((messageRole, index) => (
-            <div className="radio-wrapper" key={index}>
-              <input className="radio-input" id={`radio-${messageRole.id}`} type="radio" checked={role === messageRole.id} onChange={() => setRole(messageRole.id)} />
-              <label className="radio-label" htmlFor={`radio-${messageRole.id}`}>
-                {messageRole.label}
-              </label>
-            </div>
-          ))}
-        </div>
-      )}
       <form className="form" noValidate onSubmit={submit}>
-        <input className="input" type="text" autoComplete="off" value={message} onKeyDown={handleKeyDown} onChange={(event) => setMessage(event.target.value)} />
-        <button className="btn" type="submit" disabled={message === ''}>
-          <Send color={chat?.colors?.main} />
-        </button>
+        {admin && (
+          <div className="radio-group">
+            {adminMessageRoles.map((messageRole, index) => (
+              <div className="radio-wrapper" key={index}>
+                <input className="radio-input" id={`radio-${messageRole.id}`} type="radio" checked={role === messageRole.id} onChange={() => setRole(messageRole.id)} />
+                <label className="radio-label" htmlFor={`radio-${messageRole.id}`}>
+                  {messageRole.label}
+                </label>
+              </div>
+            ))}
+          </div>
+        )}
+        <div className="input-wrapper">
+          <input className="input" type="text" autoComplete="off" value={message} onKeyDown={handleKeyDown} onChange={(event) => setMessage(event.target.value)} />
+          <button className="btn" type="submit" disabled={message === ''}>
+            <Send color={chat?.colors?.main} />
+          </button>
+        </div>
       </form>
-    </>
+    </div>
   )
 }

@@ -14,6 +14,7 @@ import Chat from '@/components/chat'
 
 import chatImg from '../../../public/imgs/chat.svg'
 import Close from '@/components/icons/close'
+import Theme from '@/components/theme'
 
 export default function Widget({ searchParams }: { searchParams: { chatId: string } }) {
   const { chatId } = searchParams
@@ -55,10 +56,8 @@ export default function Widget({ searchParams }: { searchParams: { chatId: strin
   if (!chat) return null
 
   return (
-    <div className="widget">
-      {chat.colors?.main && (<style>{`:root{--color-main:${chat.colors.main}}`}</style>)}
-      {chat.colors?.background && (<style>{`:root{--color-background:${chat.colors.background}}`}</style>)}
-      {chat.font && (<style>{`:root{--font-family-text:${chat.font}}`}</style>)}
+    <div className="widget theme">
+      <Theme chat={chat} />
       <div className={`widget__chat-wrapper ${open ? 'show' : ''}`} aria-hidden={!open}>
         <Chat chat={chat} onMessageReceived={onMessageReceivedHandler} />
       </div>
