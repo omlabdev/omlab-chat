@@ -3,6 +3,7 @@
   flex: 1;
   flex-direction: column;
   margin-bottom: 1rem;
+  padding: 0 1rem;
 }
 
 .delete-btn {
@@ -50,6 +51,10 @@
 
 .radio-input:checked + .radio-label.theme {
   background-color: var(--color-background);
+}
+
+.radio-group--admin .radio-wrapper:last-child .radio-input:checked + .radio-label.theme {
+  background-color: var(--color-grey-light);
 }
 
 .chats-select {

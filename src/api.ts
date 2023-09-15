@@ -1,6 +1,6 @@
 import { Chat as ChatInterface } from './models/chat'
 
-import { MessageType } from './types'
+import { ChatUpdateValues, MessageType } from './types'
 
 export async function getChat(chatId: string): Promise<ChatInterface> {
   const response = await fetch(`/api/chats/${chatId}`, { cache: 'no-cache' })
@@ -28,6 +28,15 @@ export async function sendChatMessage(message: string, chatId: string): Promise<
 
 export async function getChats(): Promise<ChatInterface[]> {
   const response = await fetch('/admin/api/chats', { cache: 'no-cache' })
+  if ((response.status < 200) || (response.status >= 300)) throw response
+  const chats = await response.json()
+  return chats
+}
+
+
+export async function updateChat(chatId: string, data: ChatUpdateValues): Promise<{ success: boolean }> {
+  const body = JSON.stringify(data)
+  const response = await fetch(`/admin/api/chats/${chatId}`, { method: 'POST', body, cache: 'no-cache' })
   if ((response.status < 200) || (response.status >= 300)) throw response
   const chats = await response.json()
   return chats

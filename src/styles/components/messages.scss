@@ -2,6 +2,7 @@
   display: flex;
   flex: 1;
   flex-direction: column;
+  height: 100%;
 }
 
 .messages-wrapper {
@@ -25,7 +26,7 @@
 }
 
 .message {
-  align-items: flex-start;
+  align-items: flex-end;
   display: flex;
   gap: .5rem;
 }
@@ -45,23 +46,31 @@
 
 .message__content {
   background-color: var(--color-main);
-  border-radius: var(--border-radius);
+  border-radius: 1.5rem;
   box-shadow: var(--shadow);
   display: block;
-  font-size: 1.25rem;
+  font-size: 1rem;
   letter-spacing: .5;
   max-width: 100%;
   text-overflow: ellipsis;
   overflow: hidden;
-  padding: 1rem;
+  padding: 1rem 2rem;
   position: relative;
   width: fit-content;
 }
 
+.message--user {
+  justify-content: flex-end;
+}
+
 .message--user .message__content {
-  background-color: #fff;
+  background-color: var(--color-grey-light);
+  border-top-right-radius: 0;
   color: #000;
-  justify-self: end;
+}
+
+.message--assistant .message__content {
+  border-bottom-left-radius: 0;
 }
 
 .message--system .message__content {
