@@ -1,6 +1,6 @@
 import { Chat as ChatInterface } from './models/chat'
 
-import { ChatUpdateValues, MessageType } from './types'
+import { ChatUpdateValues, MediaImage, MessageType } from './types'
 
 export async function getChat(chatId: string): Promise<ChatInterface> {
   const response = await fetch(`/api/chats/${chatId}`, { cache: 'no-cache' })
@@ -64,4 +64,16 @@ export async function deleteAdminChatMessage(messageId: string): Promise<{ succe
   if ((response.status < 200) || (response.status >= 300)) throw response
   const responseMessage = await response.json()
   return responseMessage
+}
+
+export async function getImages(): Promise<MediaImage[]> {
+  const response = await fetch('/admin/api/images')
+  return await response.json()
+}
+
+export async function deleteImage(key: string): Promise<{ success: boolean }> {
+  const headers = { 'Content-Type': 'application/json' }
+  const body = JSON.stringify({ key })
+  const response = await fetch('/admin/api/images', { method: 'DELETE', headers, body })
+  return await response.json()
 }

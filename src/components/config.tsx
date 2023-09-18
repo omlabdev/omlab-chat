@@ -2,18 +2,25 @@ import Image from 'next/image'
 
 import { FormEvent, useEffect, useState } from 'react'
 
-import { ChatUpdateValues } from '@/types'
+import { ChatUpdateValues, MediaImage } from '@/types'
 
 import { Chat } from '@/models/chat'
 
+import { getImageUrl } from '@/helpers'
+
+import { updateChat } from '@/api'
+
 import Theme from './theme'
+import Modal from './modal'
+import MediaGallery from './mediaGallery'
 
 import Copy from './icons/copy'
-import { updateChat } from '@/api'
+import Close from './icons/close'
 
 declare type ValuesKeys = keyof ChatUpdateValues
 
 export default function Config({ chat }: { chat?: Chat }) {
+  const [mediaModalOpen, setMediaModalOpen] = useState(false)
   const [values, setValues] = useState<ChatUpdateValues>({ name: '', font: '', background: '', accent: '', avatar: '' })
   const [confirmation, setConfirmation] = useState(false)
 
@@ -32,6 +39,12 @@ export default function Config({ chat }: { chat?: Chat }) {
 
   function setValue(key: ValuesKeys, value: string) {
     setValues((currentValues) => ({ ...currentValues, [key]: value }))
+  }
+
+  function onImageSelected(image: MediaImage) {
+    const url = getImageUrl(image)
+    setValue('avatar', url)
+    setMediaModalOpen(false)
   }
 
   async function submit(event: FormEvent<HTMLFormElement>) {
@@ -78,12 +91,12 @@ export default function Config({ chat }: { chat?: Chat }) {
             Avatar
           </label>
           <div className="form-image-input-wrapper">
-            <div className="form-image-frame">
+            <button type="button" className="form-image-frame" onClick={() => setMediaModalOpen(true)}>
               <div className="form-image-wrapper">
                 {(values.avatar) && (<Image className="form-image" src={values.avatar} height={100} width={100} alt="" />)}
+                {(!values.avatar) && ('Select an image')}
               </div>
-            </div>
-            <input type="file" className="form-input" id="avatar" onChange={(event) => setValue('avatar', event.target.value)} />
+            </button>
           </div>
         </div>
         <div>
@@ -108,6 +121,21 @@ export default function Config({ chat }: { chat?: Chat }) {
           </button>
         </div>
       </form>
+
+      <Modal open={mediaModalOpen} onCloseHandler={() => setMediaModalOpen(false)}>
+        <div className="media-gallery-header">
+          <h2 className="media-gallery-title">
+            Image Gallery
+          </h2>
+          <p className="media-gallery-subtitle">
+            Select an image
+          </p>
+          <button type="button" className="media-gallery-close" title="Close" onClick={() => setMediaModalOpen(false)}>
+            <Close />
+          </button>
+        </div>
+        <MediaGallery onImageSelected={onImageSelected} />
+      </Modal>
     </div>
   )
 }

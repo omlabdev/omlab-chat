@@ -14,7 +14,11 @@ export default withAuth(function middleware(request: NextRequest) {
   {
     callbacks: {
       authorized: ({ req, token }) => (
-        (token !== null) || (!req.nextUrl.pathname.startsWith('/admin'))
+        (token !== null) ||
+        (
+          (!req.nextUrl.pathname.startsWith('/admin')) &&
+          (!req.nextUrl.pathname.startsWith('/api/uploadthing'))
+        )
       ),
     },
   }

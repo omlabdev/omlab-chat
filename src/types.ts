@@ -4,3 +4,5 @@ export type MessageRole = OpenAI.Chat.Completions.ChatCompletionMessage['role'] 
 export type MessageType = { _id?: string, role: MessageRole, content: string }
 
 export type ChatUpdateValues = { name: string, font?: string, background?: string, accent?: string, avatar?: string }
+
+export type MediaImage = { key: string, id: string }

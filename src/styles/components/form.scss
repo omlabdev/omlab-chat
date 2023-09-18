@@ -121,7 +121,9 @@
 .form-image-frame {
   align-items: center;
   background-color: var(--color-main);
+  border: 0;
   border-radius: 50%;
+  cursor: pointer;
   display: flex;
   justify-content: center;
   position: relative;
