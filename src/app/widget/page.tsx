@@ -11,10 +11,11 @@ import { getChat } from '@/api'
 import { Chat as ChatInterface } from '@/models/chat'
 
 import Chat from '@/components/chat'
-
-import chatImg from '../../../public/imgs/chat.svg'
 import Close from '@/components/icons/close'
 import Theme from '@/components/theme'
+import ChatHeader from '@/components/chatHeader'
+
+import chatImg from '../../../public/imgs/chat.svg'
 
 export default function Widget({ searchParams }: { searchParams: { chatId: string } }) {
   const { chatId } = searchParams
@@ -53,20 +54,22 @@ export default function Widget({ searchParams }: { searchParams: { chatId: strin
     setShowBadge(true)
   }
 
+  function closeWidget() {
+    setOpen(false)
+  }
+
   if (!chat) return null
 
   return (
     <div className="widget theme">
       <Theme chat={chat} />
       <div className={`widget__chat-wrapper ${open ? 'show' : ''}`} aria-hidden={!open}>
+        <ChatHeader chat={chat} onCloseHandler={closeWidget} />
         <Chat chat={chat} onMessageReceived={onMessageReceivedHandler} />
       </div>
       <button className={`widget__toggle-btn ${showBadge ? 'badge' : ''}`} aria-expanded={open} onClick={toggleChat}>
         <span className="widget__badge"></span>
         <Image className="widget__toggle-btn__img" src={chatImg} alt="Open chat" />
-        <span className="widget__toggle-btn__close">
-          <Close color={chat.colors?.main} />
-        </span>
       </button>
     </div>
   )
