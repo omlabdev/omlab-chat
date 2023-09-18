@@ -1,14 +1,21 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { Chat } from '@/models/chat'
 
 import Chevron from './icons/chevron'
 
-export default function ChatSelect({ chats, value = '', onChange }: { chats: Chat[], value?: string, onChange: (value: string) => void }) {
+export default function ChatSelect({ chats, value = '', allChats = true, onChange }: { chats: Chat[], value?: string, allChats?: boolean, onChange: (value: string) => void }) {
   const [selected, setSelected] = useState<Chat | undefined>()
   const [open, setOpen] = useState<boolean>(false)
+
+  useEffect(() => {
+    if (value) {
+      const chat = chats.find((chat) => chat.chatId === value)
+      if (chat) setSelected(chat)
+    }
+  }, [value, chats])
   
   function setValue(chat: Chat | undefined) {
     onChange(chat?.chatId || '')
@@ -27,11 +34,13 @@ export default function ChatSelect({ chats, value = '', onChange }: { chats: Cha
         </button>
         {open && (
           <ul className="chat-select__list">
-            <li className={`chat-select__item ${!selected ? 'active' : ''}`}>
-              <button className="chat-select__btn" type="button" onClick={() => setValue(undefined)}>
-                All Chats
-              </button>
-            </li>
+            {(allChats) && (
+              <li className={`chat-select__item ${!selected ? 'active' : ''}`}>
+                <button className="chat-select__btn" type="button" onClick={() => setValue(undefined)}>
+                  All Chats
+                </button>
+              </li>
+            )}
             {chats.map((chat, index) => (
               <li className={`chat-select__item ${chat.chatId === selected?.chatId ? 'active' : ''}`} key={index}>
                 <button className="chat-select__btn" type="button" onClick={() => setValue(chat)}>
