@@ -124,7 +124,7 @@ class ChatService {
     const messages = adminMessages.concat([...chatMessages, ...sandwichMessages])
     let functions = undefined
     // ChatId === [SALAM_ID]
-    if (chatId === 'b9f3c19e140223f86da61d8cbb06ce5f1c48d79e0afa99f2b3814b3be3c76ff7') functions = [{
+    if (chatId === '5285121ce8a0edcadc40d64b59782a1badb4c7b348c58e67421d29518599c6ba') functions = [{
       name: 'queryProducts',
       description: 'Retrive information about products that match the given parameters',
       parameters: {
