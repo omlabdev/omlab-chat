@@ -14,7 +14,7 @@ async function getRawProducts(data: string): Promise<Product[]> {
 }
 
 async function getProducts() {
-  const inventoryPath = path.join(__dirname, '../../../../../../../data/inventory.csv')
+  const inventoryPath = './src/data/inventory.csv'
   const data = readFileSync(inventoryPath).toString()
   const rawProducts = await getRawProducts(data)
   const products: Product[] = []
