@@ -1,5 +1,7 @@
 import { OpenAI } from 'openai'
 
+import { Function } from '@/types'
+
 import Message from '@/models/message'
 import Chat from '@/models/chat'
 
@@ -122,7 +124,7 @@ class ChatService {
     ChatService.saveMessage(chatId, sessionId, message)
     chatMessages.push(message)
     const messages = adminMessages.concat([...chatMessages, ...sandwichMessages])
-    let functions = undefined
+    let functions: Function[] | undefined = undefined
     // ChatId === [SALAM_ID]
     if (chatId === '5285121ce8a0edcadc40d64b59782a1badb4c7b348c58e67421d29518599c6ba') functions = [{
       name: 'queryProducts',
@@ -130,14 +132,14 @@ class ChatService {
       parameters: {
         type: 'object',
         properties: {
-          category: { type: 'string', description: 'Either "rug", "pillow" or "pouf"' },
-          collection: { type: 'string' },
-          color: { type: 'string' },
-          size: { type: 'string' },
-          maxPrice: { type: 'number' },
-          minPrice: { type: 'number' },
+          color: { type: 'string', enum: ['neutral', 'black-white', 'brown', 'blue', 'green', 'grey', 'orange', 'pink', 'purple', 'red', 'yellow'] },
+          size: { type: 'string', enum: ['accent', 'runner', 'area-rugs', 'oversized', 'wall-decor', 'pillows'] },
+          use: { type: 'string', enum: ['living-room', 'dining-room', 'bedroom', 'hallway', 'wall-decor', 'kitchen'] },
+          pile: { type: 'string', enum: ['flat', 'low-hand-knot', 'medium-to-high', 'mixed'] },
+          technique: { type: 'string', enum: ['flatweave', 'kharita-tazenakht', 'hanbel', 'low-hand-knot', 'medium-to-high-hand-knot', 'zanafi', 'technique_boucherouite'] },
+          style: { type: 'string', enum: ['abstract', 'checkered', 'maximalist', 'minimalist', 'modern', 'traditional', 'trellis', 'vintage'] },
         },
-        required: ['category'],
+        required: [],
       },
     }]
     const response = await ChatService.getInstance().chat.completions.create({
@@ -150,12 +152,14 @@ class ChatService {
     if (reply) {
       if (reply.function_call) {
         const functionResponse = await SalamService.call(reply.function_call.name, reply.function_call.arguments)
-        if ((functionResponse) && (functionResponse.length)) {
-          const functionMessage: ChatCompletionMessage = { role: 'system', content: `Format the following API response in a human readable way: ${JSON.stringify(functionResponse)}` }
+        if (functionResponse) {
+          const functionMessage: ChatCompletionMessage = { role: 'system', content: `Present this response from the function call to the user: ${JSON.stringify(functionResponse)}` }
           const finalResponse = await ChatService.getInstance().chat.completions.create({ model: 'gpt-3.5-turbo', messages: [...messages, functionMessage] })
           reply = finalResponse.choices[0].message
         } else {
-          reply = { role: 'assistant', content: 'Sorry, I could not find any products for you' }
+          const functionMessage: ChatCompletionMessage = { role: 'system', content: 'Tell the user you could not find any products for them' }
+          const finalResponse = await ChatService.getInstance().chat.completions.create({ model: 'gpt-3.5-turbo', messages: [...messages, functionMessage] })
+          reply = finalResponse.choices[0].message
         }
       }
       ChatService.saveMessage(chatId, sessionId, reply)

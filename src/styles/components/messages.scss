@@ -60,6 +60,10 @@
   width: fit-content;
 }
 
+.message__content a {
+  color: inherit;
+}
+
 .message--user {
   justify-content: flex-end;
 }
