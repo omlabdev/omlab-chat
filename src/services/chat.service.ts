@@ -4,6 +4,7 @@ import Message from '@/models/message'
 import Chat from '@/models/chat'
 
 import Database from './database.service'
+import SalamService from './salam.service'
 
 type ChatCompletionMessage = OpenAI.Chat.Completions.ChatCompletionMessage
 
@@ -121,12 +122,42 @@ class ChatService {
     ChatService.saveMessage(chatId, sessionId, message)
     chatMessages.push(message)
     const messages = adminMessages.concat([...chatMessages, ...sandwichMessages])
+    let functions = undefined
+    // ChatId === [SALAM_ID]
+    if (chatId === 'b9f3c19e140223f86da61d8cbb06ce5f1c48d79e0afa99f2b3814b3be3c76ff7') functions = [{
+      name: 'queryProducts',
+      description: 'Retrive information about products that match the given parameters',
+      parameters: {
+        type: 'object',
+        properties: {
+          category: { type: 'string', description: 'Either "rug", "pillow" or "pouf"' },
+          collection: { type: 'string' },
+          color: { type: 'string' },
+          size: { type: 'string' },
+          maxPrice: { type: 'number' },
+          minPrice: { type: 'number' },
+        },
+        required: ['category'],
+      },
+    }]
     const response = await ChatService.getInstance().chat.completions.create({
       model: 'gpt-3.5-turbo',
       messages,
+      // TODO: Have the functions array be configurable for each chatId instead of hardcoded
+      functions,
     })
-    const reply = response.choices[0].message
+    let reply = response.choices[0].message
     if (reply) {
+      if (reply.function_call) {
+        const functionResponse = await SalamService.call(reply.function_call.name, reply.function_call.arguments)
+        if ((functionResponse) && (functionResponse.length)) {
+          const functionMessage: ChatCompletionMessage = { role: 'system', content: `Format the following API response in a human readable way: ${JSON.stringify(functionResponse)}` }
+          const finalResponse = await ChatService.getInstance().chat.completions.create({ model: 'gpt-3.5-turbo', messages: [...messages, functionMessage] })
+          reply = finalResponse.choices[0].message
+        } else {
+          reply = { role: 'assistant', content: 'Sorry, I could not find any products for you' }
+        }
+      }
       ChatService.saveMessage(chatId, sessionId, reply)
       chatMessages.push(reply)
     }

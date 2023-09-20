@@ -23,8 +23,8 @@ function omlabInitChat(omlabChatId) {
   window.addEventListener('message', (message) => {
     const { data } = message
     if (data === 'omlab-chat/open') {
-      iframe.height = 580
-      iframe.width = 400
+      iframe.height = 800
+      iframe.width = 500
       // Inform the iframe's script that the iframe has been resized
       iframe.contentWindow.postMessage('omlab-chat/open', '*')
     } else if (data === 'omlab-chat/close') {

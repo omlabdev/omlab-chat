@@ -9,13 +9,13 @@ import ChatSelect from './chatSelect'
 export default function StoreDemo({ chats, chat }: { chats: ChatInterface[], chat?: ChatInterface }) {
   function selectChat(chatId: string) {
     const chat = chats.find((chat) => chat.chatId === chatId)
-    if (chat) history.pushState(null, '', `/store/${chat.chatId}`)
+    if (chat) history.pushState(null, '', `/admin/store/${chat.chatId}`)
     window.location = window.location
   }
 
   const dummyContent = []
   for (let index = 0; index < 10; index++) {
-    dummyContent.push(<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus, corrupti laborum? Est, quasi at quos sequi vel, aliquid hic ad iste maiores provident necessitatibus harum autem eveniet ratione repellat explicabo?</p>)
+    dummyContent.push(<p key={index}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus, corrupti laborum? Est, quasi at quos sequi vel, aliquid hic ad iste maiores provident necessitatibus harum autem eveniet ratione repellat explicabo?</p>)
     
   }
   
