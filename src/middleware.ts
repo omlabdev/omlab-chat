@@ -8,7 +8,7 @@ export default withAuth(
   function middleware(request: NextRequest) {
     if (!request.cookies.has('sessionId')) {
       const response = NextResponse.next()
-      setSessionIdCookie(response, request)
+      setSessionIdCookie(response)
       return response
     }
   },
