@@ -1,5 +1,7 @@
 'use client'
 
+import { useRouter } from 'next/navigation'
+
 import { useEffect, useState } from 'react'
 
 import { Chat as ChatInterface } from '@/models/chat'
@@ -9,13 +11,13 @@ import ChatSelect from './chatSelect'
 import Theme from './theme'
 import Config from './config'
 
-export default function AdminChat({ chats, chatId }: { chats: ChatInterface[], chatId?: string }) {
+export default function AdminChat({ chats, chatId, onChatUpdateHandler }: { chats: ChatInterface[], chatId?: string, onChatUpdateHandler?: () => void }) {
   const [tab, setTab] = useState<'chat' | 'config'>('chat')
   const [chat, setChat] = useState<ChatInterface | undefined>(undefined)
+  const router = useRouter()
 
   function selectChat(chatId?: string) {
-    history.pushState(null, '', `/admin/setup/${chatId}`)
-    window.location = window.location
+    router.push(`/admin/setup/${chatId}`)
   }
 
   useEffect(() => {
@@ -45,7 +47,7 @@ export default function AdminChat({ chats, chatId }: { chats: ChatInterface[], c
         </div>
       )}
       {(tab === 'chat') && (<Chat chat={chat} admin={true} />)}
-      {(tab === 'config') && (<Config chat={chat} />)}
+      {(tab === 'config') && (<Config chat={chat} onUpdateHandler={onChatUpdateHandler} />)}
     </div>
   )
 }

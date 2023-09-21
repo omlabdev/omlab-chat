@@ -1,3 +1,5 @@
+'use client'
+
 import Image from 'next/image'
 
 import { FormEvent, useEffect, useState } from 'react'
@@ -19,7 +21,7 @@ import Close from './icons/close'
 
 declare type ValuesKeys = keyof ChatUpdateValues
 
-export default function Config({ chat }: { chat?: Chat }) {
+export default function Config({ chat, onUpdateHandler }: { chat?: Chat, onUpdateHandler?: () => void }) {
   const [mediaModalOpen, setMediaModalOpen] = useState(false)
   const [values, setValues] = useState<ChatUpdateValues>({ name: '', font: '', background: '', accent: '', avatar: '' })
   const [confirmation, setConfirmation] = useState(false)
@@ -52,8 +54,7 @@ export default function Config({ chat }: { chat?: Chat }) {
     if (!chat) return
     const response = await updateChat(chat?.chatId, values)
     if (!response.success) throw ''
-    // TODO: Make this refresh more graceful
-    window.location = window.location
+    onUpdateHandler?.()
   }
 
   return (

@@ -1,5 +1,6 @@
 'use client'
 
+import { useRouter } from 'next/navigation'
 import Script from 'next/script'
 
 import { Chat as ChatInterface } from '@/models/chat'
@@ -7,10 +8,10 @@ import { Chat as ChatInterface } from '@/models/chat'
 import ChatSelect from './chatSelect'
 
 export default function StoreDemo({ chats, chat }: { chats: ChatInterface[], chat?: ChatInterface }) {
+  const router = useRouter()
   function selectChat(chatId: string) {
     const chat = chats.find((chat) => chat.chatId === chatId)
-    if (chat) history.pushState(null, '', `/admin/store/${chat.chatId}`)
-    window.location = window.location
+    if (chat) router.push(`/admin/store/${chat.chatId}`)
   }
 
   const dummyContent = []

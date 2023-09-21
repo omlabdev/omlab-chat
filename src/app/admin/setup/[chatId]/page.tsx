@@ -13,9 +13,11 @@ export default function SetupChat({ params }: { params: { chatId: string } }) {
   const { chatId } = params
   const [chats, setChats] = useState<ChatInterface[]>([])
 
-  useEffect(() => {
+  useEffect(updateChats, [])
+
+  function updateChats() {
     getChats().then(setChats)
-  }, [])
+  }
 
   return (
     <main className="container page-admin">
@@ -25,7 +27,7 @@ export default function SetupChat({ params }: { params: { chatId: string } }) {
         </a>
         Om Lab GPT | Setup
       </h1>
-      <AdminChat chats={chats} chatId={chatId} />
+      <AdminChat chats={chats} chatId={chatId} onChatUpdateHandler={updateChats} />
     </main>
   )
 }

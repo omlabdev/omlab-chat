@@ -12,9 +12,11 @@ import Chevron from '@/components/icons/chevron'
 export default function Setup() {
   const [chats, setChats] = useState<ChatInterface[]>([])
 
-  useEffect(() => {
+  useEffect(updateChats, [])
+
+  function updateChats() {
     getChats().then(setChats)
-  }, [])
+  }
 
   return (
     <main className="container page-admin">
@@ -24,7 +26,7 @@ export default function Setup() {
         </a>
         Om Lab GPT | Setup
       </h1>
-      <AdminChat chats={chats} />
+      <AdminChat chats={chats} onChatUpdateHandler={updateChats} />
     </main>
   )
 }
