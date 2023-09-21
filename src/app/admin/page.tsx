@@ -1,27 +1,26 @@
-'use client'
-
-import { useEffect, useState } from 'react'
-
-import { Chat as ChatInterface } from '@/models/chat'
-
-import { getChats } from '@/api'
-
-import AdminChat from '@/components/adminChat'
+import Chevron from '@/components/icons/chevron'
 
 export default function Admin() {
-  const [chats, setChats] = useState<ChatInterface[]>([])
-  const title = 'Admin'
-
-  useEffect(() => {
-    getChats().then(setChats)
-  }, [])
 
   return (
     <main className="container page-admin">
       <h1 className="title">
-        Om Lab GPT | {title}
+        Om Lab GPT | Admin
       </h1>
-      <AdminChat chats={chats} />
+      <ul className="admin__links">
+        <li>
+          <a className="admin__link" href="/admin/setup">
+            <span>Setup</span>
+            <Chevron orientation="right" />
+          </a>
+        </li>
+        <li>
+          <a className="admin__link" href="/admin/store">
+            <span>Test</span>
+            <Chevron orientation="right" />
+          </a>
+        </li>
+      </ul>
     </main>
   )
 }

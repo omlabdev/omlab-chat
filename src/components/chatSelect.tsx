@@ -27,7 +27,7 @@ export default function ChatSelect({ chats, value = '', allChats = true, onChang
     <div className="chat-select-wrapper">
       <div className="chat-select">
         <button className="chat-select__toggle" type="button" onClick={() => setOpen(!open)}>
-          {selected?.name || 'All Chats'}
+          {selected?.name || (allChats ? 'All Chats' : 'Select a Chat')}
           <span className="chat-select__chevron">
             <Chevron orientation={open ? 'down' : 'right'} />
           </span>

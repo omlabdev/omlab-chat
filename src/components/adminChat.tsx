@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { Chat as ChatInterface } from '@/models/chat'
 
@@ -9,15 +9,20 @@ import ChatSelect from './chatSelect'
 import Theme from './theme'
 import Config from './config'
 
-export default function AdminChat({ chats }: { chats: ChatInterface[] }) {
+export default function AdminChat({ chats, chatId }: { chats: ChatInterface[], chatId?: string }) {
   const [tab, setTab] = useState<'chat' | 'config'>('chat')
   const [chat, setChat] = useState<ChatInterface | undefined>(undefined)
 
-  function selectChat(chatId: string) {
-    const chat = chats.find((chat) => chat.chatId === chatId)
+  function selectChat(chatId?: string) {
+    history.pushState(null, '', `/admin/setup/${chatId}`)
+    window.location = window.location
+  }
+
+  useEffect(() => {
+    const chat = chatId ? chats.find((chat) => chat.chatId === chatId) : undefined
     setChat(chat)
     if (!chat) setTab('chat')
-  }
+  }, [chats, chatId])
 
   return (
     <div className="admin">
