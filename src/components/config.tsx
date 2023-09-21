@@ -31,7 +31,7 @@ export default function Config({ chat, onUpdateHandler }: { chat?: Chat, onUpdat
     setValues({ name: chat.name, font: chat.font, background: chat.colors?.background, accent: chat.colors?.main, avatar: chat.avatar })
   }, [chat])
 
-  const script = `<script src="https://chat.omlabdev.com/api/embed" data-chat-id="${chat?.chatId}"></script>`
+  const script = `<script src="https://chat.omlabdev.com/api/embed" data-chat-id="${chat?.chatId}" async defer></script>`
 
   function copy() {
     navigator?.clipboard?.writeText(script)
