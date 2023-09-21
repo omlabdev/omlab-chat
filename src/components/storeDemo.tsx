@@ -27,7 +27,7 @@ export default function StoreDemo({ chats, chat }: { chats: ChatInterface[], cha
       </div>
       {(chat) && (
         <div className="demo-content">
-          <Script src="/embed.js" data-chat-id={chat.chatId} />
+          <Script src="/api/embed" data-chat-id={chat.chatId} />
           <h1 className="title">
             {chat?.name}
           </h1>

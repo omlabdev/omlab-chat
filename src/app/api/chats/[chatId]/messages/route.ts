@@ -30,6 +30,6 @@ export async function DELETE(request: NextRequest, { params }: { params: { chatI
   if ((!sessionId) || (!chatId)) return NextResponse.json({}, { status: 400 })
   await ChatService.deleteChat(chatId, sessionId)
   const response = NextResponse.next()
-  setSessionIdCookie(response)
+  setSessionIdCookie(response, request)
   return NextResponse.json({}, { status: 200 })
 }
