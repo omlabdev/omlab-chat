@@ -13,7 +13,7 @@ function omlabInitChat(omlabChatId) {
   iframe.style.right = '0'
   iframe.style.maxHeight = '100vh'
   iframe.style.maxWidth = '100vw'
-  iframe.style.zIndex = '99'
+  iframe.style.zIndex = '9999'
   // iframe.addEventListener('load', () => {
   //   if (!iframe.contentDocument?.querySelector('[js-widget]')) iframe.style.display = 'none'
   // })
