@@ -11,7 +11,7 @@ function omlabInitChat(omlabChatId) {
   iframe.style.bottom = '0'
   iframe.style.position = 'fixed'
   iframe.style.right = '0'
-  iframe.style.maxHeight = '100vh'
+  iframe.style.maxHeight = '100%'
   iframe.style.maxWidth = '100vw'
   iframe.style.zIndex = '9999'
   // iframe.addEventListener('load', () => {
