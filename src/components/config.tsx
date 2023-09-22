@@ -96,8 +96,8 @@ export default function Config({ chat, onUpdateHandler }: { chat?: Chat, onUpdat
           </label>
           <select className="form-input" multiple={true} onChange={setFunctions} value={values.functions}>
             {functions.map((fn, index) => (
-              <option key={index} className="form-option" value={fn.name}>
-                {fn.name}
+              <option key={index} className="form-option" value={fn.chatFunction.name}>
+                {fn.chatFunction.name}
               </option>
             ))}
           </select>

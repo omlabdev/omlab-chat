@@ -131,7 +131,7 @@ class ChatService {
     let reply = response.choices[0].message
     if (reply) {
       if (reply.function_call) {
-        const functionResponse = await FunctionsService.call(reply.function_call.name, reply.function_call.arguments)
+        const functionResponse = await FunctionsService.callFunction(reply.function_call.name, reply.function_call.arguments)
         if (functionResponse) {
           const functionMessage: ChatCompletionMessage = { role: 'system', content: `Present this response to the user: ${JSON.stringify(functionResponse)}` }
           const finalResponse = await ChatService.getInstance().chat.completions.create({ model: 'gpt-3.5-turbo', messages: [...messages, functionMessage] })
