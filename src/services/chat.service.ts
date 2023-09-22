@@ -3,10 +3,10 @@ import { OpenAI } from 'openai'
 import { Function } from '@/types'
 
 import Message from '@/models/message'
-import Chat from '@/models/chat'
+import Chat, { Chat as ChatInterface } from '@/models/chat'
 
 import Database from './database.service'
-import SalamService from './salam.service'
+import FunctionsService from './functions.service'
 
 type ChatCompletionMessage = OpenAI.Chat.Completions.ChatCompletionMessage
 
@@ -117,6 +117,8 @@ class ChatService {
   
   public static async sendMessage(chatId: string, sessionId: string, content: string) {
     if (await ChatService.activeChatLimitReached(chatId)) return { role: 'error', content: 'Maximum active chats limit reached' }
+    const chat = await Chat.findOne({ chatId }).lean().exec() as ChatInterface | null | undefined
+    if (!chat) return { role: 'error', content: 'Chat not found' }
     const adminMessages = await ChatService.getAdminMessages(chatId)
     const sandwichMessages = await ChatService.getSandwichMessages(chatId)
     const chatMessages = await ChatService.getAllMessages(chatId, sessionId)
@@ -124,36 +126,14 @@ class ChatService {
     ChatService.saveMessage(chatId, sessionId, message)
     chatMessages.push(message)
     const messages = adminMessages.concat([...chatMessages, ...sandwichMessages])
-    let functions: Function[] | undefined = undefined
-    // ChatId === [SALAM_ID]
-    if (chatId === '5285121ce8a0edcadc40d64b59782a1badb4c7b348c58e67421d29518599c6ba') functions = [{
-      name: 'queryProducts',
-      description: 'Retrive information about products that match the given parameters',
-      parameters: {
-        type: 'object',
-        properties: {
-          color: { type: 'string', enum: ['neutral', 'black-white', 'brown', 'blue', 'green', 'grey', 'orange', 'pink', 'purple', 'red', 'yellow'] },
-          size: { type: 'string', enum: ['accent', 'runner', 'area-rugs', 'oversized', 'wall-decor', 'pillows'] },
-          use: { type: 'string', enum: ['living-room', 'dining-room', 'bedroom', 'hallway', 'wall-decor', 'kitchen'] },
-          pile: { type: 'string', enum: ['flat', 'low-hand-knot', 'medium-to-high', 'mixed'] },
-          technique: { type: 'string', enum: ['flatweave', 'kharita-tazenakht', 'hanbel', 'low-hand-knot', 'medium-to-high-hand-knot', 'zanafi', 'technique_boucherouite'] },
-          style: { type: 'string', enum: ['abstract', 'checkered', 'maximalist', 'minimalist', 'modern', 'traditional', 'trellis', 'vintage'] },
-        },
-        required: [],
-      },
-    }]
-    const response = await ChatService.getInstance().chat.completions.create({
-      model: 'gpt-3.5-turbo',
-      messages,
-      // TODO: Have the functions array be configurable for each chatId instead of hardcoded
-      functions,
-    })
+    const functions = FunctionsService.getFunctions(chat.functions) 
+    const response = await ChatService.getInstance().chat.completions.create({ model: 'gpt-3.5-turbo', messages, functions })
     let reply = response.choices[0].message
     if (reply) {
       if (reply.function_call) {
-        const functionResponse = await SalamService.call(reply.function_call.name, reply.function_call.arguments)
+        const functionResponse = await FunctionsService.call(reply.function_call.name, reply.function_call.arguments)
         if (functionResponse) {
-          const functionMessage: ChatCompletionMessage = { role: 'system', content: `Present this response from the function call to the user: ${JSON.stringify(functionResponse)}` }
+          const functionMessage: ChatCompletionMessage = { role: 'system', content: `Present this response to the user: ${JSON.stringify(functionResponse)}` }
           const finalResponse = await ChatService.getInstance().chat.completions.create({ model: 'gpt-3.5-turbo', messages: [...messages, functionMessage] })
           reply = finalResponse.choices[0].message
         } else {

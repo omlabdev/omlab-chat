@@ -2,13 +2,15 @@
 
 import Image from 'next/image'
 
-import { FormEvent, useEffect, useState } from 'react'
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 
 import { ChatUpdateValues, MediaImage } from '@/types'
 
 import { Chat } from '@/models/chat'
 
 import { getImageUrl } from '@/helpers'
+
+import { functions } from '@/services/functions.service'
 
 import { updateChat } from '@/api'
 
@@ -21,14 +23,23 @@ import Close from './icons/close'
 
 declare type ValuesKeys = keyof ChatUpdateValues
 
+const emptyValues: ChatUpdateValues = {name: '', font: '', background: '', accent: '', avatar: '', functions: [] }
+
 export default function Config({ chat, onUpdateHandler }: { chat?: Chat, onUpdateHandler?: () => void }) {
   const [mediaModalOpen, setMediaModalOpen] = useState(false)
-  const [values, setValues] = useState<ChatUpdateValues>({ name: '', font: '', background: '', accent: '', avatar: '' })
   const [confirmation, setConfirmation] = useState(false)
+  const [values, setValues] = useState<ChatUpdateValues>(emptyValues)
 
   useEffect(() => {
     if (!chat) return
-    setValues({ name: chat.name, font: chat.font, background: chat.colors?.background, accent: chat.colors?.main, avatar: chat.avatar })
+    setValues({
+      name: chat.name,
+      font: chat.font,
+      background: chat.colors?.background,
+      accent: chat.colors?.main,
+      avatar: chat.avatar,
+      functions: chat.functions,
+    })
   }, [chat])
 
   const script = `<script src="https://chat.omlabdev.com/api/embed" data-chat-id="${chat?.chatId}" async defer></script>`
@@ -41,6 +52,12 @@ export default function Config({ chat, onUpdateHandler }: { chat?: Chat, onUpdat
 
   function setValue(key: ValuesKeys, value: string) {
     setValues((currentValues) => ({ ...currentValues, [key]: value }))
+  }
+  
+  function setFunctions(event: ChangeEvent<HTMLSelectElement>) {
+    const { options } = event.target
+    const functions = Array.from(options).filter((option) => option.selected).map((option) => option.value)
+    setValues((currentValues) => ({ ...currentValues, functions }))
   }
 
   function onImageSelected(image: MediaImage) {
@@ -72,6 +89,18 @@ export default function Config({ chat, onUpdateHandler }: { chat?: Chat, onUpdat
             Font
           </label>
           <input type="text" className="form-input" id="font" value={values.font ?? ''} onChange={(event) => setValue('font', event.target.value)} />
+        </div>
+        <div className="form-group">
+          <label htmlFor="functions" className="form-label">
+            Functions
+          </label>
+          <select className="form-input" multiple={true} onChange={setFunctions} value={values.functions}>
+            {functions.map((fn, index) => (
+              <option key={index} className="form-option" value={fn.name}>
+                {fn.name}
+              </option>
+            ))}
+          </select>
         </div>
         <div className="form-row">
           <div className="form-group">

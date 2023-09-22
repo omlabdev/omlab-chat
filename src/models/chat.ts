@@ -16,6 +16,7 @@ const ChatSchema = new Schema<ChatBaseDocument, ChatModel>({
     required: true,
     unique: true,
   },
+  functions: Schema.Types.Array,
 }, { timestamps: true })
 
 export interface Chat {
@@ -24,6 +25,7 @@ export interface Chat {
   font?: string
   colors?: { main?: string, background?: string }
   chatId: string
+  functions?: string[]
 }
 
 interface ChatBaseDocument extends Chat, Document {}

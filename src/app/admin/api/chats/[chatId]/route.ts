@@ -11,7 +11,8 @@ export async function POST(request: NextRequest, { params }: { params: { chatId:
     name: data.name,
     avatar: data.avatar,
     font: data.font,
-    colors: { main: data.accent, background: data.background }
+    colors: { main: data.accent, background: data.background },
+    functions: data.functions,
   }
   await Database.connect()
   const chat = await Chat.findOneAndUpdate<ChatInterface>({ chatId }, update)
