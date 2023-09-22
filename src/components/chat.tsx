@@ -132,7 +132,7 @@ export default function Chat({ chat, onMessageReceived, admin }: ChatPropsType) 
           </div>
         )}
         <div className="input-wrapper">
-          <input className="form-input" type="text" autoComplete="off" value={message} onKeyDown={handleKeyDown} onChange={(event) => setMessage(event.target.value)} />
+          <input className="form-input message-input" type="text" autoComplete="off" value={message} onKeyDown={handleKeyDown} onChange={(event) => setMessage(event.target.value)} />
           <button className="btn" type="submit" disabled={message === ''}>
             <Send color={chat?.colors?.main} />
           </button>
