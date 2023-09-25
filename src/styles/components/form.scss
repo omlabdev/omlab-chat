@@ -68,6 +68,10 @@
   padding-right: 2.75rem;
 }
 
+.message-input--demo {
+  padding-right: 5.5rem;
+}
+
 .form-option {
   border-radius: var(--border-radius);
   cursor: pointer;
@@ -99,16 +103,23 @@
   border: none;
 }
 
-.btn {
-  cursor: pointer;
-  background-color: transparent;
-  border: 0;
+.chat-input-btns {
+  align-items: center;
   bottom: 0;
-  padding: 0 1rem;
+  display: flex;
+  gap: 1rem;
+  margin-right: 1rem;
   position: absolute;
   right: 0;
-  transition: opacity .2s linear;;
   top: 0;
+}
+
+.btn {
+  border: 0;
+  cursor: pointer;
+  background-color: transparent;
+  padding: 0;
+  transition: opacity .2s linear;
 }
 
 .btn[disabled] {

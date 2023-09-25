@@ -33,13 +33,17 @@ export async function getChats(): Promise<ChatInterface[]> {
   return chats
 }
 
-
 export async function updateChat(chatId: string, data: ChatUpdateValues): Promise<{ success: boolean }> {
   const body = JSON.stringify(data)
   const response = await fetch(`/admin/api/chats/${chatId}`, { method: 'POST', body, cache: 'no-cache' })
   if ((response.status < 200) || (response.status >= 300)) throw response
-  const chats = await response.json()
-  return chats
+  return await response.json()
+}
+
+export async function resetChat(chatId: string): Promise<{ success: boolean }> {
+  const response = await fetch(`/admin/api/chats/${chatId}`, { method: 'DELETE', cache: 'no-cache' })
+  if ((response.status < 200) || (response.status >= 300)) throw response
+  return await response.json()
 }
 
 export async function getAdminChatMessages(chatId?: string): Promise<MessageType[]> {

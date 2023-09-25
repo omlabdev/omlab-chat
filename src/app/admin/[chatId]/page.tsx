@@ -7,9 +7,9 @@ import { Chat as ChatInterface } from '@/models/chat'
 import { getChats } from '@/api'
 
 import AdminChat from '@/components/adminChat'
-import Chevron from '@/components/icons/chevron'
 
-export default function Setup() {
+export default function SetupChat({ params }: { params: { chatId: string } }) {
+  const { chatId } = params
   const [chats, setChats] = useState<ChatInterface[]>([])
 
   useEffect(updateChats, [])
@@ -21,12 +21,9 @@ export default function Setup() {
   return (
     <main className="container page-admin">
       <h1 className="title admin__title">
-        <a className="admin__back" href="/admin">
-          <Chevron orientation="left" height={30} width={30} color="#fff" />
-        </a>
         Om Lab GPT | Setup
       </h1>
-      <AdminChat chats={chats} onChatUpdateHandler={updateChats} />
+      <AdminChat chats={chats} chatId={chatId} onChatUpdateHandler={updateChats} />
     </main>
   )
 }

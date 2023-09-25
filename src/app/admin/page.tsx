@@ -1,26 +1,28 @@
-import Chevron from '@/components/icons/chevron'
+'use client'
 
-export default function Admin() {
+import { useEffect, useState } from 'react'
+
+import { Chat as ChatInterface } from '@/models/chat'
+
+import { getChats } from '@/api'
+
+import AdminChat from '@/components/adminChat'
+
+export default function Setup() {
+  const [chats, setChats] = useState<ChatInterface[]>([])
+
+  useEffect(updateChats, [])
+
+  function updateChats() {
+    getChats().then(setChats)
+  }
 
   return (
     <main className="container page-admin">
-      <h1 className="title">
-        Om Lab GPT | Admin
+      <h1 className="title admin__title">
+        Om Lab GPT | Setup
       </h1>
-      <ul className="admin__links">
-        <li>
-          <a className="admin__link" href="/admin/setup">
-            <span>Setup</span>
-            <Chevron orientation="right" />
-          </a>
-        </li>
-        <li>
-          <a className="admin__link" href="/admin/store">
-            <span>Test</span>
-            <Chevron orientation="right" />
-          </a>
-        </li>
-      </ul>
+      <AdminChat chats={chats} onChatUpdateHandler={updateChats} />
     </main>
   )
 }

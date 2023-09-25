@@ -104,7 +104,7 @@ class ChatService {
 
   public static async deleteChat(chatId: string, sessionId: string) {
     await Database.connect()
-    await Message.deleteMany({ chatId, sessionId }).exec()
+    return await Message.deleteMany({ chatId, sessionId }).exec()
     // return ChatService.chats.delete(sessionId)
   }
 

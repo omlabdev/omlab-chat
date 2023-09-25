@@ -2,38 +2,41 @@
 
 import Image from 'next/image'
 
-import { FormEvent, KeyboardEvent, useEffect, useRef, useState } from 'react'
+import { FormEvent, KeyboardEvent, useCallback, useEffect, useRef, useState } from 'react'
 
 import { MessageRole, MessageType } from '@/types'
 
 import { Chat as ChatInterface } from '@/models/chat'
 
-import { deleteAdminChatMessage, getAdminChatMessages, getChatMessages, sendAdminChatMessage, sendChatMessage } from '@/api'
+import { deleteAdminChatMessage, getAdminChatMessages, getChatMessages, resetChat, sendAdminChatMessage, sendChatMessage } from '@/api'
 
 import Loader from './loader'
 
 import Send from './icons/send'
 import Close from './icons/close'
+import Refresh from './icons/refresh'
 
 const errorMessage: MessageType = { role: 'error', content: 'There was an error processing your message, please try again' }
 
 const adminMessageRoles: { id: MessageRole, label: string }[] = [{ id: 'system', label: 'System' }, { id: 'assistant', label: 'Assistant' }, { id: 'sandwich', label: 'Sandwich' }]
 
-declare type ChatPropsType = ({ chat: ChatInterface, admin?: false } | { chat?: ChatInterface, admin: true }) & ({ onMessageReceived?: (message: MessageType) => void, onMessageSent?: (message: MessageType) => void })
+declare type ChatPropsType = ({ chat: ChatInterface, admin?: false, demo: true } | { chat?: ChatInterface, admin: true, demo?: false }) & ({ onMessageReceived?: (message: MessageType) => void, onMessageSent?: (message: MessageType) => void })
 
-export default function Chat({ chat, onMessageReceived, admin }: ChatPropsType) {
+export default function Chat({ chat, onMessageReceived, admin, demo }: ChatPropsType) {
   const messagesWrapper = useRef<HTMLDivElement>(null)
   const [loading, setLoading] = useState(false)
   const [messages, setMessages] = useState<MessageType[]>([])
   const [message, setMessage] = useState('')
   const [role, setRole] = useState<MessageRole>(admin ? 'system' : 'user')
 
-  useEffect(() => {
+  const loadMessages = useCallback(() => {
     if ((!chat) && (!admin)) return
     setLoading(true)
     const getMessages = admin ? getAdminChatMessages(chat?.chatId) : getChatMessages(chat?.chatId)
     getMessages.then(setMessages).catch(() => setMessages([errorMessage])).finally(() => setLoading(false))
   }, [admin, chat])
+
+  useEffect(loadMessages, [loadMessages])
 
   useEffect(() => {
     if (!messagesWrapper.current) return
@@ -94,6 +97,13 @@ export default function Chat({ chat, onMessageReceived, admin }: ChatPropsType) 
     setLoading(false)
   }
 
+  async function reset() {
+    if (!chat) return
+    setLoading(true)
+    await resetChat(chat?.chatId)
+    loadMessages()
+  }
+
   return (
     <div className="chat theme">
       <div className="messages-wrapper" ref={messagesWrapper}>
@@ -132,10 +142,17 @@ export default function Chat({ chat, onMessageReceived, admin }: ChatPropsType) 
           </div>
         )}
         <div className="input-wrapper">
-          <input className="form-input message-input" type="text" autoComplete="off" value={message} onKeyDown={handleKeyDown} onChange={(event) => setMessage(event.target.value)} />
-          <button className="btn" type="submit" disabled={message === ''}>
-            <Send color={chat?.colors?.main} />
-          </button>
+          <input className={`form-input message-input ${demo ? 'message-input--demo' : ''}`} type="text" autoComplete="off" value={message} onKeyDown={handleKeyDown} onChange={(event) => setMessage(event.target.value)} />
+          <div className="chat-input-btns">
+            <button className="btn" type="submit" disabled={message === ''} title="Send message">
+              <Send color={chat?.colors?.main} />
+            </button>
+            {demo && (
+              <button className="btn input-refresh" type="button" title="Reset chat" onClick={reset}>
+                <Refresh color={chat?.colors?.main} />
+              </button>
+            )}
+          </div>
         </div>
       </form>
     </div>

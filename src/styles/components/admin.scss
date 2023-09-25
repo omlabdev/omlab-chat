@@ -90,7 +90,7 @@
   background-color: var(--color-background);
 }
 
-.radio-group--admin .radio-wrapper:last-child .radio-input:checked + .radio-label.theme {
+.radio-group--admin .radio-wrapper:nth-child(2) .radio-input:checked + .radio-label.theme {
   background-color: var(--color-grey-light);
 }
 
