@@ -20,7 +20,7 @@ const errorMessage: MessageType = { role: 'error', content: 'There was an error 
 
 const adminMessageRoles: { id: MessageRole, label: string }[] = [{ id: 'system', label: 'System' }, { id: 'assistant', label: 'Assistant' }, { id: 'sandwich', label: 'Sandwich' }]
 
-declare type ChatPropsType = ({ chat: ChatInterface, admin?: false, demo: true } | { chat?: ChatInterface, admin: true, demo?: false }) & ({ onMessageReceived?: (message: MessageType) => void, onMessageSent?: (message: MessageType) => void })
+declare type ChatPropsType = ({ chat: ChatInterface, admin?: false } | { chat?: ChatInterface, admin: true }) & ({ onMessageReceived?: (message: MessageType) => void, onMessageSent?: (message: MessageType) => void, demo?: boolean })
 
 export default function Chat({ chat, onMessageReceived, admin, demo }: ChatPropsType) {
   const messagesWrapper = useRef<HTMLDivElement>(null)
