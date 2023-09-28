@@ -2,19 +2,30 @@
 
 ## Endpoints
 
+### /api/embed
+
+- GET: Returns a JS file to embed a chat widget on any external site.
+
+### /api/session
+
+- GET: Returns a new & unique sessionId. (CORS is enabled for this route)
+
 ### /api/chats/[chatId]
 
 - GET: Get a chat (just the chat, not its messages)
 
 ### /api/chats/[chatId]/messages
 
-All these endpoints require a `SessionId` cookie to be set on the request.
+All these endpoints require a `sessionId` query search parameter to be set on the request's URL.
 
 - GET: Get all the messages of a given chat and Session
 - POST: Post a new message to a given chat and Session
-- DELETE: Delete all messages for a given chat and Session
 
 ## Admin endpoints
+
+### /admin/api/chats
+
+- GET: Get all the chats on the system (just the chats, not its messages).
 
 ### /admin/api/chats/messages
 
@@ -24,6 +35,11 @@ All these endpoints require a `SessionId` cookie to be set on the request.
 ### /admin/api/chats/messages/[messageId]
 
 - DELETE: Delete a general system message (a system message that does not belong to a specific chat)
+
+### /admin/api/chats/[chatId]
+
+- POST: Update an existing chat information (Name, colors, etc.)
+- DELETE: Delete all the messages of the given chat and sesison (Requires a `sessionId` query search parameter to be set on the request's URL.)
 
 ### /admin/api/chats/[chatId]/messages
 

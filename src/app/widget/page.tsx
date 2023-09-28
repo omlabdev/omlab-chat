@@ -2,16 +2,15 @@
 
 import Image from 'next/image'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 import '@/styles/widget.scss'
 
-import { getChat } from '@/api'
+import { getChat, saveSessionId } from '@/api'
 
 import { Chat as ChatInterface } from '@/models/chat'
 
 import Chat from '@/components/chat'
-import Close from '@/components/icons/close'
 import Theme from '@/components/theme'
 import ChatHeader from '@/components/chatHeader'
 
@@ -23,26 +22,37 @@ export default function Widget({ searchParams }: { searchParams: { chatId: strin
   const [open, setOpen] = useState(false)
   const [showBadge, setShowBadge] = useState(true)
 
+  const postMessage = useCallback((element: Window, key: string, value?: string) => {
+    const message = { namespace: 'omlab-chat', key, value }
+    element.postMessage(message, '*')
+  }, [])
+
   useEffect(() => {
-    window.addEventListener('message', (message) => {
-      const { data } = message
-      if (data === 'omlab-chat/open') {
+    window.addEventListener('message', (event) => {
+      const { namespace, key, value } = event.data
+      if (namespace !== 'omlab-chat') return
+      if (key === 'open') {
         setOpen(true)
-      } else if (data === 'omlab-chat/close') {
+      } else if (key === 'close') {
         setOpen(false)
+      } else if (key === 'sessionId') {
+        // With a sessionId we can now load the chat
+        saveSessionId(value)
+        getChat(chatId).then(setChat)
       }
     })
-    getChat(chatId).then(setChat)
-  }, [chatId])
+    // Let the parent window script know we're ready to get a sessionId
+    if (window.top) postMessage(window.top, 'ready')
+  }, [chatId, postMessage])
   
   useEffect(() => {
     if (open) {
       if (showBadge) setShowBadge(false)
-      window.top?.postMessage('omlab-chat/open', '*')
+      if (window.top) postMessage(window.top, 'open')
     } else {
-      window.top?.postMessage('omlab-chat/close', '*')
+      if (window.top) postMessage(window.top, 'close')
     }
-  }, [open, showBadge])
+  }, [open, showBadge, postMessage])
 
   if (!chatId) return null
 

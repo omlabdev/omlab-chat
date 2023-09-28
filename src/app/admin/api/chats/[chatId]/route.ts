@@ -23,7 +23,7 @@ export async function POST(request: NextRequest, { params }: { params: { chatId:
 
 export async function DELETE(request: NextRequest, { params }: { params: { chatId: string } }) {
   const { chatId } = params
-  const sessionId = request.cookies.get('sessionId')?.value
+  const sessionId = request.nextUrl.searchParams.get('sessionId')
   if ((!sessionId) || (!chatId)) return NextResponse.json({}, { status: 400 })
   const result = await ChatService.deleteChat(chatId, sessionId)
   return NextResponse.json({ success: result.acknowledged })
