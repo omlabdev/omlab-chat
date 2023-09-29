@@ -1,7 +1,5 @@
 'use client'
 
-import Image from 'next/image'
-
 import { useCallback, useEffect, useState } from 'react'
 
 import '@/styles/widget.scss'
@@ -13,8 +11,7 @@ import { Chat as ChatInterface } from '@/models/chat'
 import Chat from '@/components/chat'
 import Theme from '@/components/theme'
 import ChatHeader from '@/components/chatHeader'
-
-import chatImg from '../../../public/imgs/chat.svg'
+import ChatIcon from '@/components/icons/chat'
 
 export default function Widget({ searchParams }: { searchParams: { chatId: string } }) {
   const { chatId } = searchParams
@@ -77,9 +74,11 @@ export default function Widget({ searchParams }: { searchParams: { chatId: strin
         <ChatHeader chat={chat} onCloseHandler={closeWidget} />
         <Chat chat={chat} onMessageReceived={onMessageReceivedHandler} />
       </div>
-      <button className={`widget__toggle-btn ${showBadge ? 'badge' : ''}`} aria-expanded={open} onClick={toggleChat}>
+      <button className={`widget__toggle-btn ${showBadge ? 'badge' : ''}`} aria-expanded={open} onClick={toggleChat} title="Open chat">
         <span className="widget__badge"></span>
-        <Image className="widget__toggle-btn__img" src={chatImg} alt="Open chat" />
+        <div className="widget__toggle-btn__img">
+          <ChatIcon />
+        </div>
       </button>
     </div>
   )

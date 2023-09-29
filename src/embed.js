@@ -20,8 +20,8 @@ async function omlabCreateIframe(chatId) {
   iframe.src = `[SITE_URL]/widget?chatId=${chatId}`
   iframe.classList.add('omlab-chat-iframe')
   iframe.setAttribute('frameborder', '0')
-  iframe.width = 72
-  iframe.height = 72
+  iframe.width = 80
+  iframe.height = 80
   iframe.style.bottom = '0'
   iframe.style.position = 'fixed'
   iframe.style.right = '0'
@@ -39,13 +39,13 @@ function omlabHandleIframeMessage(event, iframe) {
   const { namespace, key } = event.data
   if (namespace !== 'omlab-chat') return
   if (key === 'open') {
-    iframe.height = 800
+    iframe.height = 815
     iframe.width = 500
     // Inform the iframe's script that the iframe has been resized
     omlabPostMessage(iframe.contentWindow, 'open')
   } else if (key === 'close') {
-    iframe.height = 72
-    iframe.width = 72
+    iframe.height = 80
+    iframe.width = 80
     // Inform the iframe's script that the iframe has been resized
     omlabPostMessage(iframe.contentWindow, 'close')
   } else if (key === 'ready') {

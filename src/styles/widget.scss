@@ -6,9 +6,7 @@ body {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  padding: 1rem;
-  padding-bottom: .5rem;
-  padding-right: .5rem;
+  padding: .5rem;
 }
 
 .widget-header {
@@ -102,7 +100,7 @@ body {
   cursor: pointer;
   height: 4rem;
   margin-top: auto;
-  padding: .7rem;
+  padding-top: .25rem;
   position: relative;
   width: 4rem;
 }
@@ -121,25 +119,11 @@ body {
   display: none;
 }
 
-.widget__toggle-btn__img {
-  display: block;
-  width: 100%;
-}
-
 @media (max-width: 399px) {
-  .widget {
-    padding: 0;
-  }
-
   .widget__chat-wrapper {
     border-radius: 0;
     max-height: 100vh;
     margin-bottom: 0;
-  }
-
-  .widget__toggle-btn[aria-expanded="false"] {
-    margin-bottom: .5rem;
-    margin-right: .5rem;
   }
 
   .widget__toggle-btn[aria-expanded="true"] {
