@@ -72,7 +72,7 @@ export default function Widget({ searchParams }: { searchParams: { chatId: strin
   if (style === 'inline') return (
     <div className="widget theme">
       <Theme chat={chat} />
-      <div className="widget__chat-wrapper show">
+      <div className="widget__chat-wrapper inline">
         <ChatHeader chat={chat} />
         <Chat chat={chat} onMessageReceived={onMessageReceivedHandler} />
       </div>

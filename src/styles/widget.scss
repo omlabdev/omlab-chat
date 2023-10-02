@@ -80,7 +80,7 @@ body {
   transition: opacity .5s linear;
 }
 
-.widget__chat-wrapper:not(.show) {
+.widget__chat-wrapper:not(.show):not(.inline) {
   max-height: 0;
   margin-bottom: 0;
   opacity: 0;
@@ -120,7 +120,7 @@ body {
 }
 
 @media (max-width: 399px) {
-  .widget__chat-wrapper {
+  .widget__chat-wrapper:not(.inline) {
     border-radius: 0;
     max-height: 100vh;
     margin-bottom: 0;
