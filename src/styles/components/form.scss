@@ -54,6 +54,10 @@
   font-size: 1.125rem;
 }
 
+.form-label + .radio-group {
+  margin-top: 1rem;
+}
+
 .form-input {
   border: 0;
   border-radius: var(--border-radius);

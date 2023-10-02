@@ -4,6 +4,8 @@ import { useCallback, useEffect, useState } from 'react'
 
 import '@/styles/widget.scss'
 
+import { WidgetStyle } from '@/types'
+
 import { getChat, saveSessionId } from '@/api'
 
 import { Chat as ChatInterface } from '@/models/chat'
@@ -13,8 +15,8 @@ import Theme from '@/components/theme'
 import ChatHeader from '@/components/chatHeader'
 import ChatIcon from '@/components/icons/chat'
 
-export default function Widget({ searchParams }: { searchParams: { chatId: string } }) {
-  const { chatId } = searchParams
+export default function Widget({ searchParams }: { searchParams: { chatId: string, style: WidgetStyle } }) {
+  const { chatId, style } = searchParams
   const [chat, setChat] = useState<ChatInterface | undefined>(undefined)
   const [open, setOpen] = useState(false)
   const [showBadge, setShowBadge] = useState(true)
@@ -67,6 +69,17 @@ export default function Widget({ searchParams }: { searchParams: { chatId: strin
 
   if (!chat) return null
 
+  if (style === 'inline') return (
+    <div className="widget theme">
+      <Theme chat={chat} />
+      <div className="widget__chat-wrapper show">
+        <ChatHeader chat={chat} />
+        <Chat chat={chat} onMessageReceived={onMessageReceivedHandler} />
+      </div>
+    </div>
+  )
+
+  // Default style style === 'floating'
   return (
     <div className="widget theme">
       <Theme chat={chat} />

@@ -4,7 +4,7 @@ import Image from 'next/image'
 
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 
-import { ChatUpdateValues, MediaImage } from '@/types'
+import { ChatUpdateValues, MediaImage, WidgetStyle } from '@/types'
 
 import { Chat } from '@/models/chat'
 
@@ -25,9 +25,13 @@ declare type ValuesKeys = keyof ChatUpdateValues
 
 const emptyValues: ChatUpdateValues = {name: '', font: '', background: '', accent: '', avatar: '', functions: [] }
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL
+
 export default function Config({ chat, onUpdateHandler }: { chat?: Chat, onUpdateHandler?: () => void }) {
   const [mediaModalOpen, setMediaModalOpen] = useState(false)
   const [confirmation, setConfirmation] = useState(false)
+  const [script, setScript] = useState<string[]>([])
+  const [widgetStyle, setWidgetStyle] = useState<WidgetStyle>('floating')
   const [values, setValues] = useState<ChatUpdateValues>(emptyValues)
 
   useEffect(() => {
@@ -42,10 +46,16 @@ export default function Config({ chat, onUpdateHandler }: { chat?: Chat, onUpdat
     })
   }, [chat])
 
-  const script = `<script src="https://chat.omlabdev.com/api/embed" data-chat-id="${chat?.chatId}" async defer></script>`
+  useEffect(() => {
+    let code = []
+    if (widgetStyle === 'inline') code.push('<div id="omlab-chat-container></div>')
+    code.push(`<script src="${siteUrl}/api/embed" data-chat-id="${chat?.chatId}" data-widget-style="${widgetStyle}" async defer></script>`)
+    setScript(code)
+  }, [widgetStyle, chat])
+
 
   function copy() {
-    navigator?.clipboard?.writeText(script)
+    navigator?.clipboard?.writeText(script.join('\n'))
     setConfirmation(true)
     setTimeout(() => setConfirmation(false), 2000);
   }
@@ -133,10 +143,24 @@ export default function Config({ chat, onUpdateHandler }: { chat?: Chat, onUpdat
           <label className="form-label">
             Code Snippet
           </label>
+          <div className="radio-group radio-group--admin">
+            <div className="radio-wrapper">
+              <input className="radio-input" id="radio-style-floating" type="radio" checked={widgetStyle === 'floating'} onChange={() => setWidgetStyle('floating')} />
+              <label className="radio-label" htmlFor="radio-style-floating">
+                Floating
+              </label>
+            </div>
+            <div className="radio-wrapper">
+              <input className="radio-input" id="radio-style-inline" type="radio" checked={widgetStyle === 'inline'} onChange={() => setWidgetStyle('inline')} />
+              <label className="radio-label" htmlFor="radio-style-inline">
+                Inline
+              </label>
+            </div>
+          </div>
           <div className="code-snippet-wrapper">
             <div className="code-snippet">
               <code className="code-snippet-content">
-                {script}
+                {script.join('\n')}
               </code>
             </div>
             <button className="code-copy-btn" type="button" onClick={copy}>

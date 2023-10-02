@@ -22,9 +22,11 @@ export default function ChatHeader({ chat, onCloseHandler }: { chat: ChatInterfa
           Online
         </span>
       </div>
-      <button type="button" className="widget-header__close" title="Close" onClick={onCloseHandler}>
-       <Close height={25} width={25} />
-      </button>
+      {(onCloseHandler) && (
+        <button type="button" className="widget-header__close" title="Close" onClick={onCloseHandler}>
+          <Close height={25} width={25} />
+        </button>
+      )}
     </header>
   )
 }

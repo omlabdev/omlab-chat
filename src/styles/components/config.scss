@@ -20,22 +20,20 @@
 }
 
 .code-snippet-wrapper {
-  margin-top: .5rem;
   position: relative;
 }
 
 .code-snippet {
-  background-color: var(--color-grey);
+  background-color: #fff;
   overflow: auto;
   padding: 2.5rem 1rem;
   position: relative;
 }
 
 .code-snippet-content {
-  color: #fff;
   font-size: 1.125rem;
   padding-right: 1rem;
-  white-space: nowrap;
+  white-space: pre;
 }
 
 .code-copy-btn {
