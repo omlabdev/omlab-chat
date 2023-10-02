@@ -55,11 +55,13 @@ function omlabHandleIframeMessage(event, iframe) {
   if (key === 'open') {
     iframe.height = 815
     iframe.width = 500
+    iframe.classList.add('open')
     // Inform the iframe's script that the iframe has been resized
     omlabPostMessage(iframe.contentWindow, 'open')
   } else if (key === 'close') {
     iframe.height = 80
     iframe.width = 80
+    iframe.classList.remove('open')
     // Inform the iframe's script that the iframe has been resized
     omlabPostMessage(iframe.contentWindow, 'close')
   } else if (key === 'ready') {
@@ -73,7 +75,7 @@ function omlabHandleIframeMessage(event, iframe) {
 function omlabCreateStyles(widgetStyle) {
   const styles = document.createElement('style')
   if (widgetStyle === 'floating') {
-    styles.innerText = '@media (max-width: 399px){.omlab-chat-iframe{height:100vh;width:100vw;}}'
+    styles.innerText = '@media (max-width: 399px){.omlab-chat-iframe.open{height:100vh;width:100vw;}}'
   } else if (widgetStyle === 'inline') {
     styles.innerText = '#omlab-chat-container{height:750px;max-height:100%;width:100%;}'
   }
