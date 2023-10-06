@@ -15,7 +15,7 @@ function omlabPostMessage(element, key, value) {
   element.postMessage(message, '*')
 }
 
-async function omlabCreateIframe(chatId, widgetStyle) {
+function omlabCreateIframe(chatId, widgetStyle) {
   const iframe = document.createElement('iframe')
   iframe.src = `[SITE_URL]/widget?chatId=${chatId}&style=${widgetStyle}`
   iframe.classList.add('omlab-chat-iframe')
@@ -46,28 +46,36 @@ async function omlabCreateIframe(chatId, widgetStyle) {
     chatContainer.innerHTML = ''
     chatContainer.appendChild(iframe)
   }
-  return iframe
+  window.OmLabChat.iframe = iframe
 }
 
-function omlabHandleIframeMessage(event, iframe) {
+function omlabOpenChat() {
+  window.OmLabChat.iframe.height = 815
+  window.OmLabChat.iframe.width = 500
+  window.OmLabChat.iframe.classList.add('open')
+  // Inform the iframe's script that the iframe has been resized
+  omlabPostMessage(window.OmLabChat.iframe.contentWindow, 'open')
+}
+
+function omlabCloseChat() {
+  window.OmLabChat.iframe.height = 80
+  window.OmLabChat.iframe.width = 80
+  window.OmLabChat.iframe.classList.remove('open')
+  // Inform the iframe's script that the iframe has been resized
+  omlabPostMessage(window.OmLabChat.iframe.contentWindow, 'close')
+}
+
+function omlabHandleIframeMessage(event) {
   const { namespace, key } = event.data
   if (namespace !== 'omlab-chat') return
-  if (key === 'open') {
-    iframe.height = 815
-    iframe.width = 500
-    iframe.classList.add('open')
-    // Inform the iframe's script that the iframe has been resized
-    omlabPostMessage(iframe.contentWindow, 'open')
-  } else if (key === 'close') {
-    iframe.height = 80
-    iframe.width = 80
-    iframe.classList.remove('open')
-    // Inform the iframe's script that the iframe has been resized
-    omlabPostMessage(iframe.contentWindow, 'close')
-  } else if (key === 'ready') {
+  if (key === 'open') omlabOpenChat()
+  else if (key === 'close') omlabCloseChat()
+  else if (key === 'ready') {
+    window.OmLabChat.status = 'ready'
+    omlabPostMessage(window, 'loaded')
     // When the iframe indicate it's ready pass it a sessionId
     omlabGetSessionId().then((sessionId) => {
-      omlabPostMessage(iframe.contentWindow, 'sessionId', sessionId)
+      omlabPostMessage(window.OmLabChat.iframe.contentWindow, 'sessionId', sessionId)
     })
   }
 }
@@ -85,8 +93,15 @@ function omlabCreateStyles(widgetStyle) {
 async function omlabInitChat(chatId, widgetStyle = 'floating') {
   if (!chatId) return
   omlabCreateStyles(widgetStyle)
-  const iframe = await omlabCreateIframe(chatId, widgetStyle)
-  window.addEventListener('message', (event) => omlabHandleIframeMessage(event, iframe))
+  omlabCreateIframe(chatId, widgetStyle)
+  window.addEventListener('message', (event) => omlabHandleIframeMessage(event))
+}
+
+window.OmLabChat = {
+  status: 'loading',
+  iframe: undefined,
+  open: omlabOpenChat,
+  close: omlabCloseChat,
 }
 
 const omlabChatId = document.currentScript?.dataset.chatId
