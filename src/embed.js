@@ -50,6 +50,7 @@ function omlabCreateIframe(chatId, widgetStyle) {
 }
 
 function omlabOpenChat() {
+  document.body.classList.add('omlab-chat-open')
   window.OmLabChat.iframe.height = 815
   window.OmLabChat.iframe.width = 500
   window.OmLabChat.iframe.classList.add('open')
@@ -58,6 +59,7 @@ function omlabOpenChat() {
 }
 
 function omlabCloseChat() {
+  document.body.classList.remove('omlab-chat-open')
   window.OmLabChat.iframe.height = 80
   window.OmLabChat.iframe.width = 80
   window.OmLabChat.iframe.classList.remove('open')
@@ -83,7 +85,7 @@ function omlabHandleIframeMessage(event) {
 function omlabCreateStyles(widgetStyle) {
   const styles = document.createElement('style')
   if (widgetStyle === 'floating') {
-    styles.innerText = '@media (max-width: 399px){.omlab-chat-iframe.open{height:100vh;width:100vw;}}'
+    styles.innerText = '@media (max-width: 399px){.omlab-chat-open{overflow:hidden};.omlab-chat-iframe.open{height:100%;width:100vw;}}'
   } else if (widgetStyle === 'inline') {
     styles.innerText = '#omlab-chat-container{height:750px;max-height:100%;width:100%;}'
   }

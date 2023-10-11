@@ -170,3 +170,10 @@
 .form-image {
   max-width: 80%;
 }
+
+@media (max-width: 399px) {
+  .form {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+}

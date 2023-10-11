@@ -1,5 +1,7 @@
 'use client'
 
+import Image from 'next/image'
+
 import { useCallback, useEffect, useState } from 'react'
 
 import '@/styles/widget.scss'
@@ -81,7 +83,7 @@ export default function Widget({ searchParams }: { searchParams: { chatId: strin
 
   // Default style style === 'floating'
   return (
-    <div className="widget theme">
+    <div className={`widget theme ${open ? 'show' : ''}`}>
       <Theme chat={chat} />
       <div className={`widget__chat-wrapper ${open ? 'show' : ''}`} aria-hidden={!open}>
         <ChatHeader chat={chat} onCloseHandler={closeWidget} />
@@ -90,7 +92,7 @@ export default function Widget({ searchParams }: { searchParams: { chatId: strin
       <button className={`widget__toggle-btn ${showBadge ? 'badge' : ''}`} aria-expanded={open} onClick={toggleChat} title="Open chat">
         <span className="widget__badge"></span>
         <div className="widget__toggle-btn__img">
-          <ChatIcon />
+          {chat.avatar ? (<Image src={chat.avatar} alt="" width={56} height={56} />): (<ChatIcon />)}
         </div>
       </button>
     </div>

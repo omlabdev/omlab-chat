@@ -36,6 +36,17 @@ export default function Chat({ chat, onMessageReceived, admin, demo }: ChatProps
     getMessages.then(setMessages).catch(() => setMessages([errorMessage])).finally(() => setLoading(false))
   }, [admin, chat])
 
+  // Detect if the mobile virtual keyboard has been opened and scroll to the last messge if so
+  const viewportResizeHandler = useCallback(() => {
+    if (!window?.visualViewport) return
+    if (window.screen.height - 300 > window.visualViewport.height) messagesWrapper.current?.scrollTo({ top: messagesWrapper.current.scrollHeight })
+  }, [])
+
+  useEffect(() => {
+    window?.visualViewport?.addEventListener('resize', viewportResizeHandler)
+    return () => window?.visualViewport?.removeEventListener('resize', viewportResizeHandler)
+  }, [viewportResizeHandler])
+
   useEffect(loadMessages, [loadMessages])
 
   useEffect(() => {
@@ -54,9 +65,9 @@ export default function Chat({ chat, onMessageReceived, admin, demo }: ChatProps
       // Replace line breaks
       .replaceAll('\n', '<br/>')
       // Markdown urls
-      .replaceAll(/(\[([^\]]+)])\(([^)]+)\)/g, '<a target="_blank" rel="nofollow noopener noreferrer" href="$3">$2</a>')
+      .replaceAll(/(\[([^\]]+)])\(([^)]+)\)/g, '<br/><a target="_blank" rel="nofollow noopener noreferrer" href="$3">$2</a><br/>')
       // Regular urls
-      .replaceAll(/(?: |^)((https?|ftp|file)\:\/\/[a-zA-Z\d+&@#\/%?=~_\-|!:,.;]+)/g, '<a target="_blank" rel="nofollow noopener noreferrer" href="$1">$1</a>')
+      .replaceAll(/(?: |^)((https?|ftp|file)\:\/\/[a-zA-Z\d+&@#\/%?=~_\-|!:,.;]+)/g, '<br/><a target="_blank" rel="nofollow noopener noreferrer" href="$1">$1</a><br/>')
   }
 
   function handleKeyDown(event: KeyboardEvent<HTMLInputElement>) {
