@@ -72,7 +72,10 @@ export default class FunctionsService {
     const args = JSON.parse(argsString)
     const fn = FunctionsService.getFunction(name)
     if (!fn) return `No function found with name: ${name}`
-    if (!FunctionsService.checkArgs(fn.chatFunction, args)) return `Function "${name}" called with wrong arguments: ${argsString}`
+    if (!FunctionsService.checkArgs(fn.chatFunction, args)) {
+      console.error(`Function "${name}" called with wrong arguments: ${argsString}`)
+      return `Function "${name}" called with wrong arguments: ${argsString}`
+    }
     if (fn.async) return await fn.function(args)
     return fn.function(args)
   }

@@ -137,6 +137,7 @@ class ChatService {
           const finalResponse = await ChatService.getInstance().chat.completions.create({ model: 'gpt-3.5-turbo', messages: [...messages, functionMessage] })
           reply = finalResponse.choices[0].message
         } else {
+          console.error('No response from function call:', JSON.stringify(reply.function_call))
           const functionMessage: ChatCompletionMessage = { role: 'system', content: 'Tell the user you could not find any products for them' }
           const finalResponse = await ChatService.getInstance().chat.completions.create({ model: 'gpt-3.5-turbo', messages: [...messages, functionMessage] })
           reply = finalResponse.choices[0].message
