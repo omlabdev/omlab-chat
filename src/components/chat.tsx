@@ -65,9 +65,9 @@ export default function Chat({ chat, onMessageReceived, admin, demo }: ChatProps
       // Replace line breaks
       .replaceAll('\n', '<br/>')
       // Markdown urls
-      .replaceAll(/(\[([^\]]+)])\(([^)]+)\)/g, '<br/><a target="_blank" rel="nofollow noopener noreferrer" href="$3">$2</a><br/>')
+      .replaceAll(/(\[([^\]]+)])\(([^)]+)\)/g, '<a target="_blank" rel="nofollow noopener noreferrer" href="$3">$2</a>')
       // Regular urls
-      .replaceAll(/(?: |^)((https?|ftp|file)\:\/\/[a-zA-Z\d+&@#\/%?=~_\-|!:,.;]+)/g, '<br/><a target="_blank" rel="nofollow noopener noreferrer" href="$1">$1</a><br/>')
+      .replaceAll(/(?: |^)((https?|ftp|file)\:\/\/[a-zA-Z\d+&@#\/%?=~_\-|!:,.;]+)/g, '<a target="_blank" rel="nofollow noopener noreferrer" href="$1">$1</a>')
   }
 
   function handleKeyDown(event: KeyboardEvent<HTMLInputElement>) {
