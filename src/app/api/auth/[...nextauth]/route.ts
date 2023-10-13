@@ -5,14 +5,18 @@ import { MongoDBAdapter } from '@next-auth/mongodb-adapter'
 
 import { MongoClient } from 'mongodb'
 
-const { DB_DSN, SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, SMTP_FROM, ADMIN_EMAILS } = process.env
+import Database from '@/services/database.service'
 
-const adminEmails = ADMIN_EMAILS?.split(',')
+import Chat, { Chat as ChatInterface } from '@/models/chat'
+
+import { isAdmin } from '@/helpers'
+
+const { DB_DSN, SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, SMTP_FROM } = process.env
 
 const client = new MongoClient(DB_DSN || '')
 const clientPromise = client.connect()
 
-const authOptions: NextAuthOptions = {
+export const authOptions: NextAuthOptions = {
   adapter: MongoDBAdapter(clientPromise),
   providers: [
     EmailProvider({
@@ -28,7 +32,15 @@ const authOptions: NextAuthOptions = {
     })
   ],
   callbacks: {
-    signIn: ({ user }) => !!((user.email) && (adminEmails?.includes(user.email.toLowerCase()))),
+    signIn: async ({ user }) => {
+      if (!user.email) return false
+      // If the user is an admin allow them in
+      if (isAdmin(user.email.toLowerCase())) return true
+      // If the user is not an admin check if they have access to a chat demo
+      await Database.connect()
+      const chat = await Chat.exists({ users: user.email.toLowerCase() }).lean<ChatInterface>().exec()
+      return (!!chat)
+    },
   },
   session: { strategy: 'jwt' },
 }

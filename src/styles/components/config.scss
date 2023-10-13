@@ -19,6 +19,19 @@
   gap: 2rem;
 }
 
+.demo-link-wrapper {
+  background-color: #fff;
+  border-radius: var(--border-radius);
+  overflow: auto;
+  padding: 1rem;
+  margin: 1rem 0;
+}
+
+.demo-link {
+  white-space: nowrap;
+  margin-right: 1rem;
+}
+
 .code-snippet-wrapper {
   position: relative;
 }

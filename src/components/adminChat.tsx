@@ -10,13 +10,16 @@ import Chat from './chat'
 import ChatSelect from './chatSelect'
 import Theme from './theme'
 import Config from './config'
+import SpinnerLoader from './spinnerLoader'
 
 export default function AdminChat({ chats, chatId, onChatUpdateHandler }: { chats: ChatInterface[], chatId?: string, onChatUpdateHandler?: () => void }) {
   const [tab, setTab] = useState<'prompts' | 'config' | 'chat'>('chat')
   const [chat, setChat] = useState<ChatInterface | undefined>(undefined)
+  const [loading, setLoading] = useState(false)
   const router = useRouter()
 
   function selectChat(chatId?: string) {
+    setLoading(true)
     router.push(`/admin/${chatId}`)
   }
 
@@ -28,6 +31,7 @@ export default function AdminChat({ chats, chatId, onChatUpdateHandler }: { chat
 
   return (
     <div className="admin">
+      <SpinnerLoader active={loading} />
       <Theme chat={chat} />
       <ChatSelect chats={chats} value={chat?.chatId} onChange={selectChat} />
       {(chat) && (

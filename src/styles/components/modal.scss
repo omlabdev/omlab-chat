@@ -1,0 +1,15 @@
+.modal__footer {
+  display: flex;
+  gap: 1rem;
+}
+
+.modal__footer__btn {
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 1rem;
+  width: 100%;
+}
+
+.modal__footer__btn:disabled {
+  cursor: not-allowed;
+}

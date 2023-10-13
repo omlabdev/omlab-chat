@@ -53,6 +53,11 @@ export async function getChats(): Promise<ChatInterface[]> {
   return chats
 }
 
+export async function getChatAdmin(chatId: string): Promise<ChatInterface> {
+  const chat = await apiRequest(`/admin/api/chats/${chatId}`)
+  return chat
+}
+
 export async function updateChat(chatId: string, data: ChatUpdateValues): Promise<{ success: boolean }> {
   const body = JSON.stringify(data)
   const response = await apiRequest(`/admin/api/chats/${chatId}`, { method: 'POST', body })

@@ -1,6 +1,7 @@
 'use client'
 
 import Image from 'next/image'
+import Link from 'next/link'
 
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 
@@ -17,20 +18,24 @@ import { updateChat } from '@/api'
 import Theme from './theme'
 import Modal from './modal'
 import MediaGallery from './mediaGallery'
+import SpinnerLoader from './spinnerLoader'
 
 import Copy from './icons/copy'
 import Close from './icons/close'
-import SpinnerLoader from './spinnerLoader'
+import Trash from './icons/trash'
+import Add from './icons/add'
 
 declare type ValuesKeys = keyof ChatUpdateValues
 
-const emptyValues: ChatUpdateValues = {name: '', font: '', background: '', accent: '', avatar: '', functions: [] }
+const emptyValues: ChatUpdateValues = { name: '', font: '', background: '', accent: '', avatar: '', functions: [], users: [] }
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL
 
 export default function Config({ chat, onUpdateHandler }: { chat?: Chat, onUpdateHandler?: () => void }) {
   const [mediaModalOpen, setMediaModalOpen] = useState(false)
+  const [userModalOpen, setUserModalOpen] = useState(false)
   const [confirmation, setConfirmation] = useState(false)
+  const [user, setUser] = useState('')
   const [loading, setLoading] = useState(false)
   const [script, setScript] = useState<string[]>([])
   const [widgetStyle, setWidgetStyle] = useState<WidgetStyle>('floating')
@@ -40,11 +45,13 @@ export default function Config({ chat, onUpdateHandler }: { chat?: Chat, onUpdat
     if (!chat) return
     setValues({
       name: chat.name,
+      siteUrl: chat.siteUrl,
       font: chat.font,
       background: chat.colors?.background,
       accent: chat.colors?.main,
       avatar: chat.avatar,
       functions: chat.functions,
+      users: chat.users ?? [],
     })
   }, [chat])
 
@@ -64,6 +71,25 @@ export default function Config({ chat, onUpdateHandler }: { chat?: Chat, onUpdat
 
   function setValue(key: ValuesKeys, value: string) {
     setValues((currentValues) => ({ ...currentValues, [key]: value }))
+  }
+
+  function saveUser() {
+    setValues((currentValues) => {
+      const users = [...currentValues.users]
+      users.push(user)
+      console.log(users)
+      return { ...currentValues, users }
+    })
+    setUserModalOpen(false)
+    setUser('')
+  }
+
+  function removeUser(index: number) {
+    setValues((currentValues) => {
+      const users = [...currentValues.users]
+      users.splice(index, 1)
+      return { ...currentValues, users }
+    })
   }
   
   function setFunctions(event: ChangeEvent<HTMLSelectElement>) {
@@ -104,6 +130,12 @@ export default function Config({ chat, onUpdateHandler }: { chat?: Chat, onUpdat
             Name
           </label>
           <input type="text" className="form-input" id="name" value={values.name ?? ''} onChange={(event) => setValue('name', event.target.value)} />
+        </div>
+        <div className="form-group">
+          <label htmlFor="siteUrl" className="form-label">
+            Website URL
+          </label>
+          <input type="url" className="form-input" id="siteUrl" value={values.siteUrl ?? ''} onChange={(event) => setValue('siteUrl', event.target.value)} />
         </div>
         <div className="form-group">
           <label htmlFor="font" className="form-label">
@@ -150,6 +182,32 @@ export default function Config({ chat, onUpdateHandler }: { chat?: Chat, onUpdat
             </button>
           </div>
         </div>
+        <div className="form-group form-group--border">
+          <label className="form-label">
+            <strong>Site Demo</strong>
+          </label>
+          <div className="demo-link-wrapper">
+            <Link className="demo-link" href={`/demo/${chat?.chatId}`} target="_blank" >
+              {`${siteUrl}/demo/${chat?.chatId}`}
+            </Link>
+          </div>
+          <label className="form-label">
+            Users
+            <button className="btn-icon" type="button" title="Add user" onClick={() => setUserModalOpen(true)}>
+              <Add />
+            </button>
+          </label>
+          <ul className="form-users">
+            {values.users.map((user, index) => (
+              <li className="form-user" key={index}>
+                {user}
+                <button className="btn-icon" type="button" title="Remove user" onClick={() => removeUser(index)}>
+                  <Trash />
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
         <div>
           <label className="form-label">
             Code Snippet
@@ -186,6 +244,24 @@ export default function Config({ chat, onUpdateHandler }: { chat?: Chat, onUpdat
           </button>
         </div>
       </form>
+
+      <Modal open={userModalOpen} onCloseHandler={() => setUserModalOpen(false)}>
+        <div className="form-group">
+          <label htmlFor="userEmail" className="form-label">
+            Email
+          </label>
+          <input type="email" className="form-input" id="userEmail" value={user ?? ''} onChange={(event) => setUser(event.target.value)} />
+        </div>
+        <br />
+        <div className="modal__footer">
+          <button type="button" className="modal__footer__btn modal__footer__btn--danger" onClick={() => setUserModalOpen(false)}>
+            Cancel
+          </button>
+          <button type="button" className="modal__footer__btn" onClick={() => saveUser()}>
+            Save
+          </button>
+        </div>
+      </Modal>
 
       <Modal open={mediaModalOpen} onCloseHandler={() => setMediaModalOpen(false)}>
         <div className="media-gallery-header">

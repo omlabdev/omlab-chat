@@ -67,11 +67,11 @@ export default function MediaGallery({ onImageSelected }: { onImageSelected: (im
       <div className="media-gallery__upload">
         <UploadButton onClientUploadComplete={uploadCompleteHandler} onUploadError={uploadErrorHandler} />
       </div>
-      <div className="media-gallery__footer">
-        <button type="button" className="media-gallery__footer__btn media-gallery__footer__btn--danger" disabled={!activeImage} onClick={() => deleteSelected()}>
+      <div className="modal__footer">
+        <button type="button" className="modal__footer__btn modal__footer__btn--danger" disabled={!activeImage} onClick={() => deleteSelected()}>
           Delete
         </button>
-        <button type="button" className="media-gallery__footer__btn" disabled={!activeImage} onClick={() => selectImage()}>
+        <button type="button" className="modal__footer__btn" disabled={!activeImage} onClick={() => selectImage()}>
           Select
         </button>
       </div>

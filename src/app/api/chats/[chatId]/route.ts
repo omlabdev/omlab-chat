@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-import Chat from '@/models/chat'
+import Chat, { Chat as ChatInterface } from '@/models/chat'
 
 import Database from '@/services/database.service'
 
@@ -10,7 +10,7 @@ export async function GET(_: NextRequest, { params }: { params: { chatId: string
   const { chatId } = params
   if (!chatId) return NextResponse.json({}, { status: 400 })
   await Database.connect()
-  const chat = await Chat.findOne({ chatId }).lean().exec()
+  const chat = await Chat.findOne({ chatId }).select(['name', 'avatar', 'font', 'colors', 'chatId', 'functions']).lean<ChatInterface>().exec()
   if (!chat) return NextResponse.json({}, { status: 404 })
   return NextResponse.json(chat)
 }

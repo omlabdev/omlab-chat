@@ -29,6 +29,33 @@
   position: relative;
 }
 
+.btn-icon {
+  background-color: transparent;
+  border: 0;
+  cursor: pointer;
+  padding: 0;
+}
+
+.btn-icon svg {
+  display: block;
+}
+
+.form-users {
+  display: grid;
+  gap: 1rem;
+  margin-top: .5rem;
+}
+
+.form-user {
+  align-items: center;
+  background-color: #fff;
+  border-radius: var(--border-radius);
+  justify-content: space-between;
+  display: flex;
+  font-size: 1.25rem;
+  padding: 1rem;
+}
+
 .form-row {
   display: flex;
   gap: 1rem;
@@ -50,8 +77,18 @@
   gap: .5rem;
 }
 
+.form-group--border {
+  border: 1px solid #000;
+  border-radius: var(--border-radius);
+  padding: 1rem;
+}
+
 .form-label {
+  align-items: center;
+  display: flex;
   font-size: 1.125rem;
+  gap: .5rem;
+  justify-content: space-between;
 }
 
 .form-label + .radio-group {

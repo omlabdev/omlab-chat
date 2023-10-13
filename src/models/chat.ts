@@ -8,6 +8,7 @@ const ChatSchema = new Schema<ChatBaseDocument, ChatModel>({
     unique: true,
     index: true,
   },
+  siteUrl: String,
   avatar: String,
   font: String,
   colors: Schema.Types.Mixed,
@@ -17,15 +18,18 @@ const ChatSchema = new Schema<ChatBaseDocument, ChatModel>({
     unique: true,
   },
   functions: Schema.Types.Array,
+  users: Schema.Types.Array,
 }, { timestamps: true })
 
 export interface Chat {
   name: string
+  siteUrl?: string
   avatar?: string
   font?: string
   colors?: { main?: string, background?: string }
   chatId: string
   functions?: string[]
+  users?: string[]
 }
 
 interface ChatBaseDocument extends Chat, Document {}
