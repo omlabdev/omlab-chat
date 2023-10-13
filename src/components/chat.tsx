@@ -10,7 +10,7 @@ import { Chat as ChatInterface } from '@/models/chat'
 
 import { deleteAdminChatMessage, getAdminChatMessages, getChatMessages, resetChat, sendAdminChatMessage, sendChatMessage } from '@/api'
 
-import Loader from './loader'
+import DotsLoader from './dotsLoader'
 
 import Send from './icons/send'
 import Close from './icons/close'
@@ -137,7 +137,7 @@ export default function Chat({ chat, onMessageReceived, admin, demo }: ChatProps
             </li>
           ))}
         </ol>
-        <Loader active={loading} />
+        <DotsLoader active={loading} />
       </div>
       <form className="form" noValidate onSubmit={submit}>
         {admin && (

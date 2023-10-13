@@ -20,6 +20,7 @@ import MediaGallery from './mediaGallery'
 
 import Copy from './icons/copy'
 import Close from './icons/close'
+import SpinnerLoader from './spinnerLoader'
 
 declare type ValuesKeys = keyof ChatUpdateValues
 
@@ -30,6 +31,7 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL
 export default function Config({ chat, onUpdateHandler }: { chat?: Chat, onUpdateHandler?: () => void }) {
   const [mediaModalOpen, setMediaModalOpen] = useState(false)
   const [confirmation, setConfirmation] = useState(false)
+  const [loading, setLoading] = useState(false)
   const [script, setScript] = useState<string[]>([])
   const [widgetStyle, setWidgetStyle] = useState<WidgetStyle>('floating')
   const [values, setValues] = useState<ChatUpdateValues>(emptyValues)
@@ -79,13 +81,22 @@ export default function Config({ chat, onUpdateHandler }: { chat?: Chat, onUpdat
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     if (!chat) return
-    const response = await updateChat(chat?.chatId, values)
-    if (!response.success) throw ''
+    setLoading(true)
+    try {
+      const response = await updateChat(chat?.chatId, values)
+      if (!response.success) throw ''
+    } catch (error) {
+      console.error(error)
+      alert('There was an error saving the config.')
+    } finally {
+      setLoading(false)
+    }
     onUpdateHandler?.()
   }
 
   return (
     <div className="config theme">
+      <SpinnerLoader active={loading} />
       {(chat) && (<Theme chat={{ ...values, colors: { main: values.accent, background: values.background }, chatId: chat.chatId }} />)}
       <form className="config-form" noValidate onSubmit={submit}>
         <div className="form-group">

@@ -1,4 +1,55 @@
-.loader {
+// SPINNER
+
+.loader-spinner {
+  align-items: center;
+  background-color: rgba(0, 0, 0, .3);
+  display: flex;
+  flex-direction: column;
+  inset: 0;
+  justify-content: center;
+  position: fixed;
+  transition: all .5s ease-in-out;
+  z-index: 999999;
+}
+
+.spinner {
+  height: 54px;
+  position: relative;
+  width: 54px;
+}
+
+.spinner div {
+  animation: spinner 1.2s cubic-bezier(.5, 0, .5, 1) infinite;
+  border: 3px solid #fff;
+  border-color: #fff transparent transparent transparent;
+  border-radius: 50%;
+  box-sizing: border-box;
+  display: block;
+  height: 2.5rem;
+  position: absolute;
+  width: 2.5rem;
+}
+
+.spinner div:nth-child(1) {
+  animation-delay: -.45s;
+}
+
+.spinner div:nth-child(2) {
+  animation-delay: -.3s;
+}
+
+.spinner div:nth-child(3) {
+  animation-delay: -.15s;
+}
+
+@keyframes spinner {
+  0% { transform: rotate(0); }
+  100% { transform: rotate(360deg); }
+}
+
+// DOTS
+
+.loader-dots {
   display: flex;
   justify-content: center;
   margin-top: 1rem;
