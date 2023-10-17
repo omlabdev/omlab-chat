@@ -23,7 +23,61 @@ export const functions: ChatFunctionWithReference[] = [
       },
     },
   },
+  {
+    function: salamData,
+    async: false,
+    chatFunction: {
+      name: 'salamData',
+      description: 'Retrive general information about Salam Hello specified by topic of interest',
+      parameters: {
+        type: 'object',
+        properties: {
+          topic: { type: 'string', enum: [
+            'shipping_locations',
+            'shipping_costs',
+            'shipping_times',
+            'sales',
+            'outlet',
+            'services',
+            'history',
+            'founder',
+            'mission',
+            'contact',
+            'newsletter',
+          ] },
+        },
+        required: ['topic'],
+      },
+    },
+  },
 ]
+
+function salamData({ topic }: { topic: string}) {
+  switch (topic) {
+    case 'shipping_locations':
+      return 'We ship worldwide. If you are having any trouble finding your city and/or country, feel free to contact us at hello@salamhello.com and we will do our best to help.'
+    case 'shipping_costs':
+      return 'All of our prices include the cost of standard global shipping. Import taxes may apply for those customers who reside outside of the United States.'
+    case 'shipping_times':
+      return 'Conservatively, we quote a 5-7 day delivery window from the time it leaves Marrakech. With that said, it’s usually under the 5-day window.'
+    case 'sales':
+      return 'Currently there ar no sales or pomotions going on.'
+    case 'outlet':
+      return 'There are no outlet sales at the moment.'
+    case 'services':
+      return 'We offer our customers the "Salam Hello Experience": Immerse yourself in the Salam Hello community. Join us in Morocco for a first-of-its-kind, fully guided tour experience. for more information please refer to https://salamhello.com/pages/the-salam-hello-experience'
+    case 'history':
+      return 'In 2019, Mallory and Abdellatif founded Salam Hello. The two shared a passion for the rich tradition and artistry of Amazigh textiles. But they saw how those stories were lost in the buying practice and how the artisans’ work was devalued by the middlemen sales structure. You can learn more at https://salamhello.com/pages/our-values'
+    case 'founder':
+      return 'Mallory and Abdellatif founded Salam Hello in 2019. You can learn more about it here https://salamhello.com/pages/our-values'
+    case 'contact':
+      return 'You can get in contact with us at hello@salamhello.com'
+    case 'newsletter':
+      return 'You can subscribe to our newsletter by filling out the form on our site\'s footer: https://salamhello.com/#shopify-section-footer'
+    default:
+      return 'Invalid topic provided. You can refer the user to the FAQ page at https://salamhello.com/pages/faq'
+  }
+}
 
 function salamQueryProducts(args: { color?: string, size?: string, use?: string, pile?: string, technique?: string, style?: string }) {
   const { color, size, use, pile, technique, style } = args

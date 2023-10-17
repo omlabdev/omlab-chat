@@ -45,3 +45,7 @@ All these endpoints require a `sessionId` query search parameter to be set on th
 
 - GET: Get all the system messages for a given chat
 - POST: Post a new system message to a given chat
+
+## Useful prompts
+
+-  Don’t justify your answers. Don’t give me information not mentioned in the CONTEXT INFORMATION about products and services.

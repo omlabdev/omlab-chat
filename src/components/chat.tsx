@@ -80,7 +80,7 @@ export default function Chat({ chat, onMessageReceived, admin, demo }: ChatProps
       const response = await deleteAdminChatMessage(messageId)
       if (response.success) setMessages((messages) => {
         const index = messages.findIndex((message) => message._id === messageId)
-        messages.splice(index, 1)
+        if (index > -1) messages.splice(index, 1)
         return [...messages]
       })
     } catch (error) {
