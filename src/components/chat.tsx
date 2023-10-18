@@ -15,6 +15,7 @@ import DotsLoader from './dotsLoader'
 import Send from './icons/send'
 import Close from './icons/close'
 import Refresh from './icons/refresh'
+import { useStoreContext } from '@/context/store'
 
 const errorMessage: MessageType = { role: 'error', content: 'There was an error processing your message, please try again' }
 
@@ -24,17 +25,17 @@ declare type ChatPropsType = ({ chat: ChatInterface, admin?: false } | { chat?: 
 
 export default function Chat({ chat, onMessageReceived, admin, demo }: ChatPropsType) {
   const messagesWrapper = useRef<HTMLDivElement>(null)
-  const [loading, setLoading] = useState(false)
+  const { setStatus, status } = useStoreContext()
   const [messages, setMessages] = useState<MessageType[]>([])
   const [message, setMessage] = useState('')
   const [role, setRole] = useState<MessageRole>(admin ? 'system' : 'user')
 
   const loadMessages = useCallback(() => {
     if ((!chat) && (!admin)) return
-    setLoading(true)
+    setStatus('typing')
     const getMessages = admin ? getAdminChatMessages(chat?.chatId) : getChatMessages(chat?.chatId)
-    getMessages.then(setMessages).catch(() => setMessages([errorMessage])).finally(() => setLoading(false))
-  }, [admin, chat])
+    getMessages.then(setMessages).catch(() => setMessages([errorMessage])).finally(() => setStatus('idle'))
+  }, [admin, chat, setStatus])
 
   // Detect if the mobile virtual keyboard has been opened and scroll to the last messge if so
   const viewportResizeHandler = useCallback(() => {
@@ -75,7 +76,7 @@ export default function Chat({ chat, onMessageReceived, admin, demo }: ChatProps
   }
 
   async function handleAdminMessageDelete(messageId: string) {
-    setLoading(true)
+    setStatus('typing')
     try {
       const response = await deleteAdminChatMessage(messageId)
       if (response.success) setMessages((messages) => {
@@ -86,15 +87,15 @@ export default function Chat({ chat, onMessageReceived, admin, demo }: ChatProps
     } catch (error) {
       setMessages((currentMessages) => [...currentMessages, errorMessage])
     }
-    setLoading(false)
+    setStatus('idle')
   }
 
   async function submit(event?: FormEvent<HTMLFormElement>) {
     event?.preventDefault()
-    if (!message) return
+    if ((status !== 'idle') || (!message)) return
     const messageSent: MessageType = { role, content: message }
     if (!admin) setMessages((currentMessages) => [...currentMessages, messageSent])
-    setLoading(true)
+    setStatus('typing')
     setMessage('')
     onMessageReceived?.(messageSent)
     let newMessage = errorMessage
@@ -105,12 +106,12 @@ export default function Chat({ chat, onMessageReceived, admin, demo }: ChatProps
     }
     setMessages((currentMessages) => [...currentMessages, newMessage])
     onMessageReceived?.(newMessage)
-    setLoading(false)
+    setStatus('idle')
   }
 
   async function reset() {
     if (!chat) return
-    setLoading(true)
+    setStatus('typing')
     await resetChat(chat?.chatId)
     loadMessages()
   }
@@ -137,7 +138,7 @@ export default function Chat({ chat, onMessageReceived, admin, demo }: ChatProps
             </li>
           ))}
         </ol>
-        <DotsLoader active={loading} />
+        <DotsLoader active={status === 'typing'} />
       </div>
       <form className="form" noValidate onSubmit={submit}>
         {admin && (
@@ -155,7 +156,7 @@ export default function Chat({ chat, onMessageReceived, admin, demo }: ChatProps
         <div className="input-wrapper">
           <input className={`form-input message-input ${demo ? 'message-input--demo' : ''}`} type="text" autoComplete="off" value={message} onKeyDown={handleKeyDown} onChange={(event) => setMessage(event.target.value)} />
           <div className="chat-input-btns">
-            <button className="btn" type="submit" disabled={message === ''} title="Send message">
+            <button className="btn" type="submit" disabled={((message === '') && (status !== 'idle'))} title="Send message">
               <Send color={chat?.colors?.main} />
             </button>
             {demo && (

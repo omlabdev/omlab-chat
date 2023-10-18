@@ -6,6 +6,8 @@ import { useCallback, useEffect, useState } from 'react'
 
 import '@/styles/widget.scss'
 
+import { StoreProvider } from '@/context/store'
+
 import { WidgetStyle } from '@/types'
 
 import { getChat, saveSessionId } from '@/api'
@@ -75,8 +77,10 @@ export default function Widget({ searchParams }: { searchParams: { chatId: strin
     <div className="widget theme">
       <Theme chat={chat} />
       <div className="widget__chat-wrapper inline">
-        <ChatHeader chat={chat} />
-        <Chat chat={chat} onMessageReceived={onMessageReceivedHandler} />
+        <StoreProvider>
+          <ChatHeader chat={chat} />
+          <Chat chat={chat} onMessageReceived={onMessageReceivedHandler} />
+        </StoreProvider>
       </div>
     </div>
   )
@@ -86,8 +90,10 @@ export default function Widget({ searchParams }: { searchParams: { chatId: strin
     <div className={`widget theme ${open ? 'show' : ''}`}>
       <Theme chat={chat} />
       <div className={`widget__chat-wrapper ${open ? 'show' : ''}`} aria-hidden={!open}>
-        <ChatHeader chat={chat} onCloseHandler={closeWidget} />
-        <Chat chat={chat} onMessageReceived={onMessageReceivedHandler} />
+        <StoreProvider>
+          <ChatHeader chat={chat} onCloseHandler={closeWidget} />
+          <Chat chat={chat} onMessageReceived={onMessageReceivedHandler} />
+        </StoreProvider>
       </div>
       <button className={`widget__toggle-btn ${showBadge ? 'badge' : ''}`} aria-expanded={open} onClick={toggleChat} title="Open chat">
         <span className="widget__badge"></span>

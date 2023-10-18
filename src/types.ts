@@ -10,3 +10,5 @@ export type MediaImage = { key: string, id: string }
 export type Function = OpenAI.Chat.Completions.ChatCompletionCreateParams.Function
 
 export type WidgetStyle = 'floating' | 'inline'
+
+export type ChatStatus = 'idle' | 'typing'

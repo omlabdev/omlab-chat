@@ -4,6 +4,8 @@ import { useRouter } from 'next/navigation'
 
 import { useEffect, useState } from 'react'
 
+import { StoreProvider } from '@/context/store'
+
 import { Chat as ChatInterface } from '@/models/chat'
 
 import Chat from './chat'
@@ -56,9 +58,11 @@ export default function AdminChat({ chats, chatId, onChatUpdateHandler }: { chat
           </div>
         </div>
       )}
-      {(tab === 'prompts') && (<Chat chat={chat} admin={true} />)}
       {(tab === 'config') && (<Config chat={chat} onUpdateHandler={onChatUpdateHandler} />)}
-      {(tab === 'chat') && (chat) && (<Chat chat={chat} demo={true} />)}
+      <StoreProvider>
+        {(tab === 'prompts') && (<Chat chat={chat} admin={true} />)}
+        {(tab === 'chat') && (chat) && (<Chat chat={chat} demo={true} />)}
+      </StoreProvider>
     </div>
   )
 }

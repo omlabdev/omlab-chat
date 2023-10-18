@@ -2,11 +2,15 @@ import Image from 'next/image'
 
 import { MouseEventHandler } from 'react'
 
+import { useStoreContext } from '@/context/store'
+
 import { Chat as ChatInterface } from '@/models/chat'
 
 import Close from './icons/close'
 
 export default function ChatHeader({ chat, onCloseHandler }: { chat: ChatInterface, onCloseHandler?: MouseEventHandler<HTMLButtonElement> }) {
+  const { status } = useStoreContext()
+
   return (
     <header className="theme widget-header">
       {(chat.avatar) && (
@@ -18,8 +22,9 @@ export default function ChatHeader({ chat, onCloseHandler }: { chat: ChatInterfa
         <h1 className="widget-header__title">
           {chat.name}
         </h1>
-        <span className="widget-header__subtitle">
-          Online
+        <span className={`widget-header__subtitle ${status === 'typing' ? 'typing' : ''}`}>
+          {(status === 'idle') && 'Online'}
+          {(status === 'typing') && 'Typing...'}
         </span>
       </div>
       {(onCloseHandler) && (

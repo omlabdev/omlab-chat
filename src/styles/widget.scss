@@ -48,6 +48,10 @@ body {
   width: .5rem;
 }
 
+.widget-header__subtitle.typing::before {
+  animation: blink 1s ease-in-out infinite;
+}
+
 .widget-header__close {
   align-self: flex-start;
   background-color: transparent;
@@ -135,4 +139,10 @@ body {
   .widget__toggle-btn[aria-expanded="true"] {
     display: none;
   }
+}
+
+@keyframes blink {
+  0% { opacity: 0; }
+  50% { opacity: 1; }
+  100% { opacity: 0; }
 }
