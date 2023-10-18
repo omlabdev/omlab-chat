@@ -8,7 +8,7 @@ declare type ChatFunctionWithReference = { function: Function, async: boolean, c
 
 function omLabData({ topic }: { topic: string}) {
   switch (topic) {
-    case 'services':
+    case 'general':
       return 'Om Lab does software development and specializes in AI for e-commerce and CRO. Their most recent product is a ChatGPT-powered 24/7 sales agent.'
     case 'technologies':
       return 'We work with Shopify, Big Commerce, WordPress/Woocommerce, Next.js/React, Python/Django and many more.'
@@ -18,6 +18,8 @@ function omLabData({ topic }: { topic: string}) {
       return 'Get the most out of your Store with our 360º e‑commerce optimization process.'
     case 'ai':
       return 'Increase your engagement with our ChatGPT-powered 24/7 sales agent.'
+    case 'cost/sales':
+      return 'You can schedule a meeeting with us by following this link and we can discuss pricing with you https://calendly.com/rafael-146/discovery'
     case 'contact':
       return 'You can schedule a meeeting with us here https://calendly.com/rafael-146/discovery'
     default:
