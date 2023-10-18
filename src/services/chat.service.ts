@@ -16,7 +16,6 @@ const MAX_CHATS_NUMBER = Number(MAX_CHATS) || 1000
 
 class ChatService {
   private static instance: OpenAI | undefined
-  private static chats: Map<string, ChatCompletionMessage[]> = new Map()
   private static adminMessages: ChatCompletionMessage[]
   private static chatAdminMessages: Map<string, ChatCompletionMessage[]> = new Map()
   private static sandwichMessages: ChatCompletionMessage[]
@@ -63,12 +62,6 @@ class ChatService {
   private static async getAllMessages(chatId: string, sessionId: string) {
     await Database.connect()
     return (await Message.find({ chatId, sessionId }).exec()).map((message) => message.toMessage())
-    // Disable chat message caching for now
-    // if (!this.chats.has(sessionId)) {
-    //   const messages = (await Message.find({ sessionId })).map((message) => message.toMessage())
-    //   ChatService.chats.set(sessionId, messages)
-    // }
-    // return ChatService.chats.get(sessionId) as ChatCompletionMessage[]
   }
 
   private static async saveMessage(chatId: string, sessionId: string, message: ChatCompletionMessage) {
@@ -97,21 +90,21 @@ class ChatService {
 
   public static async deleteAdminMessage(messageId: string) {
     await Database.connect()
+    const message = await Message.findById(messageId).exec()
+    if (!message) return false
     const { acknowledged } = await Message.deleteOne({ _id: messageId }).exec()
-    if (acknowledged) ChatService.refershAdminMessages()
+    if (acknowledged) ChatService.refershAdminMessages(message.chatId)
     return acknowledged
   }
 
   public static async deleteChat(chatId: string, sessionId: string) {
     await Database.connect()
     return await Message.deleteMany({ chatId, sessionId }).exec()
-    // return ChatService.chats.delete(sessionId)
   }
 
   public static async getMessages(chatId: string, sessionId: string) {
     const adminMessages = await ChatService.getAdminMessages(chatId)
     const messages = await ChatService.getAllMessages(chatId, sessionId)
-    // return adminMessages.concat(messages)
     return adminMessages.filter((message) => message.role !== 'system').concat(messages)
   }
   
