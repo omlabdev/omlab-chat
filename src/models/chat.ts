@@ -1,5 +1,7 @@
 import { Document, Model, model, models, Schema } from 'mongoose'
 
+import { FontConfig } from '@/types'
+
 // Schema
 const ChatSchema = new Schema<ChatBaseDocument, ChatModel>({
   name: {
@@ -10,7 +12,7 @@ const ChatSchema = new Schema<ChatBaseDocument, ChatModel>({
   },
   siteUrl: String,
   avatar: String,
-  font: String,
+  fontConfig: Schema.Types.Mixed,
   colors: Schema.Types.Mixed,
   chatId: {
     type: String,
@@ -25,7 +27,7 @@ export interface Chat {
   name: string
   siteUrl?: string
   avatar?: string
-  font?: string
+  fontConfig?: FontConfig
   colors?: { main?: string, background?: string }
   chatId: string
   functions?: string[]

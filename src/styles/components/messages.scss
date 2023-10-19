@@ -50,9 +50,11 @@
   background-color: var(--color-main);
   border-radius: 1.5rem;
   box-shadow: var(--shadow);
+  color: var(--font-color);
   display: block;
-  font-size: 1rem;
-  letter-spacing: .5;
+  font-size: var(--font-size);
+  letter-spacing: var(--letter-spacing);
+  line-height: var(--line-height);
   max-width: 100%;
   text-overflow: ellipsis;
   overflow: hidden;

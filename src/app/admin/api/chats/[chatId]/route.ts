@@ -23,7 +23,7 @@ export async function POST(request: NextRequest, { params }: { params: { chatId:
     name: data.name,
     siteUrl: data.siteUrl,
     avatar: data.avatar,
-    font: data.font,
+    fontConfig: data.fontConfig,
     colors: { main: data.accent, background: data.background },
     functions: data.functions,
     users: data.users,

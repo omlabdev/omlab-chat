@@ -5,7 +5,7 @@ import Link from 'next/link'
 
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 
-import { ChatUpdateValues, MediaImage, WidgetStyle } from '@/types'
+import { ChatUpdateValues, FontConfig, MediaImage, WidgetStyle } from '@/types'
 
 import { Chat } from '@/models/chat'
 
@@ -26,8 +26,9 @@ import Trash from './icons/trash'
 import Add from './icons/add'
 
 declare type ValuesKeys = keyof ChatUpdateValues
+declare type FontValuesKeys = keyof FontConfig
 
-const emptyValues: ChatUpdateValues = { name: '', font: '', background: '', accent: '', avatar: '', functions: [], users: [] }
+const emptyValues: ChatUpdateValues = { name: '', fontConfig: { size: 16, height: 16, spacing: .5, color: '#fff'  }, background: '', accent: '', avatar: '', functions: [], users: [] }
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL
 
@@ -46,7 +47,7 @@ export default function Config({ chat, onUpdateHandler }: { chat?: Chat, onUpdat
     setValues({
       name: chat.name,
       siteUrl: chat.siteUrl,
-      font: chat.font,
+      fontConfig: chat.fontConfig,
       background: chat.colors?.background,
       accent: chat.colors?.main,
       avatar: chat.avatar,
@@ -71,6 +72,10 @@ export default function Config({ chat, onUpdateHandler }: { chat?: Chat, onUpdat
 
   function setValue(key: ValuesKeys, value: string) {
     setValues((currentValues) => ({ ...currentValues, [key]: value }))
+  }
+
+  function setFontValue(key: FontValuesKeys, value: string) {
+    setValues((currentValues) => ({ ...currentValues, fontConfig: { ...currentValues.fontConfig, [key]: value} }))
   }
 
   function saveUser() {
@@ -125,11 +130,26 @@ export default function Config({ chat, onUpdateHandler }: { chat?: Chat, onUpdat
       <SpinnerLoader active={loading} />
       {(chat) && (<Theme chat={{ ...values, colors: { main: values.accent, background: values.background }, chatId: chat.chatId }} />)}
       <form className="config-form" noValidate onSubmit={submit}>
-        <div className="form-group">
-          <label htmlFor="name" className="form-label">
-            Name
-          </label>
-          <input type="text" className="form-input" id="name" value={values.name ?? ''} onChange={(event) => setValue('name', event.target.value)} />
+        <div className="form-row">
+          <div className="form-group flex-grow-0">
+            <label htmlFor="avatar" className="form-label text-center">
+              Avatar
+            </label>
+            <div className="form-image-input-wrapper">
+              <button type="button" className="form-image-frame" onClick={() => setMediaModalOpen(true)}>
+                <div className="form-image-wrapper">
+                  {(values.avatar) && (<Image className="form-image" src={values.avatar} height={100} width={100} alt="" />)}
+                  {(!values.avatar) && ('Select an image')}
+                </div>
+              </button>
+            </div>
+          </div>
+          <div className="form-group">
+            <label htmlFor="name" className="form-label">
+              Name
+            </label>
+            <input type="text" className="form-input" id="name" value={values.name ?? ''} onChange={(event) => setValue('name', event.target.value)} />
+          </div>
         </div>
         <div className="form-group">
           <label htmlFor="siteUrl" className="form-label">
@@ -137,11 +157,67 @@ export default function Config({ chat, onUpdateHandler }: { chat?: Chat, onUpdat
           </label>
           <input type="url" className="form-input" id="siteUrl" value={values.siteUrl ?? ''} onChange={(event) => setValue('siteUrl', event.target.value)} />
         </div>
-        <div className="form-group">
-          <label htmlFor="font" className="form-label">
-            Font
+        <div className="form-group form-group--border">
+          <label className="form-label">
+            <strong>Font</strong>
           </label>
-          <input type="text" className="form-input" id="font" value={values.font ?? ''} onChange={(event) => setValue('font', event.target.value)} />
+          <div className="form-group">
+            <span className="form-label">
+              Sample
+            </span>
+            <span className="form-sample-text theme">
+              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quis quo, tempore nulla natus doloremque, voluptas nostrum cum iusto minima ipsam error qui culpa impedit? Saepe consequuntur unde perspiciatis eveniet laboriosam.
+            </span>
+          </div>
+          <div className="form-group">
+            <label htmlFor="font" className="form-label">
+              Font Family
+            </label>
+            <input type="text" className="form-input" id="font" value={values.fontConfig?.family ?? ''} onChange={(event) => setFontValue('family', event.target.value)} />
+          </div>
+          <div className="form-group">
+            <label htmlFor="font-size" className="form-label">
+              Font Size (px)
+            </label>
+            <input type="number" className="form-input" id="font-size" value={values.fontConfig?.size ?? ''} onChange={(event) => setFontValue('size', event.target.value)} />
+          </div>
+          <div className="form-group">
+            <label htmlFor="font-line-height" className="form-label">
+              Line height (px)
+            </label>
+            <input type="number" className="form-input" id="font-line-height" value={values.fontConfig?.height ?? ''} onChange={(event) => setFontValue('height', event.target.value)} />
+          </div>
+          <div className="form-group">
+            <label htmlFor="font-letter-spacing" className="form-label">
+              Letter spacing (px)
+            </label>
+            <input type="number" className="form-input" id="font-letter-spacing" value={values.fontConfig?.spacing ?? ''} onChange={(event) => setFontValue('spacing', event.target.value)} />
+          </div>
+        </div>
+        <div className="form-group form-group--border">
+          <label className="form-label">
+            <strong>Colors</strong>
+          </label>
+          <div className="form-row">
+            <div className="form-group">
+              <label htmlFor="color-main" className="form-label text-center">
+                Accent Color
+              </label>
+              <input type="color" className="color-input" id="color-main" value={values.accent ?? ''} onChange={(event) => setValue('accent', event.target.value)} />
+            </div>
+            <div className="form-group">
+              <label htmlFor="color-bg" className="form-label text-center">
+                Background Color
+              </label>
+              <input type="color" className="color-input" id="color-bg" value={values.background ?? ''} onChange={(event) => setValue('background', event.target.value)} />
+            </div>
+            <div className="form-group">
+              <label htmlFor="color-font" className="form-label text-center">
+                Font Color
+              </label>
+              <input type="color" className="color-input" id="color-font" value={values.fontConfig?.color ?? ''} onChange={(event) => setFontValue('color', event.target.value)} />
+            </div>
+          </div>
         </div>
         <div className="form-group">
           <label htmlFor="functions" className="form-label">
@@ -154,33 +230,6 @@ export default function Config({ chat, onUpdateHandler }: { chat?: Chat, onUpdat
               </option>
             ))}
           </select>
-        </div>
-        <div className="form-row">
-          <div className="form-group">
-            <label htmlFor="color-main" className="form-label">
-              Accent Color
-            </label>
-            <input type="color" className="color-input" id="color-main" value={values.accent ?? ''} onChange={(event) => setValue('accent', event.target.value)} />
-          </div>
-          <div className="form-group">
-            <label htmlFor="color-bg" className="form-label">
-              Background Color
-            </label>
-            <input type="color" className="color-input" id="color-bg" value={values.background ?? ''} onChange={(event) => setValue('background', event.target.value)} />
-          </div>
-        </div>
-        <div className="form-group">
-          <label htmlFor="avatar" className="form-label">
-            Avatar
-          </label>
-          <div className="form-image-input-wrapper">
-            <button type="button" className="form-image-frame" onClick={() => setMediaModalOpen(true)}>
-              <div className="form-image-wrapper">
-                {(values.avatar) && (<Image className="form-image" src={values.avatar} height={100} width={100} alt="" />)}
-                {(!values.avatar) && ('Select an image')}
-              </div>
-            </button>
-          </div>
         </div>
         <div className="form-group form-group--border">
           <label className="form-label">
