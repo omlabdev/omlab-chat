@@ -65,6 +65,16 @@
 
 .message__content a {
   color: inherit;
+  font-weight: bold;
+  max-width: 100%;
+  overflow: hidden;
+  text-decoration: underline;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.message__content a::before {
+  content: '• ';
 }
 
 .message--user {

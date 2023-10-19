@@ -65,6 +65,8 @@ export default function Chat({ chat, onMessageReceived, admin, demo }: ChatProps
       .replaceAll("'", '&#039;')
       // Replace line breaks
       .replaceAll('\n', '<br/>')
+      // Add line breaks after ". "
+      .replaceAll('. ', '.<br/>')
       // Markdown urls
       .replaceAll(/(\[([^\]]+)])\(([^)]+)\)/g, '<a target="_blank" rel="nofollow noopener noreferrer" href="$3">$2</a>')
       // Regular urls

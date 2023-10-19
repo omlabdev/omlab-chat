@@ -10,7 +10,7 @@ export async function GET(_: NextRequest, { params }: { params: { chatId: string
   const { chatId } = params
   if (!chatId) return NextResponse.json({}, { status: 400 })
   await Database.connect()
-  const chat = await Chat.findOne({ chatId }).select(['name', 'avatar', 'font', 'colors', 'chatId', 'functions']).lean<ChatInterface>().exec()
+  const chat = await Chat.findOne({ chatId }).select(['name', 'avatar', 'fontConfig', 'colors', 'chatId', 'functions']).lean<ChatInterface>().exec()
   if (!chat) return NextResponse.json({}, { status: 404 })
   return NextResponse.json(chat)
 }
